@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -181,7 +182,6 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
     <button class="pb pbdel" data-action="del">&#9003;</button>
   </div>
   <div id="perr"></div>
-  <div id="ver" style="position:fixed;bottom:8px;right:8px;font-family:monospace;font-size:10px;color:#333;z-index:99999;">v20260309-F</div>
 </div>
 
 <div id="home" class="scr">
@@ -262,13 +262,6 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
 <div class="toast" id="tst"></div>
 
 <script>
-// Early error catcher - runs before anything else
-window.onerror=function(msg,src,line,col,err){
-  var el=document.getElementById('perr');
-  if(el)el.textContent='ERR: '+msg+' L'+line;
-  return false;
-};
-
 var DK='arsenal_v1';
 var D={weapons:[],ammo:[],wish:[],lastBackup:null,sorts:{weapons:'date',ammo:'date',wish:'date'}};
 try{
@@ -516,165 +509,154 @@ function fa(){return '<div class="facs">'+(ceid?'<button class="btnd" id="fdel">
 function buildForm(type,it){
   if(type==='weapons'){
     return '<div class="fsec">IDENTIFICATION</div><div class="fgrd"><div class="ff"><label class="fl">MAKE</label><input class="fi" id="fmk" placeholder="GLOCK" value="'+esc(fv(it,'make'))+'"></div><div class="ff"><label class="fl">MODEL</label><input class="fi" id="fmd" placeholder="19 GEN5" value="'+esc(fv(it,'model'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder="9MM" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">ACTION</label><select class="fs" id="fac"><option value="">SELECT</option><option '+fsel(it,'action','SEMI-AUTO')+'>SEMI-AUTO</option><option '+fsel(it,'action','PUMP')+'>PUMP</option><option '+fsel(it,'action','BOLT')+'>BOLT</option><option '+fsel(it,'action','REVOLVER')+'>REVOLVER</option><option '+fsel(it,'action','LEVER')+'>LEVER</option><option '+fsel(it,'action','SINGLE-SHOT')+'>SINGLE-SHOT</option><option '+fsel(it,'action','FULL-AUTO')+'>FULL-AUTO</option><option '+fsel(it,'action','BREAK')+'>BREAK</option></select></div><div class="ff"><label class="fl">TYPE</label><select class="fs" id="fft"><option value="">SELECT</option><option '+fsel(it,'ftype','PISTOL')+'>PISTOL</option><option '+fsel(it,'ftype','RIFLE')+'>RIFLE</option><option '+fsel(it,'ftype','SHOTGUN')+'>SHOTGUN</option><option '+fsel(it,'ftype','REVOLVER')+'>REVOLVER</option><option '+fsel(it,'ftype','SBR')+'>SBR</option><option '+fsel(it,'ftype','SMG')+'>SMG</option><option '+fsel(it,'ftype','SUPPRESSOR')+'>SUPPRESSOR</option><option '+fsel(it,'ftype','NFA ITEM')+'>NFA ITEM</option></select></div><div class="ff"><label class="fl">BARREL LENGTH</label><input class="fi" id="fbl" placeholder="4.02in" value="'+esc(fv(it,'barrel'))+'"></div></div><div class="fsec">INVENTORY &amp; PRICING</div><div class="fgrd"><div class="ff"><label class="fl">QTY IN STOCK</label><input class="fi" id="fqt" type="number" placeholder="1" value="'+esc(fv(it,'qty','1'))+'"></div><div class="ff"><label class="fl">CONDITION</label><select class="fs" id="fco"><option value="">SELECT</option><option '+fsel(it,'condition','NEW')+'>NEW</option><option '+fsel(it,'condition','LIKE NEW')+'>LIKE NEW</option><option '+fsel(it,'condition','EXCELLENT')+'>EXCELLENT</option><option '+fsel(it,'condition','VERY GOOD')+'>VERY GOOD</option><option '+fsel(it,'condition','GOOD')+'>GOOD</option><option '+fsel(it,'condition','FAIR')+'>FAIR</option><option '+fsel(it,'condition','CONSIGNMENT')+'>CONSIGNMENT</option></select></div><div class="ff"><label class="fl">COST PAID</label><input class="fi" id="fcs" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'cost'))+'"></div><div class="ff"><label class="fl">RETAIL PRICE</label><input class="fi" id="fpr" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'price'))+'"></div><div class="ff full"><label class="fl">SERIAL NUMBER</label><input class="fi" id="fsr" placeholder="SERIAL #" value="'+esc(fv(it,'serial'))+'"></div></div><div class="fsec">DETAILS</div><div class="fgrd"><div class="ff"><label class="fl">FINISH</label><input class="fi" id="ffn" placeholder="MATTE BLACK" value="'+esc(fv(it,'finish'))+'"></div><div class="ff"><label class="fl">CAPACITY</label><input class="fi" id="fcp" placeholder="15+1" value="'+esc(fv(it,'capacity'))+'"></div><div class="ff"><label class="fl">SUPPLIER</label><input class="fi" id="fsp" placeholder="ZANDERS" value="'+esc(fv(it,'supplier'))+'"></div><div class="ff"><label class="fl">DATE ACQUIRED</label><input class="fi" id="fda" type="date" value="'+esc(fv(it,'acquired'))+'"></div><div class="ff full"><label class="fl">NOTES</label><textarea class="ft" id="fnt" placeholder="MAGS, SIGHTS, ACCESSORIES...">'+esc(fv(it,'notes'))+'</textarea></div></div>'+fa();
-  }
-  if(type==='ammo'){
-    return '<div class="fsec">IDENTIFICATION</div><div class="fgrd"><div class="ff"><label class="fl">BRAND</label><input class="fi" id="fbr" placeholder="FEDERAL" value="'+esc(fv(it,'brand'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder="9MM LUGER" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">GRAIN</label><input class="fi" id="fgr" placeholder="115" value="'+esc(fv(it,'grain'))+'"></div><div class="ff"><label class="fl">BULLET TYPE</label><select class="fs" id="fbt"><option value="">SELECT</option><option '+fsel(it,'bullet_type','FMJ')+'>FMJ</option><option '+fsel(it,'bullet_type','HP')+'>HP</option><option '+fsel(it,'bullet_type','JHP')+'>JHP</option><option '+fsel(it,'bullet_type','SP')+'>SP</option><option '+fsel(it,'bullet_type','FP')+'>FP</option><option '+fsel(it,'bullet_type','BTHP')+'>BTHP</option><option '+fsel(it,'bullet_type','SLUG')+'>SLUG</option><option '+fsel(it,'bullet_type','BUCKSHOT')+'>BUCKSHOT</option><option '+fsel(it,'bullet_type','BIRDSHOT')+'>BIRDSHOT</option><option '+fsel(it,'bullet_type','TRACER')+'>TRACER</option><option '+fsel(it,'bullet_type','SUBSONIC')+'>SUBSONIC</option><option '+fsel(it,'bullet_type','FRANGIBLE')+'>FRANGIBLE</option></select></div><div class="ff"><label class="fl">CASING</label><select class="fs" id="fca"><option value="">SELECT</option><option '+fsel(it,'casing','BRASS')+'>BRASS</option><option '+fsel(it,'casing','STEEL')+'>STEEL</option><option '+fsel(it,'casing','ALUMINUM')+'>ALUMINUM</option><option '+fsel(it,'casing','NICKEL')+'>NICKEL-PLATED</option><option '+fsel(it,'casing','POLYMER')+'>POLYMER</option></select></div><div class="ff"><label class="fl">VELOCITY (FPS)</label><input class="fi" id="fvl" placeholder="1200" value="'+esc(fv(it,'velocity'))+'"></div></div><div class="fsec">INVENTORY</div><div class="fgrd"><div class="ff"><label class="fl">ROUNDS IN STOCK</label><input class="fi" id="fqt" type="number" placeholder="500" value="'+esc(fv(it,'qty'))+'"></div><div class="ff"><label class="fl">BOX SIZE</label><input class="fi" id="fbx" type="number" placeholder="50" value="'+esc(fv(it,'boxsize'))+'"></div><div class="ff"><label class="fl">COST / BOX</label><input class="fi" id="fcs" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'cost'))+'"></div><div class="ff"><label class="fl">RETAIL / BOX</label><input class="fi" id="fpr" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'price'))+'"></div><div class="ff"><label class="fl">SUPPLIER</label><input class="fi" id="fsp" placeholder="RSR GROUP" value="'+esc(fv(it,'supplier'))+'"></div><div class="ff"><label class="fl">LOT / UPC</label><input class="fi" id="flt" placeholder="UPC #" value="'+esc(fv(it,'lot'))+'"></div></div><div class="fsec">LOW STOCK ALERT</div><div class="trow"><div><div class="tlbl">ALERT WHEN AT OR BELOW:</div><div style="font-family:monospace;font-size:9px;color:var(--t3);margin-top:4px">SUPPLIER LINKS APPEAR AUTOMATICALLY</div></div><input class="tin" id="fth" type="number" placeholder="100" value="'+esc(fv(it,'threshold'))+'"></div><div class="fgrd" style="margin-top:12px"><div class="ff full"><label class="fl">NOTES</label><textarea class="ft" id="fnt" placeholder="RANGE USE, DEFENSE, BULK...">'+esc(fv(it,'notes'))+'</textarea></div></div>'+fa();
-  }
-  if(type==='wish'){
-    return '<div class="fsec">FIREARM DETAILS</div><div class="fgrd"><div class="ff"><label class="fl">MAKE</label><input class="fi" id="fmk" placeholder="COLT" value="'+esc(fv(it,'make'))+'"></div><div class="ff"><label class="fl">MODEL</label><input class="fi" id="fmd" placeholder="PYTHON" value="'+esc(fv(it,'model'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder=".357 MAG" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">ACTION</label><select class="fs" id="fac"><option value="">SELECT</option><option '+fsel(it,'action','SEMI-AUTO')+'>SEMI-AUTO</option><option '+fsel(it,'action','PUMP')+'>PUMP</option><option '+fsel(it,'action','BOLT')+'>BOLT</option><option '+fsel(it,'action','REVOLVER')+'>REVOLVER</option><option '+fsel(it,'action','LEVER')+'>LEVER</option><option '+fsel(it,'action','SINGLE-SHOT')+'>SINGLE-SHOT</option></select></div><div class="ff"><label class="fl">UNITS WANTED</label><input class="fi" id="fqt" type="number" placeholder="2" value="'+esc(fv(it,'qty'))+'"></div><div class="ff"><label class="fl">PRIORITY</label><select class="fs" id="fpri"><option value="">SELECT</option><option '+fsel(it,'priority','high')+'>HIGH</option><option '+fsel(it,'priority','med')+'>MEDIUM</option><option '+fsel(it,'priority','low')+'>LOW</option></select></div></div><div class="fsec">ACQUISITION</div><div class="fgrd"><div class="ff"><label class="fl">TARGET BUDGET</label><input class="fi" id="fbd" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'budget'))+'"></div><div class="ff"><label class="fl">MAX BUDGET</label><input class="fi" id="fmb" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'maxbudget'))+'"></div><div class="ff"><label class="fl">SOURCE</label><select class="fs" id="fsc"><option value="">SELECT</option><option '+fsel(it,'source','ZANDERS')+'>ZANDERS</option><option '+fsel(it,'source','RSR GROUP')+'>RSR GROUP</option><option '+fsel(it,'source','SPORTS SOUTH')+'>SPORTS SOUTH</option><option '+fsel(it,'source','BILL HICKS')+'>BILL HICKS</option><option '+fsel(it,'source','LIPSEYS')+'>LIPSEYS</option><option '+fsel(it,'source','AUCTION')+'>AUCTION</option><option '+fsel(it,'source','PRIVATE SALE')+'>PRIVATE SALE</option><option '+fsel(it,'source','OTHER')+'>OTHER</option></select></div><div class="ff"><label class="fl">TARGET DATE</label><input class="fi" id="ftd" type="date" value="'+esc(fv(it,'targetdate'))+'"></div><div class="ff full"><label class="fl">REASON</label><textarea class="ft" id="fnt" placeholder="CUSTOMER DEMAND, MARGIN...">'+esc(fv(it,'notes'))+'</textarea></div></div>'+fa();
-  }
-  return '';
+
+}
+if(type===‘ammo’){
+return ‘<div class="fsec">IDENTIFICATION</div><div class="fgrd"><div class="ff"><label class="fl">BRAND</label><input class="fi" id="fbr" placeholder="FEDERAL" value="'+esc(fv(it,'brand'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder="9MM LUGER" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">GRAIN</label><input class="fi" id="fgr" placeholder="115" value="'+esc(fv(it,'grain'))+'"></div><div class="ff"><label class="fl">BULLET TYPE</label><select class="fs" id="fbt"><option value="">SELECT</option><option ‘+fsel(it,‘bullet_type’,‘FMJ’)+’>FMJ</option><option ‘+fsel(it,‘bullet_type’,‘HP’)+’>HP</option><option ‘+fsel(it,‘bullet_type’,‘JHP’)+’>JHP</option><option ‘+fsel(it,‘bullet_type’,‘SP’)+’>SP</option><option ‘+fsel(it,‘bullet_type’,‘FP’)+’>FP</option><option ‘+fsel(it,‘bullet_type’,‘BTHP’)+’>BTHP</option><option ‘+fsel(it,‘bullet_type’,‘SLUG’)+’>SLUG</option><option ‘+fsel(it,‘bullet_type’,‘BUCKSHOT’)+’>BUCKSHOT</option><option ‘+fsel(it,‘bullet_type’,‘BIRDSHOT’)+’>BIRDSHOT</option><option ‘+fsel(it,‘bullet_type’,‘TRACER’)+’>TRACER</option><option ‘+fsel(it,‘bullet_type’,‘SUBSONIC’)+’>SUBSONIC</option><option ‘+fsel(it,‘bullet_type’,‘FRANGIBLE’)+’>FRANGIBLE</option></select></div><div class="ff"><label class="fl">CASING</label><select class="fs" id="fca"><option value="">SELECT</option><option ‘+fsel(it,‘casing’,‘BRASS’)+’>BRASS</option><option ‘+fsel(it,‘casing’,‘STEEL’)+’>STEEL</option><option ‘+fsel(it,‘casing’,‘ALUMINUM’)+’>ALUMINUM</option><option ‘+fsel(it,‘casing’,‘NICKEL’)+’>NICKEL-PLATED</option><option ‘+fsel(it,‘casing’,‘POLYMER’)+’>POLYMER</option></select></div><div class="ff"><label class="fl">VELOCITY (FPS)</label><input class="fi" id="fvl" placeholder="1200" value="'+esc(fv(it,'velocity'))+'"></div></div><div class="fsec">INVENTORY</div><div class="fgrd"><div class="ff"><label class="fl">ROUNDS IN STOCK</label><input class="fi" id="fqt" type="number" placeholder="500" value="'+esc(fv(it,'qty'))+'"></div><div class="ff"><label class="fl">BOX SIZE</label><input class="fi" id="fbx" type="number" placeholder="50" value="'+esc(fv(it,'boxsize'))+'"></div><div class="ff"><label class="fl">COST / BOX</label><input class="fi" id="fcs" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'cost'))+'"></div><div class="ff"><label class="fl">RETAIL / BOX</label><input class="fi" id="fpr" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'price'))+'"></div><div class="ff"><label class="fl">SUPPLIER</label><input class="fi" id="fsp" placeholder="RSR GROUP" value="'+esc(fv(it,'supplier'))+'"></div><div class="ff"><label class="fl">LOT / UPC</label><input class="fi" id="flt" placeholder="UPC #" value="'+esc(fv(it,'lot'))+'"></div></div><div class="fsec">LOW STOCK ALERT</div><div class="trow"><div><div class="tlbl">ALERT WHEN AT OR BELOW:</div><div style="font-family:monospace;font-size:9px;color:var(--t3);margin-top:4px">SUPPLIER LINKS APPEAR AUTOMATICALLY</div></div><input class="tin" id="fth" type="number" placeholder="100" value="'+esc(fv(it,'threshold'))+'"></div><div class="fgrd" style="margin-top:12px"><div class="ff full"><label class="fl">NOTES</label><textarea class="ft" id="fnt" placeholder="RANGE USE, DEFENSE, BULK...">’+esc(fv(it,‘notes’))+’</textarea></div></div>’+fa();
+}
+if(type===‘wish’){
+return ‘<div class="fsec">FIREARM DETAILS</div><div class="fgrd"><div class="ff"><label class="fl">MAKE</label><input class="fi" id="fmk" placeholder="COLT" value="'+esc(fv(it,'make'))+'"></div><div class="ff"><label class="fl">MODEL</label><input class="fi" id="fmd" placeholder="PYTHON" value="'+esc(fv(it,'model'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder=".357 MAG" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">ACTION</label><select class="fs" id="fac"><option value="">SELECT</option><option ‘+fsel(it,‘action’,‘SEMI-AUTO’)+’>SEMI-AUTO</option><option ‘+fsel(it,‘action’,‘PUMP’)+’>PUMP</option><option ‘+fsel(it,‘action’,‘BOLT’)+’>BOLT</option><option ‘+fsel(it,‘action’,‘REVOLVER’)+’>REVOLVER</option><option ‘+fsel(it,‘action’,‘LEVER’)+’>LEVER</option><option ‘+fsel(it,‘action’,‘SINGLE-SHOT’)+’>SINGLE-SHOT</option></select></div><div class="ff"><label class="fl">UNITS WANTED</label><input class="fi" id="fqt" type="number" placeholder="2" value="'+esc(fv(it,'qty'))+'"></div><div class="ff"><label class="fl">PRIORITY</label><select class="fs" id="fpri"><option value="">SELECT</option><option ‘+fsel(it,‘priority’,‘high’)+’>HIGH</option><option ‘+fsel(it,‘priority’,‘med’)+’>MEDIUM</option><option ‘+fsel(it,‘priority’,‘low’)+’>LOW</option></select></div></div><div class="fsec">ACQUISITION</div><div class="fgrd"><div class="ff"><label class="fl">TARGET BUDGET</label><input class="fi" id="fbd" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'budget'))+'"></div><div class="ff"><label class="fl">MAX BUDGET</label><input class="fi" id="fmb" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'maxbudget'))+'"></div><div class="ff"><label class="fl">SOURCE</label><select class="fs" id="fsc"><option value="">SELECT</option><option ‘+fsel(it,‘source’,‘ZANDERS’)+’>ZANDERS</option><option ‘+fsel(it,‘source’,‘RSR GROUP’)+’>RSR GROUP</option><option ‘+fsel(it,‘source’,‘SPORTS SOUTH’)+’>SPORTS SOUTH</option><option ‘+fsel(it,‘source’,‘BILL HICKS’)+’>BILL HICKS</option><option ‘+fsel(it,‘source’,‘LIPSEYS’)+’>LIPSEYS</option><option ‘+fsel(it,‘source’,‘AUCTION’)+’>AUCTION</option><option ‘+fsel(it,‘source’,‘PRIVATE SALE’)+’>PRIVATE SALE</option><option ‘+fsel(it,‘source’,‘OTHER’)+’>OTHER</option></select></div><div class="ff"><label class="fl">TARGET DATE</label><input class="fi" id="ftd" type="date" value="'+esc(fv(it,'targetdate'))+'"></div><div class="ff full"><label class="fl">REASON</label><textarea class="ft" id="fnt" placeholder="CUSTOMER DEMAND, MARGIN...">’+esc(fv(it,‘notes’))+’</textarea></div></div>’+fa();
+}
+return ‘’;
 }
 
-function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
+function gv(id){var e=document.getElementById(id);return e?e.value.trim():’’;}
 
 // FIX: saveItem and delItem now use ctype directly as the D key (weapons/ammo/wish)
 function saveItem(){
-  var type=ctype;
-  var data={};
-  if(type==='weapons'){
-    data={make:gv('fmk'),model:gv('fmd'),caliber:gv('fcl'),action:gv('fac'),ftype:gv('fft'),barrel:gv('fbl'),qty:gv('fqt')||'1',condition:gv('fco'),cost:gv('fcs'),price:gv('fpr'),serial:gv('fsr'),finish:gv('ffn'),capacity:gv('fcp'),supplier:gv('fsp'),acquired:gv('fda'),notes:gv('fnt')};
-    if(!data.make&&!data.model){toast('ENTER MAKE OR MODEL','er');return;}
-  }
-  if(type==='ammo'){
-    data={brand:gv('fbr'),caliber:gv('fcl'),grain:gv('fgr'),bullet_type:gv('fbt'),casing:gv('fca'),velocity:gv('fvl'),qty:gv('fqt'),boxsize:gv('fbx'),cost:gv('fcs'),price:gv('fpr'),supplier:gv('fsp'),lot:gv('flt'),threshold:gv('fth'),notes:gv('fnt')};
-    if(!data.caliber){toast('CALIBER IS REQUIRED','er');return;}
-  }
-  if(type==='wish'){
-    data={make:gv('fmk'),model:gv('fmd'),caliber:gv('fcl'),action:gv('fac'),qty:gv('fqt'),priority:gv('fpri'),budget:gv('fbd'),maxbudget:gv('fmb'),source:gv('fsc'),targetdate:gv('ftd'),notes:gv('fnt')};
-    if(!data.make&&!data.model){toast('ENTER MAKE OR MODEL','er');return;}
-  }
-  if(ceid){
-    var idx=D[type].findIndex(function(i){return i.id===ceid;});
-    if(idx!==-1)D[type][idx]=Object.assign(D[type][idx],data);
-  } else {
-    data.id='id_'+Date.now()+'_'+Math.random().toString(36).substr(2,5);
-    data.created=Date.now();
-    D[type].push(data);
-  }
-  save();closeModal();toast('SAVED','ok');
-  if(type==='weapons')rl('weapons');
-  if(type==='ammo'){rl('ammo');rrod();}
-  if(type==='wish')rl('wish');
-  hstats();
+var type=ctype;
+var data={};
+if(type===‘weapons’){
+data={make:gv(‘fmk’),model:gv(‘fmd’),caliber:gv(‘fcl’),action:gv(‘fac’),ftype:gv(‘fft’),barrel:gv(‘fbl’),qty:gv(‘fqt’)||‘1’,condition:gv(‘fco’),cost:gv(‘fcs’),price:gv(‘fpr’),serial:gv(‘fsr’),finish:gv(‘ffn’),capacity:gv(‘fcp’),supplier:gv(‘fsp’),acquired:gv(‘fda’),notes:gv(‘fnt’)};
+if(!data.make&&!data.model){toast(‘ENTER MAKE OR MODEL’,‘er’);return;}
+}
+if(type===‘ammo’){
+data={brand:gv(‘fbr’),caliber:gv(‘fcl’),grain:gv(‘fgr’),bullet_type:gv(‘fbt’),casing:gv(‘fca’),velocity:gv(‘fvl’),qty:gv(‘fqt’),boxsize:gv(‘fbx’),cost:gv(‘fcs’),price:gv(‘fpr’),supplier:gv(‘fsp’),lot:gv(‘flt’),threshold:gv(‘fth’),notes:gv(‘fnt’)};
+if(!data.caliber){toast(‘CALIBER IS REQUIRED’,‘er’);return;}
+}
+if(type===‘wish’){
+data={make:gv(‘fmk’),model:gv(‘fmd’),caliber:gv(‘fcl’),action:gv(‘fac’),qty:gv(‘fqt’),priority:gv(‘fpri’),budget:gv(‘fbd’),maxbudget:gv(‘fmb’),source:gv(‘fsc’),targetdate:gv(‘ftd’),notes:gv(‘fnt’)};
+if(!data.make&&!data.model){toast(‘ENTER MAKE OR MODEL’,‘er’);return;}
+}
+if(ceid){
+var idx=D[type].findIndex(function(i){return i.id===ceid;});
+if(idx!==-1)D[type][idx]=Object.assign(D[type][idx],data);
+} else {
+data.id=‘id_’+Date.now()+’_’+Math.random().toString(36).substr(2,5);
+data.created=Date.now();
+D[type].push(data);
+}
+save();closeModal();toast(‘SAVED’,‘ok’);
+if(type===‘weapons’)rl(‘weapons’);
+if(type===‘ammo’){rl(‘ammo’);rrod();}
+if(type===‘wish’)rl(‘wish’);
+hstats();
 }
 
 function delItem(){
-  if(!confirm('DELETE THIS ITEM?'))return;
-  D[ctype]=D[ctype].filter(function(i){return i.id!==ceid;});
-  save();closeModal();toast('DELETED','ok');
-  if(ctype==='weapons')rl('weapons');
-  if(ctype==='ammo'){rl('ammo');rrod();}
-  if(ctype==='wish')rl('wish');
-  hstats();
+if(!confirm(‘DELETE THIS ITEM?’))return;
+D[ctype]=D[ctype].filter(function(i){return i.id!==ceid;});
+save();closeModal();toast(‘DELETED’,‘ok’);
+if(ctype===‘weapons’)rl(‘weapons’);
+if(ctype===‘ammo’){rl(‘ammo’);rrod();}
+if(ctype===‘wish’)rl(‘wish’);
+hstats();
 }
 
 function doExport(){
-  function csvRows(arr,fields){
-    if(!arr.length)return fields.join(',');
-    return fields.join(',')+'\n'+arr.map(function(it){
-      return fields.map(function(f){return'"'+(it[f]||'').toString().replace(/"/g,'""')+'"';}).join(',');
-    }).join('\n');
-  }
-  var d=new Date().toISOString().slice(0,10);
-  var content='ARSENAL BACKUP '+d+'\n\n=== WEAPONS ===\n'
-    +csvRows(D.weapons,['make','model','caliber','action','ftype','barrel','qty','condition','cost','price','serial','finish','capacity','supplier','acquired','notes'])
-    +'\n\n=== AMMO ===\n'
-    +csvRows(D.ammo,['brand','caliber','grain','bullet_type','casing','velocity','qty','boxsize','cost','price','supplier','lot','threshold','notes'])
-    +'\n\n=== WISH LIST ===\n'
-    +csvRows(D.wish,['make','model','caliber','action','qty','priority','budget','maxbudget','source','targetdate','notes']);
-  var blob=new Blob([content],{type:'text/csv'});
-  var url=URL.createObjectURL(blob);
-  var a=document.createElement('a');
-  a.href=url;a.download='arsenal-'+d+'.csv';a.click();
-  URL.revokeObjectURL(url);
-  D.lastBackup=Date.now();save();hstats();toast('BACKUP DOWNLOADED','ok');
+function csvRows(arr,fields){
+if(!arr.length)return fields.join(’,’);
+return fields.join(’,’)+’\n’+arr.map(function(it){
+return fields.map(function(f){return’”’+(it[f]||’’).toString().replace(/”/g,’””’)+’”’;}).join(’,’);
+}).join(’\n’);
+}
+var d=new Date().toISOString().slice(0,10);
+var content=‘ARSENAL BACKUP ‘+d+’\n\n=== WEAPONS ===\n’
++csvRows(D.weapons,[‘make’,‘model’,‘caliber’,‘action’,‘ftype’,‘barrel’,‘qty’,‘condition’,‘cost’,‘price’,‘serial’,‘finish’,‘capacity’,‘supplier’,‘acquired’,‘notes’])
++’\n\n=== AMMO ===\n’
++csvRows(D.ammo,[‘brand’,‘caliber’,‘grain’,‘bullet_type’,‘casing’,‘velocity’,‘qty’,‘boxsize’,‘cost’,‘price’,‘supplier’,‘lot’,‘threshold’,‘notes’])
++’\n\n=== WISH LIST ===\n’
++csvRows(D.wish,[‘make’,‘model’,‘caliber’,‘action’,‘qty’,‘priority’,‘budget’,‘maxbudget’,‘source’,‘targetdate’,‘notes’]);
+var blob=new Blob([content],{type:‘text/csv’});
+var url=URL.createObjectURL(blob);
+var a=document.createElement(‘a’);
+a.href=url;a.download=‘arsenal-’+d+’.csv’;a.click();
+URL.revokeObjectURL(url);
+D.lastBackup=Date.now();save();hstats();toast(‘BACKUP DOWNLOADED’,‘ok’);
 }
 
 var ttmr;
-function toast(m,t){var e=document.getElementById('tst');e.textContent=m;e.className='toast show'+(t?' '+t:'');clearTimeout(ttmr);ttmr=setTimeout(function(){e.className='toast';},2200);}
+function toast(m,t){var e=document.getElementById(‘tst’);e.textContent=m;e.className=‘toast show’+(t?’ ‘+t:’’);clearTimeout(ttmr);ttmr=setTimeout(function(){e.className=‘toast’;},2200);}
 
 function appInit() {
-  if(appInit.done)return;
-  appInit.done=true;
+if(appInit.done)return;
+appInit.done=true;
 
-  // DEBUG OVERLAY
-  var dbg=document.createElement('div');
-  dbg.id='dbg';
-  dbg.style.cssText='position:fixed;top:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.9);color:#0f0;font-family:monospace;font-size:11px;padding:8px;max-height:200px;overflow-y:auto;';
-  document.body.appendChild(dbg);
-  function log(msg){var d=document.getElementById('dbg');if(d){d.innerHTML='<div>'+msg+'</div>'+d.innerHTML;}console.log(msg);}
-  window.addEventListener('error',function(e){log('JS ERROR: '+e.message+' L'+e.lineno);});
-  log('appInit running. readyState='+document.readyState);
-  try{localStorage.setItem('_t','1');localStorage.removeItem('_t');log('localStorage: OK');}catch(e){log('localStorage FAIL: '+e.message);}
+var ppad=document.getElementById(‘ppad’);
 
-  var ppad=document.getElementById('ppad');
-  log('ppad found: '+(ppad?'YES':'NO'));
+// Helper — safe bind
+function on(id,evt,fn){var el=document.getElementById(id);if(el)el.addEventListener(evt,fn);}
 
-  // Helper — safe bind
-  function on(id,evt,fn){var el=document.getElementById(id);if(el){el.addEventListener(evt,fn);}else{log('MISSING: #'+id);}}
+// PIN pad — direct listeners on each button
+function handlePinBtn(btn){
+if(btn.dataset.action===‘del’){pinDel();}
+else if(btn.dataset.digit!==undefined){pinDigit(btn.dataset.digit);}
+}
+if(ppad){
+ppad.querySelectorAll(‘button’).forEach(function(btn){
+btn.addEventListener(‘touchend’,function(e){e.preventDefault();handlePinBtn(this);});
+btn.addEventListener(‘click’,function(){handlePinBtn(this);});
+});
+}
 
-  // PIN pad — direct listeners on each button
-  function handlePinBtn(btn){
-    log('btn tapped: digit='+btn.dataset.digit+' action='+btn.dataset.action);
-    if(btn.dataset.action==='del'){pinDel();}
-    else if(btn.dataset.digit!==undefined){pinDigit(btn.dataset.digit);}
-  }
-  if(ppad){
-    ppad.querySelectorAll('button').forEach(function(btn,i){
-      log('wiring btn '+i+': '+btn.textContent.trim());
-      btn.addEventListener('touchend',function(e){e.preventDefault();handlePinBtn(this);});
-      btn.addEventListener('click',function(){handlePinBtn(this);});
-    });
-  }
+on(‘nav-w’,‘click’,function(){go(‘wscr’);});
+on(‘nav-a’,‘click’,function(){go(‘ascr’);});
+on(‘nav-wl’,‘click’,function(){go(‘wlscr’);});
+on(‘wback’,‘click’,function(){go(‘home’);});
+on(‘aback’,‘click’,function(){go(‘home’);});
+on(‘wlback’,‘click’,function(){go(‘home’);});
+on(‘wadd’,‘click’,function(){openAdd(‘weapons’);});
+on(‘aadd’,‘click’,function(){openAdd(‘ammo’);});
+on(‘wladd’,‘click’,function(){openAdd(‘wish’);});
+on(‘btn-backup’,‘click’,doExport);
+on(‘mclose’,‘click’,closeModal);
+on(‘sclose’,‘click’,closeSett);
+on(‘sexp’,‘click’,function(){doExport();closeSett();});
+on(‘schgpin’,‘click’,function(){closeSett();showPIN(‘c0’,‘VERIFY CURRENT PIN’);});
+on(‘sclear’,‘click’,clearAll);
+on(‘imod’,‘click’,function(e){if(e.target===this)closeModal();});
+on(‘smod’,‘click’,function(e){if(e.target===this)closeSett();});
+on(‘wq’,‘input’,function(){rl(‘weapons’);});
+on(‘aq’,‘input’,function(){rl(‘ammo’);});
+on(‘wlq’,‘input’,function(){rl(‘wish’);});
 
-  on('nav-w','click',function(){go('wscr');});
-  on('nav-a','click',function(){go('ascr');});
-  on('nav-wl','click',function(){go('wlscr');});
-  on('wback','click',function(){go('home');});
-  on('aback','click',function(){go('home');});
-  on('wlback','click',function(){go('home');});
-  on('wadd','click',function(){openAdd('weapons');});
-  on('aadd','click',function(){openAdd('ammo');});
-  on('wladd','click',function(){openAdd('wish');});
-  on('btn-backup','click',doExport);
-  on('mclose','click',closeModal);
-  on('sclose','click',closeSett);
-  on('sexp','click',function(){doExport();closeSett();});
-  on('schgpin','click',function(){closeSett();showPIN('c0','VERIFY CURRENT PIN');});
-  on('sclear','click',clearAll);
-  on('imod','click',function(e){if(e.target===this)closeModal();});
-  on('smod','click',function(e){if(e.target===this)closeSett();});
-  on('wq','input',function(){rl('weapons');});
-  on('aq','input',function(){rl('ammo');});
-  on('wlq','input',function(){rl('wish');});
+[‘wsrt’,‘asrt’,‘wlsrt’].forEach(function(sid){
+var tm={wsrt:‘weapons’,asrt:‘ammo’,wlsrt:‘wish’};
+on(sid,‘click’,function(e){
+var btn=e.target.closest(‘button’);if(!btn||!btn.dataset.sort)return;
+D.sorts[tm[sid]]=btn.dataset.sort;
+this.querySelectorAll(’.chip’).forEach(function(c){c.classList.remove(‘on’);});
+btn.classList.add(‘on’);rl(tm[sid]);
+});
+});
 
-  ['wsrt','asrt','wlsrt'].forEach(function(sid){
-    var tm={wsrt:'weapons',asrt:'ammo',wlsrt:'wish'};
-    on(sid,'click',function(e){
-      var btn=e.target.closest('button');if(!btn||!btn.dataset.sort)return;
-      D.sorts[tm[sid]]=btn.dataset.sort;
-      this.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
-      btn.classList.add('on');rl(tm[sid]);
-    });
-  });
+var ltaps=0,ltmr2;
+on(‘hlogo’,‘click’,function(){
+ltaps++;clearTimeout(ltmr2);ltmr2=setTimeout(function(){ltaps=0;},700);
+if(ltaps>=3){ltaps=0;var sm=document.getElementById(‘smod’);if(sm)sm.classList.add(‘open’);}
+});
 
-  var ltaps=0,ltmr2;
-  on('hlogo','click',function(){
-    ltaps++;clearTimeout(ltmr2);ltmr2=setTimeout(function(){ltaps=0;},700);
-    if(ltaps>=3){ltaps=0;var sm=document.getElementById('smod');if(sm)sm.classList.add('open');}
-  });
-
-  try{initPIN();log('initPIN done. pmode='+pmode);}catch(e){log('initPIN ERR: '+e.message);}
+initPIN();
 }
 
 // Fire on DOMContentLoaded, load, AND immediately if already ready
-if(document.readyState==='loading'){
-  document.addEventListener('DOMContentLoaded', appInit);
+if(document.readyState===‘loading’){
+document.addEventListener(‘DOMContentLoaded’, appInit);
 } else {
-  appInit();
+appInit();
 }
-window.addEventListener('load', appInit);
+window.addEventListener(‘load’, appInit);
 </script>
+
 </body>
 </html>
