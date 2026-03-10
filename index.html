@@ -47,10 +47,10 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
 .pd{width:18px;height:18px;border-radius:50%;border:2px solid var(--ac3);background:transparent;transition:all .15s}
 .pd.on{background:var(--ac);border-color:var(--ac);box-shadow:0 0 10px rgba(200,168,75,.6)}
 .pd.er{background:var(--rd);border-color:var(--rd2)}
-.ppad{display:grid;grid-template-columns:repeat(3,72px);gap:12px}
+.ppad{display:grid;grid-template-columns:repeat(3,72px);gap:12px;justify-items:center}
 .pb{width:72px;height:72px;border-radius:50%;border:1px solid var(--b2);background:var(--bg3);color:var(--t1);font-family:'Bebas Neue',cursive;font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s}
 .pb:active{background:var(--bg4);transform:scale(.94);border-color:var(--ac3)}
-.pbz{grid-column:2}
+.pbz{grid-column:2}.ppad>div{display:block}
 .pbd{background:transparent;border-color:var(--b1);font-size:18px;color:var(--t2)}
 .pbd:active{background:var(--bg3)}
 #perr{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--rd2);letter-spacing:2px;margin-top:16px;min-height:18px;text-align:center}
@@ -187,11 +187,11 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
   <div class="psub">INVENTORY MANAGEMENT SYSTEM</div>
   <div id="pmsg">ENTER YOUR PIN</div>
   <div class="pdots"><div class="pd" id="d0"></div><div class="pd" id="d1"></div><div class="pd" id="d2"></div><div class="pd" id="d3"></div></div>
-  <div class="ppad">
-    <button class="pb" onclick="pp('1')">1</button><button class="pb" onclick="pp('2')">2</button><button class="pb" onclick="pp('3')">3</button>
-    <button class="pb" onclick="pp('4')">4</button><button class="pb" onclick="pp('5')">5</button><button class="pb" onclick="pp('6')">6</button>
-    <button class="pb" onclick="pp('7')">7</button><button class="pb" onclick="pp('8')">8</button><button class="pb" onclick="pp('9')">9</button>
-    <button class="pb pbz" onclick="pp('0')">0</button><button class="pb pbd" onclick="pdel()">&#9003;</button>
+  <div class="ppad" id="ppad">
+    <button class="pb" data-d="1">1</button><button class="pb" data-d="2">2</button><button class="pb" data-d="3">3</button>
+    <button class="pb" data-d="4">4</button><button class="pb" data-d="5">5</button><button class="pb" data-d="6">6</button>
+    <button class="pb" data-d="7">7</button><button class="pb" data-d="8">8</button><button class="pb" data-d="9">9</button>
+    <div></div><button class="pb pbz" data-d="0">0</button><button class="pb pbd" data-del="1">&#9003;</button>
   </div>
   <div id="perr"></div>
 </div>
@@ -510,6 +510,14 @@ clearTimeout(ttmr);ttmr=setTimeout(function(){e.className=‘toast’;},2200);
 }
 
 initPIN();
+
+// Use event delegation on the pad - more reliable on iOS than onclick
+document.getElementById(‘ppad’).addEventListener(‘click’, function(e) {
+var btn = e.target.closest(‘button’);
+if (!btn) return;
+if (btn.dataset.del) { pdel(); return; }
+if (btn.dataset.d !== undefined) { pp(btn.dataset.d); }
+});
 </script>
 
 </body>
