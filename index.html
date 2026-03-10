@@ -182,7 +182,7 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
     <button class="pb pbdel" data-action="del">&#9003;</button>
   </div>
   <div id="perr"></div>
-  <div id="ver" style="position:fixed;bottom:8px;right:8px;font-family:monospace;font-size:10px;color:#333;z-index:99999;">v20260309-D</div>
+  <div id="ver" style="position:fixed;bottom:8px;right:8px;font-family:monospace;font-size:10px;color:#333;z-index:99999;">v20260309-E</div>
 </div>
 
 <div id="home" class="scr">
@@ -596,41 +596,40 @@ D.lastBackup=Date.now();save();hstats();toast(‘BACKUP DOWNLOADED’,‘ok’);
 var ttmr;
 function toast(m,t){var e=document.getElementById(‘tst’);e.textContent=m;e.className=‘toast show’+(t?’ ‘+t:’’);clearTimeout(ttmr);ttmr=setTimeout(function(){e.className=‘toast’;},2200);}
 
-window.addEventListener(‘load’, function() {
-// DEBUG OVERLAY - remove once fixed
+function appInit() {
+if(appInit.done)return;
+appInit.done=true;
+
+// DEBUG OVERLAY
 var dbg=document.createElement(‘div’);
 dbg.id=‘dbg’;
-dbg.style.cssText=‘position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font-family:monospace;font-size:11px;padding:8px;max-height:160px;overflow-y:auto;pointer-events:none;’;
+dbg.style.cssText=‘position:fixed;top:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.9);color:#0f0;font-family:monospace;font-size:11px;padding:8px;max-height:200px;overflow-y:auto;’;
 document.body.appendChild(dbg);
-function log(msg){var d=document.getElementById(‘dbg’);d.innerHTML=’<div>’+msg+’</div>’+d.innerHTML;console.log(msg);}
-window.addEventListener(‘error’,function(e){log(‘JS ERROR: ‘+e.message+’ line ‘+e.lineno);});
-log(‘Page loaded. localStorage available: ‘+(typeof localStorage!==‘undefined’));
-try{localStorage.setItem(’_t’,‘1’);localStorage.removeItem(’_t’);log(‘localStorage: WORKS’);}catch(e){log(‘localStorage ERROR: ‘+e.message);}
-log(‘PIN stored: ‘+(localStorage.getItem(‘arsenal_pin’)?‘YES’:‘NO (will prompt create)’));
-document.addEventListener(‘touchstart’,function(e){log(‘touchstart on: ‘+e.target.tagName+’ id=’+e.target.id+’ class=’+e.target.className);},{passive:true});
-document.addEventListener(‘touchend’,function(e){log(‘touchend on: ‘+e.target.tagName+’ id=’+e.target.id);},{passive:true});
-document.addEventListener(‘click’,function(e){log(‘click on: ‘+e.target.tagName+’ id=’+e.target.id+’ class=’+e.target.className);});
-document.querySelectorAll(’#ppad button’).forEach(function(btn,i){
-log(‘PIN btn ‘+i+’ found: digit=’+btn.dataset.digit+’ action=’+btn.dataset.action);
-});
-// PIN pad — attach directly to each button with both touch and click for mobile reliability
-function handlePinBtn(btn) {
+function log(msg){var d=document.getElementById(‘dbg’);if(d){d.innerHTML=’<div>’+msg+’</div>’+d.innerHTML;}console.log(msg);}
+window.addEventListener(‘error’,function(e){log(‘JS ERROR: ‘+e.message+’ L’+e.lineno);});
+log(‘appInit running. readyState=’+document.readyState);
+try{localStorage.setItem(’_t’,‘1’);localStorage.removeItem(’_t’);log(‘localStorage: OK’);}catch(e){log(’localStorage FAIL: ’+e.message);}
+
+var ppad=document.getElementById(‘ppad’);
+log(’ppad found: ’+(ppad?‘YES’:‘NO’));
+
+// Helper — safe bind
+function on(id,evt,fn){var el=document.getElementById(id);if(el){el.addEventListener(evt,fn);}else{log(‘MISSING: #’+id);}}
+
+// PIN pad — direct listeners on each button
+function handlePinBtn(btn){
+log(‘btn tapped: digit=’+btn.dataset.digit+’ action=’+btn.dataset.action);
 if(btn.dataset.action===‘del’){pinDel();}
 else if(btn.dataset.digit!==undefined){pinDigit(btn.dataset.digit);}
 }
-document.querySelectorAll(’#ppad button’).forEach(function(btn){
-btn.addEventListener(‘touchend’, function(e){
-e.preventDefault(); // prevent ghost click
-handlePinBtn(this);
+if(ppad){
+ppad.querySelectorAll(‘button’).forEach(function(btn,i){
+log(’wiring btn ‘+i+’: ’+btn.textContent.trim());
+btn.addEventListener(‘touchend’,function(e){e.preventDefault();handlePinBtn(this);});
+btn.addEventListener(‘click’,function(){handlePinBtn(this);});
 });
-btn.addEventListener(‘click’, function(e){
-handlePinBtn(this);
-});
-});
-// Helper — safe bind so a missing element never crashes the whole listener block
-function on(id, evt, fn){var el=document.getElementById(id);if(el)el.addEventListener(evt,fn);}
+}
 
-// Nav
 on(‘nav-w’,‘click’,function(){go(‘wscr’);});
 on(‘nav-a’,‘click’,function(){go(‘ascr’);});
 on(‘nav-wl’,‘click’,function(){go(‘wlscr’);});
@@ -662,15 +661,22 @@ btn.classList.add(‘on’);rl(tm[sid]);
 });
 });
 
-var ltaps=0,ltmr;
+var ltaps=0,ltmr2;
 on(‘hlogo’,‘click’,function(){
-ltaps++;clearTimeout(ltmr);ltmr=setTimeout(function(){ltaps=0;},700);
+ltaps++;clearTimeout(ltmr2);ltmr2=setTimeout(function(){ltaps=0;},700);
 if(ltaps>=3){ltaps=0;var sm=document.getElementById(‘smod’);if(sm)sm.classList.add(‘open’);}
 });
 
-// Always init PIN last — even if something above failed
-try{initPIN();}catch(e){document.getElementById(‘perr’).textContent=’INIT ERR: ’+e.message;}
-});
+try{initPIN();log(‘initPIN done. pmode=’+pmode);}catch(e){log(’initPIN ERR: ’+e.message);}
+}
+
+// Fire on DOMContentLoaded, load, AND immediately if already ready
+if(document.readyState===‘loading’){
+document.addEventListener(‘DOMContentLoaded’, appInit);
+} else {
+appInit();
+}
+window.addEventListener(‘load’, appInit);
 </script>
 
 </body>
