@@ -1,0 +1,2203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ARSENAL">
+<meta name="theme-color" content="#0a0a0a">
+<title>ARSENAL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --bg4: #222222;
+    --border: #2a2a2a;
+    --border2: #333333;
+    --accent: #c8a84b;
+    --accent2: #e8c86b;
+    --accent3: #8b6914;
+    --danger: #c0392b;
+    --danger2: #e74c3c;
+    --success: #27ae60;
+    --text: #e8e8e8;
+    --text2: #a0a0a0;
+    --text3: #606060;
+    --font-display: 'Bebas Neue', cursive;
+    --font-body: 'Rajdhani', sans-serif;
+    --font-mono: 'Share Tech Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow-x: hidden;
+    font-size: 16px;
+  }
+
+  /* ─── SCREEN SYSTEM ─── */
+  .screen { display: none; min-height: 100vh; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* ─── PIN SCREEN ─── */
+  #pin-screen {
+    background: var(--bg);
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    flex-direction: column;
+    gap: 0;
+  }
+  #pin-screen.active { display: flex; }
+
+  .pin-logo {
+    margin-bottom: 32px;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .chamber-svg {
+    filter: drop-shadow(0 0 20px rgba(200,168,75,0.4));
+  }
+
+  .pin-title {
+    font-family: var(--font-display);
+    font-size: 48px;
+    letter-spacing: 12px;
+    color: var(--accent);
+    text-align: center;
+    animation: fadeDown 0.6s 0.1s ease both;
+    margin-bottom: 4px;
+  }
+
+  .pin-subtitle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 4px;
+    text-align: center;
+    animation: fadeDown 0.6s 0.15s ease both;
+    margin-bottom: 48px;
+  }
+
+  .pin-dots {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 40px;
+    animation: fadeDown 0.6s 0.2s ease both;
+  }
+
+  .pin-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--accent3);
+    background: transparent;
+    transition: all 0.15s ease;
+  }
+  .pin-dot.filled { background: var(--accent); border-color: var(--accent); box-shadow: 0 0 10px rgba(200,168,75,0.6); }
+  .pin-dot.error { background: var(--danger); border-color: var(--danger2); }
+
+  .pin-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 72px);
+    gap: 12px;
+    animation: fadeDown 0.6s 0.25s ease both;
+  }
+
+  .pin-btn {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .pin-btn:active { background: var(--bg4); transform: scale(0.94); border-color: var(--accent3); }
+  .pin-btn.zero { grid-column: 2; }
+  .pin-btn.del { grid-column: 3; background: transparent; border-color: var(--border); font-size: 18px; color: var(--text2); }
+  .pin-btn.del:active { background: var(--bg3); }
+
+  .pin-label { font-size: 10px; color: var(--text3); font-family: var(--font-mono); letter-spacing: 2px; display: block; }
+
+  .pin-error {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--danger2);
+    letter-spacing: 2px;
+    margin-top: 20px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .pin-error.show { opacity: 1; }
+
+  .pin-setup-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+    text-align: center;
+    animation: fadeDown 0.6s 0.18s ease both;
+  }
+
+  /* ─── HOME SCREEN ─── */
+  #home-screen {
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .home-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(200,168,75,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(200,168,75,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .home-bg-radial {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 20%, rgba(200,168,75,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .home-header {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 60px 24px 32px;
+    gap: 8px;
+  }
+
+  .home-logo-ring {
+    position: relative;
+    margin-bottom: 16px;
+    animation: spinOnce 2s ease both;
+  }
+
+  @keyframes spinOnce {
+    from { transform: rotate(-60deg); opacity: 0; }
+    to { transform: rotate(0deg); opacity: 1; }
+  }
+
+  .home-title {
+    font-family: var(--font-display);
+    font-size: 64px;
+    letter-spacing: 16px;
+    color: var(--accent);
+    text-align: center;
+    line-height: 1;
+    text-shadow: 0 0 40px rgba(200,168,75,0.3);
+    animation: fadeDown 0.5s 0.3s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .home-tagline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 5px;
+    text-align: center;
+    animation: fadeDown 0.5s 0.4s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .home-divider {
+    width: 100%;
+    max-width: 300px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent3), transparent);
+    margin: 8px 0;
+    animation: fadeIn 0.5s 0.5s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .home-status-bar {
+    display: flex;
+    gap: 20px;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+    justify-content: center;
+    animation: fadeDown 0.5s 0.5s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .status-chip {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 6px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .status-chip-val {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .status-chip-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 2px;
+  }
+
+  .status-chip-val.alert { color: var(--danger2); }
+
+  .home-nav {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px 20px 40px;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .nav-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    animation: slideRight 0.5s ease both;
+    opacity: 0;
+    animation-fill-mode: forwards;
+  }
+
+  .nav-card:nth-child(1) { animation-delay: 0.55s; }
+  .nav-card:nth-child(2) { animation-delay: 0.65s; }
+  .nav-card:nth-child(3) { animation-delay: 0.75s; }
+
+  .nav-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent3);
+    transition: all 0.2s ease;
+  }
+
+  .nav-card:active { transform: scale(0.98); background: var(--bg3); border-color: var(--accent3); }
+  .nav-card:active::before { background: var(--accent); width: 4px; }
+
+  .nav-card-icon {
+    width: 52px; height: 52px;
+    border-radius: 6px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 26px;
+  }
+
+  .nav-card-info { flex: 1; }
+
+  .nav-card-title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--text);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .nav-card-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+  }
+
+  .nav-card-badge {
+    min-width: 28px; height: 28px;
+    border-radius: 4px;
+    background: var(--danger);
+    color: white;
+    font-family: var(--font-display);
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 6px;
+    animation: pulse 2s ease infinite;
+  }
+
+  .nav-card-count {
+    min-width: 28px; height: 28px;
+    border-radius: 4px;
+    background: var(--bg4);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+    font-family: var(--font-display);
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 6px;
+  }
+
+  .nav-card-arrow {
+    color: var(--text3);
+    font-size: 20px;
+    margin-left: 4px;
+  }
+
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
+    50% { box-shadow: 0 0 0 6px rgba(192,57,43,0); }
+  }
+
+  .home-footer {
+    padding: 16px 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+  }
+
+  .home-footer-left {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    line-height: 1.8;
+  }
+
+  .btn-backup {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--text3);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-backup:active { border-color: var(--accent3); color: var(--accent); }
+
+  /* ─── PAGE HEADER ─── */
+  .page-header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 52px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .btn-back {
+    width: 40px; height: 40px;
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--text2);
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .btn-back:active { background: var(--bg4); border-color: var(--accent3); color: var(--accent); }
+
+  .page-header-info { flex: 1; }
+
+  .page-header-title {
+    font-family: var(--font-display);
+    font-size: 32px;
+    letter-spacing: 6px;
+    color: var(--accent);
+    line-height: 1;
+  }
+
+  .page-header-sub {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 3px;
+    margin-top: 2px;
+  }
+
+  .btn-add {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 24px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-weight: 700;
+    transition: all 0.15s;
+    box-shadow: 0 4px 16px rgba(200,168,75,0.3);
+  }
+  .btn-add:active { transform: scale(0.9); }
+
+  /* ─── SEARCH BAR ─── */
+  .search-bar {
+    padding: 12px 20px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .search-input {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 10px 14px 10px 38px;
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 1px;
+    outline: none;
+    position: relative;
+  }
+  .search-input:focus { border-color: var(--accent3); }
+  .search-input::placeholder { color: var(--text3); }
+
+  .search-wrap {
+    position: relative;
+  }
+  .search-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--text3);
+    font-size: 14px;
+    pointer-events: none;
+  }
+
+  /* ─── SORT BAR ─── */
+  .sort-bar {
+    padding: 8px 20px;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+    scrollbar-width: none;
+  }
+  .sort-bar::-webkit-scrollbar { display: none; }
+
+  .sort-chip {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text3);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .sort-chip.active { background: var(--accent3); border-color: var(--accent); color: var(--accent2); }
+
+  /* ─── ITEM LIST ─── */
+  .item-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .item-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+  .item-card:active { transform: scale(0.99); border-color: var(--border2); }
+
+  .item-card-accent {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent3);
+  }
+  .item-card-accent.low { background: var(--danger); }
+  .item-card-accent.wish { background: #4a7fa5; }
+
+  .item-card-main {
+    padding: 14px 14px 12px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .item-card-info { flex: 1; min-width: 0; }
+
+  .item-card-make {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: var(--text);
+    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .item-card-model {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--text2);
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .item-card-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+
+  .tag {
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2px 7px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+
+  .tag.caliber { border-color: var(--accent3); color: var(--accent); background: rgba(200,168,75,0.08); }
+  .tag.low { border-color: var(--danger); color: var(--danger2); background: rgba(192,57,43,0.1); }
+
+  .item-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .item-qty {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .item-qty.low { color: var(--danger2); }
+
+  .item-qty-label {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--text3);
+    letter-spacing: 2px;
+  }
+
+  .item-price {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text2);
+  }
+
+  /* ─── EMPTY STATE ─── */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 40px;
+    opacity: 0.4;
+  }
+
+  .empty-state-icon { font-size: 48px; }
+
+  .empty-state-text {
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 4px;
+    color: var(--text2);
+    text-align: center;
+  }
+
+  .empty-state-sub {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: 2px;
+    text-align: center;
+  }
+
+  /* ─── MODAL / DRAWER ─── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 500;
+    display: none;
+    align-items: flex-end;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal-drawer {
+    background: var(--bg2);
+    border-radius: 16px 16px 0 0;
+    border-top: 1px solid var(--border2);
+    width: 100%;
+    max-height: 92vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-handle {
+    width: 40px; height: 4px;
+    background: var(--border2);
+    border-radius: 2px;
+    margin: 12px auto 0;
+  }
+
+  .modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .modal-title {
+    font-family: var(--font-display);
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: var(--accent);
+  }
+
+  .modal-close {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border2);
+    background: var(--bg3);
+    color: var(--text2);
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .modal-close:active { background: var(--bg4); }
+
+  .modal-body { padding: 20px; }
+
+  /* ─── FORM ─── */
+  .form-section-title {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--accent3);
+    margin-bottom: 12px;
+    margin-top: 20px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-section-title:first-child { margin-top: 0; }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .form-field.full { grid-column: 1 / -1; }
+
+  .form-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--text3);
+  }
+
+  .form-input, .form-select, .form-textarea {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    font-weight: 600;
+    outline: none;
+    transition: border-color 0.15s;
+    width: 100%;
+    -webkit-appearance: none;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--accent3); }
+  .form-select { appearance: none; -webkit-appearance: none; }
+  .form-textarea { resize: none; min-height: 80px; font-size: 14px; }
+
+  .threshold-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(192,57,43,0.08);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 6px;
+    margin-top: 8px;
+  }
+
+  .threshold-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--danger2);
+    letter-spacing: 2px;
+    flex: 1;
+  }
+
+  .threshold-input {
+    width: 70px;
+    background: var(--bg3);
+    border: 1px solid rgba(192,57,43,0.3);
+    border-radius: 4px;
+    padding: 8px;
+    color: var(--danger2);
+    font-family: var(--font-display);
+    font-size: 20px;
+    text-align: center;
+    outline: none;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    padding-bottom: 20px;
+  }
+
+  .btn-primary {
+    flex: 1;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 8px;
+    padding: 14px;
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 3px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-primary:active { transform: scale(0.97); }
+
+  .btn-danger {
+    background: var(--bg3);
+    color: var(--danger2);
+    border: 1px solid rgba(192,57,43,0.3);
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-family: var(--font-display);
+    font-size: 20px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-danger:active { background: rgba(192,57,43,0.15); }
+
+  /* ─── REORDER PANEL ─── */
+  .reorder-panel {
+    background: rgba(192,57,43,0.06);
+    border: 1px solid rgba(192,57,43,0.2);
+    border-radius: 8px;
+    margin: 12px 16px;
+    overflow: hidden;
+  }
+
+  .reorder-header {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid rgba(192,57,43,0.15);
+  }
+
+  .reorder-alert {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--danger2);
+    letter-spacing: 2px;
+    flex: 1;
+  }
+
+  .reorder-item-name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--danger2);
+    letter-spacing: 2px;
+  }
+
+  .supplier-links {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .supplier-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s;
+  }
+  .supplier-link:active { border-color: var(--accent3); }
+
+  .supplier-name {
+    font-family: var(--font-display);
+    font-size: 16px;
+    letter-spacing: 2px;
+    color: var(--text);
+    flex: 1;
+  }
+
+  .supplier-type {
+    font-family: var(--font-mono);
+    font-size: 8px;
+    color: var(--text3);
+    letter-spacing: 2px;
+  }
+
+  .supplier-arrow {
+    color: var(--accent3);
+    font-size: 14px;
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideRight {
+    from { opacity: 0; transform: translateX(-24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-8px); }
+    40% { transform: translateX(8px); }
+    60% { transform: translateX(-6px); }
+    80% { transform: translateX(6px); }
+  }
+
+  .shake { animation: shake 0.4s ease; }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text2);
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .toast.success { border-color: var(--success); color: #5dbb7c; }
+  .toast.error { border-color: var(--danger); color: var(--danger2); }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  /* ─── WISH PRIORITY ─── */
+  .priority-badge {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 8px;
+    letter-spacing: 2px;
+  }
+  .priority-badge.high { background: rgba(192,57,43,0.15); color: var(--danger2); border: 1px solid rgba(192,57,43,0.3); }
+  .priority-badge.med { background: rgba(200,168,75,0.1); color: var(--accent); border: 1px solid var(--accent3); }
+  .priority-badge.low-p { background: var(--bg4); color: var(--text3); border: 1px solid var(--border); }
+
+  /* ─── SETTINGS BUTTON ─── */
+  .btn-settings {
+    width: 36px; height: 36px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text3);
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+
+  .settings-modal { display: none; }
+  .settings-modal.active { display: flex; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════ PIN SCREEN ═══════════════════════════════════ -->
+<div id="pin-screen" class="screen active">
+  <div class="pin-logo">
+    <svg class="chamber-svg" width="100" height="100" viewBox="0 0 100 100">
+      <!-- Outer ring -->
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#c8a84b" stroke-width="1.5" opacity="0.4"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="#c8a84b" stroke-width="0.5" opacity="0.2"/>
+      <!-- Center -->
+      <circle cx="50" cy="50" r="8" fill="none" stroke="#c8a84b" stroke-width="1.5"/>
+      <circle cx="50" cy="50" r="3" fill="#c8a84b"/>
+      <!-- 6 chambers -->
+      <circle cx="50" cy="18" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
+      <circle cx="50" cy="18" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="77.8" cy="34" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
+      <circle cx="77.8" cy="34" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="77.8" cy="66" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
+      <circle cx="77.8" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="50" cy="82" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
+      <circle cx="50" cy="82" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="22.2" cy="66" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
+      <circle cx="22.2" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+      <circle cx="22.2" cy="34" r="8" fill="#c8a84b" stroke="#c8a84b" stroke-width="1.5"/>
+      <circle cx="22.2" cy="34" r="4" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- Tick marks -->
+      <line x1="50" y1="4" x2="50" y2="8" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
+      <line x1="50" y1="92" x2="50" y2="96" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
+      <line x1="4" y1="50" x2="8" y2="50" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
+      <line x1="92" y1="50" x2="96" y2="50" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
+    </svg>
+  </div>
+  <div class="pin-title">ARSENAL</div>
+  <div class="pin-subtitle">INVENTORY MANAGEMENT SYSTEM</div>
+  <div id="pin-setup-label" class="pin-setup-label" style="display:none"></div>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn zero" onclick="pinPress('0')">0</button>
+    <button class="pin-btn del" onclick="pinDel()">⌫</button>
+  </div>
+  <div class="pin-error" id="pin-error">INCORRECT PIN</div>
+</div>
+
+<!-- ═══════════════════════════════════ HOME SCREEN ═══════════════════════════════════ -->
+<div id="home-screen" class="screen">
+  <div class="home-bg-grid"></div>
+  <div class="home-bg-radial"></div>
+
+  <div class="home-header">
+    <div class="home-logo-ring">
+      <svg class="chamber-svg" width="80" height="80" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="46" fill="none" stroke="#c8a84b" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="50" cy="50" r="40" fill="none" stroke="#c8a84b" stroke-width="0.5" opacity="0.2"/>
+        <circle cx="50" cy="50" r="8" fill="none" stroke="#c8a84b" stroke-width="1.5"/>
+        <circle cx="50" cy="50" r="3" fill="#c8a84b"/>
+        <circle cx="50" cy="18" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
+        <circle cx="50" cy="18" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="77.8" cy="34" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
+        <circle cx="77.8" cy="34" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="77.8" cy="66" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
+        <circle cx="77.8" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="50" cy="82" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
+        <circle cx="50" cy="82" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="22.2" cy="66" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
+        <circle cx="22.2" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
+        <circle cx="22.2" cy="34" r="8" fill="#c8a84b" stroke="#c8a84b" stroke-width="1.5"/>
+        <circle cx="22.2" cy="34" r="4" fill="none" stroke="#111" stroke-width="1.2"/>
+      </svg>
+    </div>
+    <div class="home-title">ARSENAL</div>
+    <div class="home-divider"></div>
+    <div class="home-tagline">FIREARM INVENTORY MANAGEMENT</div>
+  </div>
+
+  <div class="home-status-bar">
+    <div class="status-chip">
+      <span class="status-chip-val" id="stat-weapons">0</span>
+      <span class="status-chip-label">WEAPONS</span>
+    </div>
+    <div class="status-chip">
+      <span class="status-chip-val" id="stat-ammo">0</span>
+      <span class="status-chip-label">AMMO SKUs</span>
+    </div>
+    <div class="status-chip">
+      <span class="status-chip-val alert" id="stat-low">0</span>
+      <span class="status-chip-label">LOW STOCK</span>
+    </div>
+    <div class="status-chip">
+      <span class="status-chip-val" id="stat-wish">0</span>
+      <span class="status-chip-label">WISH LIST</span>
+    </div>
+  </div>
+
+  <nav class="home-nav">
+    <div class="nav-card" onclick="showScreen('weapons-screen')">
+      <div class="nav-card-icon">🔫</div>
+      <div class="nav-card-info">
+        <div class="nav-card-title">WEAPONS</div>
+        <div class="nav-card-sub">FIREARMS INVENTORY</div>
+      </div>
+      <div class="nav-card-count" id="nav-weapons-count">0</div>
+      <div class="nav-card-arrow">›</div>
+    </div>
+    <div class="nav-card" onclick="showScreen('ammo-screen')">
+      <div class="nav-card-icon">🎯</div>
+      <div class="nav-card-info">
+        <div class="nav-card-title">AMMUNITION</div>
+        <div class="nav-card-sub">ROUNDS & STOCK LEVELS</div>
+      </div>
+      <div id="nav-ammo-badge"></div>
+      <div class="nav-card-arrow">›</div>
+    </div>
+    <div class="nav-card" onclick="showScreen('wish-screen')">
+      <div class="nav-card-icon">📋</div>
+      <div class="nav-card-info">
+        <div class="nav-card-title">WISH LIST</div>
+        <div class="nav-card-sub">ACQUISITION TARGETS</div>
+      </div>
+      <div class="nav-card-count" id="nav-wish-count">0</div>
+      <div class="nav-card-arrow">›</div>
+    </div>
+  </nav>
+
+  <div class="home-footer">
+    <div class="home-footer-left">
+      <span id="footer-date"></span><br>
+      <span id="footer-backup-time" style="color:var(--text3)">BACKUP: NEVER</span>
+    </div>
+    <button class="btn-backup" onclick="manualBackup()">⬆ BACKUP NOW</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ WEAPONS SCREEN ═══════════════════════════════════ -->
+<div id="weapons-screen" class="screen">
+  <div class="page-header">
+    <button class="btn-back" onclick="showScreen('home-screen')">‹</button>
+    <div class="page-header-info">
+      <div class="page-header-title">WEAPONS</div>
+      <div class="page-header-sub" id="weapons-sub">0 FIREARMS IN INVENTORY</div>
+    </div>
+    <button class="btn-add" onclick="openAddModal('weapon')">+</button>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" id="weapons-search" placeholder="SEARCH MAKE, MODEL, CALIBER..." oninput="renderList('weapons')">
+    </div>
+  </div>
+
+  <div class="sort-bar">
+    <button class="sort-chip active" onclick="setSort('weapons','date',this)">RECENT</button>
+    <button class="sort-chip" onclick="setSort('weapons','make',this)">MAKE A-Z</button>
+    <button class="sort-chip" onclick="setSort('weapons','qty',this)">QTY</button>
+    <button class="sort-chip" onclick="setSort('weapons','price',this)">PRICE</button>
+    <button class="sort-chip" onclick="setSort('weapons','caliber',this)">CALIBER</button>
+  </div>
+
+  <div class="item-list" id="weapons-list"></div>
+</div>
+
+<!-- ═══════════════════════════════════ AMMO SCREEN ═══════════════════════════════════ -->
+<div id="ammo-screen" class="screen">
+  <div class="page-header">
+    <button class="btn-back" onclick="showScreen('home-screen')">‹</button>
+    <div class="page-header-info">
+      <div class="page-header-title">AMMUNITION</div>
+      <div class="page-header-sub" id="ammo-sub">0 SKUs IN INVENTORY</div>
+    </div>
+    <button class="btn-add" onclick="openAddModal('ammo')">+</button>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" id="ammo-search" placeholder="SEARCH CALIBER, BRAND, TYPE..." oninput="renderList('ammo')">
+    </div>
+  </div>
+
+  <div class="sort-bar">
+    <button class="sort-chip active" onclick="setSort('ammo','date',this)">RECENT</button>
+    <button class="sort-chip" onclick="setSort('ammo','caliber',this)">CALIBER</button>
+    <button class="sort-chip" onclick="setSort('ammo','qty',this)">QTY</button>
+    <button class="sort-chip" onclick="setSort('ammo','brand',this)">BRAND</button>
+    <button class="sort-chip low-btn" onclick="setSort('ammo','low',this)">⚠ LOW STOCK</button>
+  </div>
+
+  <div id="reorder-alerts"></div>
+  <div class="item-list" id="ammo-list"></div>
+</div>
+
+<!-- ═══════════════════════════════════ WISH LIST SCREEN ═══════════════════════════════════ -->
+<div id="wish-screen" class="screen">
+  <div class="page-header">
+    <button class="btn-back" onclick="showScreen('home-screen')">‹</button>
+    <div class="page-header-info">
+      <div class="page-header-title">WISH LIST</div>
+      <div class="page-header-sub" id="wish-sub">0 ACQUISITION TARGETS</div>
+    </div>
+    <button class="btn-add" onclick="openAddModal('wish')">+</button>
+  </div>
+
+  <div class="search-bar">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" id="wish-search" placeholder="SEARCH MAKE, MODEL, CALIBER..." oninput="renderList('wish')">
+    </div>
+  </div>
+
+  <div class="sort-bar">
+    <button class="sort-chip active" onclick="setSort('wish','date',this)">RECENT</button>
+    <button class="sort-chip" onclick="setSort('wish','make',this)">MAKE A-Z</button>
+    <button class="sort-chip" onclick="setSort('wish','priority',this)">PRIORITY</button>
+    <button class="sort-chip" onclick="setSort('wish','budget',this)">BUDGET</button>
+  </div>
+
+  <div class="item-list" id="wish-list"></div>
+</div>
+
+<!-- ═══════════════════════════════════ ADD/EDIT MODAL ═══════════════════════════════════ -->
+<div class="modal-overlay" id="item-modal">
+  <div class="modal-drawer">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title" id="modal-title">ADD WEAPON</div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════ SETTINGS MODAL ═══════════════════════════════════ -->
+<div class="modal-overlay settings-modal" id="settings-modal">
+  <div class="modal-drawer">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <div class="modal-title">SETTINGS</div>
+      <button class="modal-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-section-title">GOOGLE DRIVE BACKUP</div>
+      <div class="form-field">
+        <label class="form-label">BACKUP EMAIL (GOOGLE ACCOUNT)</label>
+        <input class="form-input" id="settings-email" placeholder="your@gmail.com" type="email">
+      </div>
+      <p style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:8px;line-height:1.8;letter-spacing:1px">
+        DATA IS EXPORTED AS CSV. USE THE "BACKUP NOW" BUTTON ON HOME SCREEN TO DOWNLOAD AND MANUALLY SAVE TO GOOGLE DRIVE, OR EMAIL IT TO YOURSELF.
+      </p>
+      <div class="form-section-title">SECURITY</div>
+      <button class="btn-primary" onclick="changePIN()" style="font-size:16px;letter-spacing:2px;margin-bottom:12px">CHANGE PIN</button>
+      <div class="form-section-title">DATA</div>
+      <button class="btn-primary" onclick="exportCSV()" style="font-size:16px;letter-spacing:2px;margin-bottom:8px">EXPORT ALL DATA (CSV)</button>
+      <button class="btn-danger" onclick="confirmClearData()" style="width:100%;font-size:16px">CLEAR ALL DATA</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  STATE & STORAGE
+// ═══════════════════════════════════════════════════════
+const DB_KEY = 'arsenal_v1';
+let state = {
+  weapons: [],
+  ammo: [],
+  wish: [],
+  lastBackup: null,
+  sorts: { weapons: 'date', ammo: 'date', wish: 'date' }
+};
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(DB_KEY);
+    if (raw) state = { ...state, ...JSON.parse(raw) };
+  } catch(e) {}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem(DB_KEY, JSON.stringify(state));
+    scheduleAutoBackup();
+  } catch(e) {}
+}
+
+loadState();
+
+// ═══════════════════════════════════════════════════════
+//  PIN SYSTEM
+// ═══════════════════════════════════════════════════════
+let pinBuffer = '';
+let pinSetupStep = 0;
+let pinSetupFirst = '';
+let changingPin = false;
+
+function hasPIN() { return !!localStorage.getItem('arsenal_pin'); }
+function getPIN() { return localStorage.getItem('arsenal_pin') || ''; }
+function setPIN(p) { localStorage.setItem('arsenal_pin', p); }
+
+function initPIN() {
+  if (!hasPIN()) {
+    document.getElementById('pin-setup-label').style.display = 'block';
+    document.getElementById('pin-setup-label').textContent = 'CREATE A 4-DIGIT PIN';
+    pinSetupStep = 1;
+  }
+}
+
+function pinPress(digit) {
+  if (pinBuffer.length >= 4) return;
+  pinBuffer += digit;
+  updateDots(false);
+  if (pinBuffer.length === 4) {
+    setTimeout(() => handlePINComplete(), 150);
+  }
+}
+
+function pinDel() {
+  pinBuffer = pinBuffer.slice(0, -1);
+  updateDots(false);
+}
+
+function updateDots(isError) {
+  for (let i = 0; i < 4; i++) {
+    const d = document.getElementById('d' + i);
+    d.classList.remove('filled', 'error');
+    if (isError) d.classList.add('error');
+    else if (i < pinBuffer.length) d.classList.add('filled');
+  }
+}
+
+function handlePINComplete() {
+  if (pinSetupStep === 1) {
+    // First entry of setup
+    pinSetupFirst = pinBuffer;
+    pinBuffer = '';
+    updateDots(false);
+    document.getElementById('pin-setup-label').textContent = 'CONFIRM YOUR PIN';
+    pinSetupStep = 2;
+    return;
+  }
+  if (pinSetupStep === 2) {
+    // Confirm setup
+    if (pinBuffer === pinSetupFirst) {
+      setPIN(pinBuffer);
+      pinBuffer = '';
+      pinSetupStep = 0;
+      document.getElementById('pin-setup-label').style.display = 'none';
+      unlockApp();
+    } else {
+      showPinError('PINS DO NOT MATCH');
+    }
+    return;
+  }
+  if (changingPin) {
+    if (pinSetupStep === 10) {
+      pinSetupFirst = pinBuffer;
+      pinBuffer = '';
+      updateDots(false);
+      document.getElementById('pin-setup-label').textContent = 'CONFIRM NEW PIN';
+      pinSetupStep = 11;
+      return;
+    }
+    if (pinSetupStep === 11) {
+      if (pinBuffer === pinSetupFirst) {
+        setPIN(pinBuffer);
+        changingPin = false; pinSetupStep = 0;
+        document.getElementById('pin-setup-label').style.display = 'none';
+        closeSettings();
+        showToast('PIN UPDATED', 'success');
+        showScreen('home-screen');
+        pinBuffer = '';
+      } else {
+        showPinError('PINS DO NOT MATCH');
+      }
+      return;
+    }
+  }
+  // Normal unlock
+  if (pinBuffer === getPIN()) {
+    unlockApp();
+  } else {
+    showPinError('INCORRECT PIN');
+  }
+}
+
+function showPinError(msg) {
+  pinBuffer = '';
+  updateDots(true);
+  const el = document.getElementById('pin-error');
+  el.textContent = msg;
+  el.classList.add('show');
+  document.querySelector('.pin-dots').classList.add('shake');
+  setTimeout(() => {
+    document.querySelector('.pin-dots').classList.remove('shake');
+    el.classList.remove('show');
+    updateDots(false);
+  }, 1200);
+}
+
+function unlockApp() {
+  document.getElementById('pin-screen').classList.remove('active');
+  showScreen('home-screen');
+  pinBuffer = '';
+}
+
+function changePIN() {
+  closeSettings();
+  changingPin = true;
+  pinSetupStep = 10;
+  pinBuffer = '';
+  updateDots(false);
+  document.getElementById('pin-setup-label').style.display = 'block';
+  document.getElementById('pin-setup-label').textContent = 'ENTER NEW PIN';
+  document.getElementById('pin-screen').classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  SCREEN NAVIGATION
+// ═══════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'home-screen') updateHomeStats();
+  if (id === 'weapons-screen') renderList('weapons');
+  if (id === 'ammo-screen') { renderList('ammo'); renderReorderAlerts(); }
+  if (id === 'wish-screen') renderList('wish');
+}
+
+// ═══════════════════════════════════════════════════════
+//  HOME STATS
+// ═══════════════════════════════════════════════════════
+function updateHomeStats() {
+  const lowAmmo = state.ammo.filter(a => a.qty <= (parseInt(a.threshold) || 0) && a.threshold);
+  document.getElementById('stat-weapons').textContent = state.weapons.length;
+  document.getElementById('stat-ammo').textContent = state.ammo.length;
+  document.getElementById('stat-low').textContent = lowAmmo.length;
+  document.getElementById('stat-wish').textContent = state.wish.length;
+  document.getElementById('nav-weapons-count').textContent = state.weapons.length;
+  document.getElementById('nav-wish-count').textContent = state.wish.length;
+
+  const badge = document.getElementById('nav-ammo-badge');
+  if (lowAmmo.length > 0) {
+    badge.className = 'nav-card-badge';
+    badge.textContent = '⚠ ' + lowAmmo.length;
+  } else {
+    badge.className = 'nav-card-count';
+    badge.textContent = state.ammo.length;
+  }
+
+  // Footer date
+  const now = new Date();
+  document.getElementById('footer-date').textContent =
+    now.toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'}).toUpperCase();
+
+  if (state.lastBackup) {
+    document.getElementById('footer-backup-time').textContent =
+      'LAST BACKUP: ' + new Date(state.lastBackup).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).toUpperCase();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SORT SYSTEM
+// ═══════════════════════════════════════════════════════
+function setSort(type, key, btn) {
+  state.sorts[type] = key;
+  btn.closest('.sort-bar').querySelectorAll('.sort-chip').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderList(type);
+}
+
+function sortItems(items, key, type) {
+  const arr = [...items];
+  if (key === 'date') return arr.sort((a,b) => (b.created||0)-(a.created||0));
+  if (key === 'make') return arr.sort((a,b) => (a.make||'').localeCompare(b.make||''));
+  if (key === 'brand') return arr.sort((a,b) => (a.brand||'').localeCompare(b.brand||''));
+  if (key === 'caliber') return arr.sort((a,b) => (a.caliber||'').localeCompare(b.caliber||''));
+  if (key === 'qty') return arr.sort((a,b) => (parseInt(b.qty)||0)-(parseInt(a.qty)||0));
+  if (key === 'price') return arr.sort((a,b) => (parseFloat(b.price)||0)-(parseFloat(a.price)||0));
+  if (key === 'budget') return arr.sort((a,b) => (parseFloat(b.budget)||0)-(parseFloat(a.budget)||0));
+  if (key === 'priority') {
+    const order = {high:0,med:1,low:2};
+    return arr.sort((a,b) => (order[a.priority]||1)-(order[b.priority]||1));
+  }
+  if (key === 'low') {
+    return arr.sort((a,b) => {
+      const aLow = a.threshold && parseInt(a.qty) <= parseInt(a.threshold) ? 0 : 1;
+      const bLow = b.threshold && parseInt(b.qty) <= parseInt(b.threshold) ? 0 : 1;
+      return aLow - bLow;
+    });
+  }
+  return arr;
+}
+
+// ═══════════════════════════════════════════════════════
+//  RENDER LISTS
+// ═══════════════════════════════════════════════════════
+function renderList(type) {
+  const listEl = document.getElementById(type + '-list');
+  const searchEl = document.getElementById(type + '-search');
+  const q = (searchEl?.value || '').toLowerCase();
+  let items = state[type] || [];
+
+  // Filter
+  if (q) {
+    items = items.filter(item => {
+      const hay = [item.make, item.model, item.caliber, item.brand, item.type, item.notes, item.serial]
+        .filter(Boolean).join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  // Sort
+  items = sortItems(items, state.sorts[type] || 'date', type);
+
+  // Update sub-header
+  if (type === 'weapons') {
+    document.getElementById('weapons-sub').textContent = items.length + ' FIREARMS IN INVENTORY';
+  } else if (type === 'ammo') {
+    document.getElementById('ammo-sub').textContent = items.length + ' SKUs IN INVENTORY';
+  } else {
+    document.getElementById('wish-sub').textContent = items.length + ' ACQUISITION TARGETS';
+  }
+
+  if (items.length === 0) {
+    const icons = { weapons: '🔫', ammo: '🎯', wish: '📋' };
+    const labels = { weapons: 'NO WEAPONS ON FILE', ammo: 'NO AMMO ON FILE', wish: 'WISH LIST IS EMPTY' };
+    const subs = { weapons: 'TAP + TO ADD YOUR FIRST FIREARM', ammo: 'TAP + TO ADD AMMUNITION', wish: 'TAP + TO ADD TO WISH LIST' };
+    listEl.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">${icons[type]}</div>
+      <div class="empty-state-text">${labels[type]}</div>
+      <div class="empty-state-sub">${subs[type]}</div>
+    </div>`;
+    return;
+  }
+
+  if (type === 'weapons') {
+    listEl.innerHTML = items.map(item => weaponCard(item)).join('');
+  } else if (type === 'ammo') {
+    listEl.innerHTML = items.map(item => ammoCard(item)).join('');
+  } else {
+    listEl.innerHTML = items.map(item => wishCard(item)).join('');
+  }
+}
+
+function weaponCard(item) {
+  const tags = [
+    item.caliber ? `<span class="tag caliber">${item.caliber}</span>` : '',
+    item.action ? `<span class="tag">${item.action}</span>` : '',
+    item.condition ? `<span class="tag">${item.condition}</span>` : '',
+    item.serial ? `<span class="tag">SN: ${item.serial}</span>` : '',
+  ].filter(Boolean).join('');
+
+  return `<div class="item-card" onclick="openEditModal('weapon','${item.id}')">
+    <div class="item-card-accent"></div>
+    <div class="item-card-main">
+      <div class="item-card-info">
+        <div class="item-card-make">${item.make || 'UNKNOWN'}</div>
+        <div class="item-card-model">${item.model || '—'}</div>
+        <div class="item-card-tags">${tags}</div>
+      </div>
+      <div class="item-card-right">
+        <div class="item-qty">${item.qty || '0'}</div>
+        <div class="item-qty-label">IN STOCK</div>
+        ${item.price ? `<div class="item-price">$${parseFloat(item.price).toFixed(2)}</div>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function ammoCard(item) {
+  const isLow = item.threshold && parseInt(item.qty) <= parseInt(item.threshold);
+  const tags = [
+    item.caliber ? `<span class="tag caliber">${item.caliber}</span>` : '',
+    item.grain ? `<span class="tag">${item.grain}GR</span>` : '',
+    item.bullet_type ? `<span class="tag">${item.bullet_type}</span>` : '',
+    item.casing ? `<span class="tag">${item.casing}</span>` : '',
+    isLow ? `<span class="tag low">⚠ LOW STOCK</span>` : '',
+  ].filter(Boolean).join('');
+
+  return `<div class="item-card" onclick="openEditModal('ammo','${item.id}')">
+    <div class="item-card-accent ${isLow ? 'low' : ''}"></div>
+    <div class="item-card-main">
+      <div class="item-card-info">
+        <div class="item-card-make">${item.brand || 'UNKNOWN'}</div>
+        <div class="item-card-model">${item.caliber || '—'}${item.grain ? ' · ' + item.grain + 'GR' : ''}</div>
+        <div class="item-card-tags">${tags}</div>
+      </div>
+      <div class="item-card-right">
+        <div class="item-qty ${isLow ? 'low' : ''}">${item.qty || '0'}</div>
+        <div class="item-qty-label">ROUNDS</div>
+        ${item.price ? `<div class="item-price">$${parseFloat(item.price).toFixed(2)}/BOX</div>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+function wishCard(item) {
+  const pClass = { high: 'high', med: 'med', low: 'low-p' }[item.priority] || 'low-p';
+  const pLabel = { high: 'HIGH PRIORITY', med: 'MEDIUM', low: 'LOW PRIORITY' }[item.priority] || 'UNSET';
+  const tags = [
+    item.caliber ? `<span class="tag caliber">${item.caliber}</span>` : '',
+    item.action ? `<span class="tag">${item.action}</span>` : '',
+    item.source ? `<span class="tag">${item.source}</span>` : '',
+  ].filter(Boolean).join('');
+
+  return `<div class="item-card" onclick="openEditModal('wish','${item.id}')">
+    <div class="item-card-accent wish"></div>
+    <div class="item-card-main">
+      <div class="item-card-info">
+        <div class="item-card-make">${item.make || 'UNKNOWN'}</div>
+        <div class="item-card-model">${item.model || '—'}</div>
+        <div class="item-card-tags">${tags}</div>
+      </div>
+      <div class="item-card-right">
+        <span class="priority-badge ${pClass}">${pLabel}</span>
+        ${item.budget ? `<div class="item-price" style="margin-top:6px">$${parseFloat(item.budget).toFixed(2)}</div>` : ''}
+        ${item.qty ? `<div class="item-qty-label" style="color:var(--text2)">${item.qty} UNITS</div>` : ''}
+      </div>
+    </div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  REORDER ALERTS
+// ═══════════════════════════════════════════════════════
+const SUPPLIERS = [
+  { name: 'MIDWAY USA', type: 'RETAILER', url: (cal) => `https://www.midwayusa.com/find?sortby=0&categoryId=14718&filter=caliber%3A${encodeURIComponent(cal)}` },
+  { name: 'SPORTSMANS GUIDE', type: 'DISCOUNT BULK', url: (cal) => `https://www.sportsmansguide.com/search?searchText=${encodeURIComponent(cal + ' ammunition')}` },
+  { name: 'AMMOSEEK', type: 'PRICE COMPARE', url: (cal) => `https://www.ammoseek.com/ammo/${encodeURIComponent(cal.toLowerCase().replace(/\s+/g,'-'))}` },
+];
+
+function renderReorderAlerts() {
+  const container = document.getElementById('reorder-alerts');
+  const lowItems = state.ammo.filter(a => a.threshold && parseInt(a.qty) <= parseInt(a.threshold));
+  if (lowItems.length === 0) { container.innerHTML = ''; return; }
+
+  container.innerHTML = lowItems.map(item => `
+    <div class="reorder-panel">
+      <div class="reorder-header">
+        <span style="font-size:16px">⚠️</span>
+        <div style="flex:1">
+          <div class="reorder-alert">LOW STOCK ALERT</div>
+          <div class="reorder-item-name">${item.brand || ''} ${item.caliber || ''} — ${item.qty} ROUNDS REMAINING</div>
+        </div>
+      </div>
+      <div class="supplier-links">
+        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:4px">REORDER FROM:</div>
+        ${SUPPLIERS.map(s => `
+          <a href="${s.url(item.caliber || '')}" target="_blank" class="supplier-link">
+            <div>
+              <div class="supplier-name">${s.name}</div>
+              <div class="supplier-type">${s.type}</div>
+            </div>
+            <div class="supplier-arrow">→</div>
+          </a>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODAL FORMS
+// ═══════════════════════════════════════════════════════
+let currentModalType = null;
+let currentEditId = null;
+
+function openAddModal(type) {
+  currentModalType = type;
+  currentEditId = null;
+  const titles = { weapon: 'ADD WEAPON', ammo: 'ADD AMMO', wish: 'ADD TO WISH LIST' };
+  document.getElementById('modal-title').textContent = titles[type];
+  document.getElementById('modal-body').innerHTML = buildForm(type, null);
+  document.getElementById('item-modal').classList.add('active');
+}
+
+function openEditModal(type, id) {
+  currentModalType = type;
+  currentEditId = id;
+  const map = { weapon: 'weapons', ammo: 'ammo', wish: 'wish' };
+  const item = state[map[type]].find(i => i.id === id);
+  if (!item) return;
+  const titles = { weapon: 'EDIT WEAPON', ammo: 'EDIT AMMO', wish: 'EDIT WISH ITEM' };
+  document.getElementById('modal-title').textContent = titles[type];
+  document.getElementById('modal-body').innerHTML = buildForm(type, item);
+  document.getElementById('item-modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('item-modal').classList.remove('active');
+  currentModalType = null; currentEditId = null;
+}
+
+function buildForm(type, item) {
+  const v = (key, fallback='') => item ? (item[key] || fallback) : fallback;
+  const sel = (key, val) => item && item[key] === val ? 'selected' : '';
+
+  if (type === 'weapon') {
+    return `
+      <div class="form-section-title">IDENTIFICATION</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">MAKE / MANUFACTURER</label>
+          <input class="form-input" id="f-make" placeholder="GLOCK" value="${v('make')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">MODEL</label>
+          <input class="form-input" id="f-model" placeholder="19 GEN5" value="${v('model')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">CALIBER</label>
+          <input class="form-input" id="f-caliber" placeholder="9MM" value="${v('caliber')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">ACTION TYPE</label>
+          <select class="form-select" id="f-action">
+            <option value="">SELECT</option>
+            <option ${sel('action','SEMI-AUTO')}>SEMI-AUTO</option>
+            <option ${sel('action','PUMP')}>PUMP</option>
+            <option ${sel('action','BOLT')}>BOLT</option>
+            <option ${sel('action','REVOLVER')}>REVOLVER</option>
+            <option ${sel('action','LEVER')}>LEVER</option>
+            <option ${sel('action','SINGLE-SHOT')}>SINGLE-SHOT</option>
+            <option ${sel('action','FULL-AUTO')}>FULL-AUTO</option>
+            <option ${sel('action','BREAK')}>BREAK</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">FIREARM TYPE</label>
+          <select class="form-select" id="f-ftype">
+            <option value="">SELECT</option>
+            <option ${sel('ftype','PISTOL')}>PISTOL</option>
+            <option ${sel('ftype','RIFLE')}>RIFLE</option>
+            <option ${sel('ftype','SHOTGUN')}>SHOTGUN</option>
+            <option ${sel('ftype','REVOLVER')}>REVOLVER</option>
+            <option ${sel('ftype','SBR')}>SBR</option>
+            <option ${sel('ftype','SMG')}>SMG</option>
+            <option ${sel('ftype','SUPPRESSOR')}>SUPPRESSOR</option>
+            <option ${sel('ftype','NFA ITEM')}>NFA ITEM</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">BARREL LENGTH</label>
+          <input class="form-input" id="f-barrel" placeholder='4.02"' value="${v('barrel')}">
+        </div>
+      </div>
+      <div class="form-section-title">INVENTORY & PRICING</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">QTY IN STOCK</label>
+          <input class="form-input" id="f-qty" type="number" placeholder="1" value="${v('qty','1')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">CONDITION</label>
+          <select class="form-select" id="f-condition">
+            <option value="">SELECT</option>
+            <option ${sel('condition','NEW')}>NEW</option>
+            <option ${sel('condition','LIKE NEW')}>LIKE NEW</option>
+            <option ${sel('condition','EXCELLENT')}>EXCELLENT</option>
+            <option ${sel('condition','VERY GOOD')}>VERY GOOD</option>
+            <option ${sel('condition','GOOD')}>GOOD</option>
+            <option ${sel('condition','FAIR')}>FAIR</option>
+            <option ${sel('condition','CONSIGNMENT')}>CONSIGNMENT</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">COST (WHAT YOU PAID)</label>
+          <input class="form-input" id="f-cost" type="number" step="0.01" placeholder="0.00" value="${v('cost')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">RETAIL / ASKING PRICE</label>
+          <input class="form-input" id="f-price" type="number" step="0.01" placeholder="0.00" value="${v('price')}">
+        </div>
+        <div class="form-field full">
+          <label class="form-label">SERIAL NUMBER</label>
+          <input class="form-input" id="f-serial" placeholder="SERIAL NUMBER" value="${v('serial')}">
+        </div>
+      </div>
+      <div class="form-section-title">DETAILS</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">FINISH / COLOR</label>
+          <input class="form-input" id="f-finish" placeholder="MATTE BLACK" value="${v('finish')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">CAPACITY (ROUNDS)</label>
+          <input class="form-input" id="f-capacity" placeholder="15+1" value="${v('capacity')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">SUPPLIER / DISTRIBUTOR</label>
+          <input class="form-input" id="f-supplier" placeholder="ZANDERS" value="${v('supplier')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">DATE ACQUIRED</label>
+          <input class="form-input" id="f-acquired" type="date" value="${v('acquired')}">
+        </div>
+        <div class="form-field full">
+          <label class="form-label">NOTES / ACCESSORIES</label>
+          <textarea class="form-textarea" id="f-notes" placeholder="E.g., INCLUDES 2 MAGS, NIGHT SIGHTS, ORIGINAL BOX...">${v('notes')}</textarea>
+        </div>
+      </div>
+      ${buildFormActions()}`;
+  }
+
+  if (type === 'ammo') {
+    return `
+      <div class="form-section-title">IDENTIFICATION</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">BRAND</label>
+          <input class="form-input" id="f-brand" placeholder="FEDERAL" value="${v('brand')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">CALIBER</label>
+          <input class="form-input" id="f-caliber" placeholder="9MM LUGER" value="${v('caliber')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">GRAIN WEIGHT</label>
+          <input class="form-input" id="f-grain" placeholder="115" value="${v('grain')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">BULLET TYPE</label>
+          <select class="form-select" id="f-bullet_type">
+            <option value="">SELECT</option>
+            <option ${sel('bullet_type','FMJ')}>FMJ – FULL METAL JACKET</option>
+            <option ${sel('bullet_type','HP')}>HP – HOLLOW POINT</option>
+            <option ${sel('bullet_type','JHP')}>JHP – JACKETED HP</option>
+            <option ${sel('bullet_type','SP')}>SP – SOFT POINT</option>
+            <option ${sel('bullet_type','FP')}>FP – FLAT POINT</option>
+            <option ${sel('bullet_type','BTHP')}>BTHP – BOAT TAIL HP</option>
+            <option ${sel('bullet_type','AP')}>AP – ARMOR PIERCING</option>
+            <option ${sel('bullet_type','SLUG')}>SLUG</option>
+            <option ${sel('bullet_type','BUCKSHOT')}>BUCKSHOT</option>
+            <option ${sel('bullet_type','BIRDSHOT')}>BIRDSHOT</option>
+            <option ${sel('bullet_type','TRACER')}>TRACER</option>
+            <option ${sel('bullet_type','SUBSONIC')}>SUBSONIC</option>
+            <option ${sel('bullet_type','FRANGIBLE')}>FRANGIBLE</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">CASING</label>
+          <select class="form-select" id="f-casing">
+            <option value="">SELECT</option>
+            <option ${sel('casing','BRASS')}>BRASS</option>
+            <option ${sel('casing','STEEL')}>STEEL</option>
+            <option ${sel('casing','ALUMINUM')}>ALUMINUM</option>
+            <option ${sel('casing','NICKEL')}>NICKEL-PLATED</option>
+            <option ${sel('casing','POLYMER')}>POLYMER</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">MUZZLE VELOCITY (FPS)</label>
+          <input class="form-input" id="f-velocity" placeholder="1200" value="${v('velocity')}">
+        </div>
+      </div>
+      <div class="form-section-title">INVENTORY</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">ROUNDS IN STOCK</label>
+          <input class="form-input" id="f-qty" type="number" placeholder="500" value="${v('qty')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">BOX SIZE (RDS/BOX)</label>
+          <input class="form-input" id="f-boxsize" type="number" placeholder="50" value="${v('boxsize')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">COST PER BOX</label>
+          <input class="form-input" id="f-cost" type="number" step="0.01" placeholder="0.00" value="${v('cost')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">RETAIL PRICE / BOX</label>
+          <input class="form-input" id="f-price" type="number" step="0.01" placeholder="0.00" value="${v('price')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">SUPPLIER</label>
+          <input class="form-input" id="f-supplier" placeholder="RSR GROUP" value="${v('supplier')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">LOT / UPC</label>
+          <input class="form-input" id="f-lot" placeholder="UPC OR LOT #" value="${v('lot')}">
+        </div>
+      </div>
+      <div class="form-section-title">⚠ LOW STOCK ALERT THRESHOLD</div>
+      <div class="threshold-row">
+        <div>
+          <div class="threshold-label">ALERT WHEN ROUNDS DROP TO OR BELOW:</div>
+          <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:4px;letter-spacing:1px">SUPPLIER LINKS WILL APPEAR AUTOMATICALLY</div>
+        </div>
+        <input class="threshold-input" id="f-threshold" type="number" placeholder="100" value="${v('threshold')}">
+      </div>
+      <div class="form-grid" style="margin-top:12px">
+        <div class="form-field full">
+          <label class="form-label">NOTES</label>
+          <textarea class="form-textarea" id="f-notes" placeholder="RANGE USE, DEFENSE, BULK ORDER INFO...">${v('notes')}</textarea>
+        </div>
+      </div>
+      ${buildFormActions()}`;
+  }
+
+  if (type === 'wish') {
+    return `
+      <div class="form-section-title">FIREARM DETAILS</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">MAKE / MANUFACTURER</label>
+          <input class="form-input" id="f-make" placeholder="COLT" value="${v('make')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">MODEL</label>
+          <input class="form-input" id="f-model" placeholder="PYTHON" value="${v('model')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">CALIBER</label>
+          <input class="form-input" id="f-caliber" placeholder=".357 MAGNUM" value="${v('caliber')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">ACTION TYPE</label>
+          <select class="form-select" id="f-action">
+            <option value="">SELECT</option>
+            <option ${sel('action','SEMI-AUTO')}>SEMI-AUTO</option>
+            <option ${sel('action','PUMP')}>PUMP</option>
+            <option ${sel('action','BOLT')}>BOLT</option>
+            <option ${sel('action','REVOLVER')}>REVOLVER</option>
+            <option ${sel('action','LEVER')}>LEVER</option>
+            <option ${sel('action','SINGLE-SHOT')}>SINGLE-SHOT</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">UNITS WANTED</label>
+          <input class="form-input" id="f-qty" type="number" placeholder="2" value="${v('qty')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">PRIORITY</label>
+          <select class="form-select" id="f-priority">
+            <option value="">SELECT</option>
+            <option ${sel('priority','high')}>HIGH</option>
+            <option ${sel('priority','med')}>MEDIUM</option>
+            <option ${sel('priority','low')}>LOW</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-section-title">ACQUISITION INFO</div>
+      <div class="form-grid">
+        <div class="form-field">
+          <label class="form-label">TARGET BUDGET ($)</label>
+          <input class="form-input" id="f-budget" type="number" step="0.01" placeholder="0.00" value="${v('budget')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">MAX BUDGET ($)</label>
+          <input class="form-input" id="f-maxbudget" type="number" step="0.01" placeholder="0.00" value="${v('maxbudget')}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">PREFERRED SOURCE</label>
+          <select class="form-select" id="f-source">
+            <option value="">SELECT</option>
+            <option ${sel('source','ZANDERS')}>ZANDERS</option>
+            <option ${sel('source','RSR GROUP')}>RSR GROUP</option>
+            <option ${sel('source','SPORTS SOUTH')}>SPORTS SOUTH</option>
+            <option ${sel('source','BILL HICKS')}>BILL HICKS</option>
+            <option ${sel('source','LIPSEYS')}>LIPSEYS</option>
+            <option ${sel('source','AUCTION')}>AUCTION</option>
+            <option ${sel('source','PRIVATE SALE')}>PRIVATE SALE</option>
+            <option ${sel('source','OTHER')}>OTHER</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">TARGET DATE</label>
+          <input class="form-input" id="f-targetdate" type="date" value="${v('targetdate')}">
+        </div>
+        <div class="form-field full">
+          <label class="form-label">REASON / JUSTIFICATION</label>
+          <textarea class="form-textarea" id="f-notes" placeholder="WHY DO YOU WANT TO STOCK THIS? CUSTOMER DEMAND, MARGIN, ETC.">${v('notes')}</textarea>
+        </div>
+      </div>
+      ${buildFormActions()}`;
+  }
+}
+
+function buildFormActions() {
+  const isEdit = !!currentEditId;
+  return `<div class="form-actions">
+    ${isEdit ? `<button class="btn-danger" onclick="deleteItem()">DELETE</button>` : ''}
+    <button class="btn-primary" onclick="saveItem()">SAVE</button>
+  </div>`;
+}
+
+function saveItem() {
+  const type = currentModalType;
+  const stateKey = { weapon: 'weapons', ammo: 'ammo', wish: 'wish' }[type];
+
+  const get = id => document.getElementById(id)?.value?.trim() || '';
+
+  let data = {};
+
+  if (type === 'weapon') {
+    data = {
+      make: get('f-make'), model: get('f-model'), caliber: get('f-caliber'),
+      action: get('f-action'), ftype: get('f-ftype'), barrel: get('f-barrel'),
+      qty: get('f-qty') || '1', condition: get('f-condition'),
+      cost: get('f-cost'), price: get('f-price'), serial: get('f-serial'),
+      finish: get('f-finish'), capacity: get('f-capacity'),
+      supplier: get('f-supplier'), acquired: get('f-acquired'), notes: get('f-notes'),
+    };
+    if (!data.make && !data.model) { showToast('ENTER AT LEAST MAKE OR MODEL', 'error'); return; }
+  }
+
+  if (type === 'ammo') {
+    data = {
+      brand: get('f-brand'), caliber: get('f-caliber'), grain: get('f-grain'),
+      bullet_type: get('f-bullet_type'), casing: get('f-casing'), velocity: get('f-velocity'),
+      qty: get('f-qty'), boxsize: get('f-boxsize'), cost: get('f-cost'), price: get('f-price'),
+      supplier: get('f-supplier'), lot: get('f-lot'), threshold: get('f-threshold'), notes: get('f-notes'),
+    };
+    if (!data.caliber) { showToast('CALIBER IS REQUIRED', 'error'); return; }
+  }
+
+  if (type === 'wish') {
+    data = {
+      make: get('f-make'), model: get('f-model'), caliber: get('f-caliber'),
+      action: get('f-action'), qty: get('f-qty'), priority: get('f-priority'),
+      budget: get('f-budget'), maxbudget: get('f-maxbudget'), source: get('f-source'),
+      targetdate: get('f-targetdate'), notes: get('f-notes'),
+    };
+    if (!data.make && !data.model) { showToast('ENTER AT LEAST MAKE OR MODEL', 'error'); return; }
+  }
+
+  if (currentEditId) {
+    const idx = state[stateKey].findIndex(i => i.id === currentEditId);
+    if (idx !== -1) {
+      state[stateKey][idx] = { ...state[stateKey][idx], ...data };
+    }
+    showToast('SAVED', 'success');
+  } else {
+    data.id = 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
+    data.created = Date.now();
+    state[stateKey].push(data);
+    showToast('ADDED', 'success');
+  }
+
+  saveState();
+  closeModal();
+
+  if (stateKey === 'weapons') renderList('weapons');
+  if (stateKey === 'ammo') { renderList('ammo'); renderReorderAlerts(); }
+  if (stateKey === 'wish') renderList('wish');
+}
+
+function deleteItem() {
+  if (!confirm('DELETE THIS ITEM?')) return;
+  const stateKey = { weapon: 'weapons', ammo: 'ammo', wish: 'wish' }[currentModalType];
+  state[stateKey] = state[stateKey].filter(i => i.id !== currentEditId);
+  saveState();
+  closeModal();
+  if (stateKey === 'weapons') renderList('weapons');
+  if (stateKey === 'ammo') { renderList('ammo'); renderReorderAlerts(); }
+  if (stateKey === 'wish') renderList('wish');
+  showToast('DELETED', 'success');
+}
+
+// ═══════════════════════════════════════════════════════
+//  BACKUP / EXPORT
+// ═══════════════════════════════════════════════════════
+function toCSV(arr, fields) {
+  if (!arr.length) return fields.join(',') + '\n';
+  const rows = arr.map(item => fields.map(f => {
+    const val = (item[f] || '').toString().replace(/"/g, '""');
+    return `"${val}"`;
+  }).join(','));
+  return fields.join(',') + '\n' + rows.join('\n');
+}
+
+function exportCSV() {
+  const now = new Date().toISOString().slice(0,10);
+  const wCSV = toCSV(state.weapons, ['make','model','caliber','action','ftype','barrel','qty','condition','cost','price','serial','finish','capacity','supplier','acquired','notes']);
+  const aCSV = toCSV(state.ammo, ['brand','caliber','grain','bullet_type','casing','velocity','qty','boxsize','cost','price','supplier','lot','threshold','notes']);
+  const wiCSV = toCSV(state.wish, ['make','model','caliber','action','qty','priority','budget','maxbudget','source','targetdate','notes']);
+
+  const combined = `ARSENAL INVENTORY BACKUP — ${now}\n\n=== WEAPONS ===\n${wCSV}\n\n=== AMMO ===\n${aCSV}\n\n=== WISH LIST ===\n${wiCSV}`;
+
+  const blob = new Blob([combined], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `arsenal-backup-${now}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  state.lastBackup = Date.now();
+  saveState();
+  updateHomeStats();
+  showToast('BACKUP DOWNLOADED', 'success');
+}
+
+function manualBackup() { exportCSV(); }
+
+function scheduleAutoBackup() {
+  // Auto-backup every 24 hours
+  const last = state.lastBackup || 0;
+  if (Date.now() - last > 24 * 60 * 60 * 1000) {
+    // Silent backup reminder (don't force download automatically on every save)
+    // Just flag it needs backing up
+    updateHomeStats();
+  }
+}
+
+function confirmClearData() {
+  if (confirm('DELETE ALL DATA? THIS CANNOT BE UNDONE.')) {
+    if (confirm('ARE YOU ABSOLUTELY SURE?')) {
+      state.weapons = []; state.ammo = []; state.wish = [];
+      saveState();
+      closeSettings();
+      showToast('ALL DATA CLEARED', 'error');
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════════════
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('active');
+}
+
+// ═══════════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════════
+let toastTimeout;
+function showToast(msg, type='') {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show ' + type;
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => { el.className = 'toast'; }, 2000);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CLOSE MODAL ON OVERLAY CLICK
+// ═══════════════════════════════════════════════════════
+document.getElementById('item-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.getElementById('settings-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeSettings();
+});
+
+// ═══════════════════════════════════════════════════════
+//  SETTINGS GEAR (tap home logo 3x)
+// ═══════════════════════════════════════════════════════
+let homeTapCount = 0; let homeTapTimer;
+document.querySelector('.home-logo-ring').addEventListener('click', () => {
+  homeTapCount++;
+  clearTimeout(homeTapTimer);
+  homeTapTimer = setTimeout(() => { homeTapCount = 0; }, 700);
+  if (homeTapCount >= 3) {
+    homeTapCount = 0;
+    document.getElementById('settings-modal').classList.add('active');
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+initPIN();
+updateHomeStats();
+</script>
+</body>
+</html>
