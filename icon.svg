@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Black background -->
+  <rect width="512" height="512" fill="#0a0a0a" rx="112"/>
+  <!-- Scale up: original 100x100 viewBox → 512x512, scale factor = 5.12, centered -->
+  <g transform="translate(256,256) scale(4.2)">
+    <!-- Outer ring -->
+    <circle cx="0" cy="0" r="46" fill="none" stroke="#c8a84b" stroke-width="1.5" opacity="0.4"/>
+    <!-- Center hub -->
+    <circle cx="0" cy="0" r="8" fill="none" stroke="#c8a84b" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="3" fill="#c8a84b"/>
+    <!-- Chambers (offset from center 50,50 in original) -->
+    <!-- Top: 50,18 → 0,-32 -->
+    <circle cx="0" cy="-32" r="8" fill="#0a0a0a" stroke="#c8a84b" stroke-width="1.5"/>
+    <!-- Top-right: 77.8,34 → 27.8,-16 -->
+    <circle cx="27.8" cy="-16" r="8" fill="#0a0a0a" stroke="#c8a84b" stroke-width="1.5"/>
+    <!-- Bottom-right: 77.8,66 → 27.8,16 -->
+    <circle cx="27.8" cy="16" r="8" fill="#0a0a0a" stroke="#c8a84b" stroke-width="1.5"/>
+    <!-- Bottom: 50,82 → 0,32 -->
+    <circle cx="0" cy="32" r="8" fill="#0a0a0a" stroke="#c8a84b" stroke-width="1.5"/>
+    <!-- Bottom-left: 22.2,66 → -27.8,16 -->
+    <circle cx="-27.8" cy="16" r="8" fill="#0a0a0a" stroke="#c8a84b" stroke-width="1.5"/>
+    <!-- Top-left (filled/active chamber): 22.2,34 → -27.8,-16 -->
+    <circle cx="-27.8" cy="-16" r="8" fill="#c8a84b" stroke="#c8a84b" stroke-width="1.5"/>
+    <circle cx="-27.8" cy="-16" r="4" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+  </g>
+</svg>
