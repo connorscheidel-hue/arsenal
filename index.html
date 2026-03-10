@@ -182,7 +182,7 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
     <button class="pb pbdel" data-action="del">&#9003;</button>
   </div>
   <div id="perr"></div>
-  <div id="ver" style="position:fixed;bottom:8px;right:8px;font-family:monospace;font-size:10px;color:#333;z-index:99999;">v20260309-C</div>
+  <div id="ver" style="position:fixed;bottom:8px;right:8px;font-family:monospace;font-size:10px;color:#333;z-index:99999;">v20260309-D</div>
 </div>
 
 <div id="home" class="scr">
@@ -627,44 +627,49 @@ btn.addEventListener(‘click’, function(e){
 handlePinBtn(this);
 });
 });
+// Helper — safe bind so a missing element never crashes the whole listener block
+function on(id, evt, fn){var el=document.getElementById(id);if(el)el.addEventListener(evt,fn);}
+
 // Nav
-document.getElementById(‘nav-w’).addEventListener(‘click’, function(){go(‘wscr’);});
-document.getElementById(‘nav-a’).addEventListener(‘click’, function(){go(‘ascr’);});
-document.getElementById(‘nav-wl’).addEventListener(‘click’, function(){go(‘wlscr’);});
-document.getElementById(‘wback’).addEventListener(‘click’, function(){go(‘home’);});
-document.getElementById(‘aback’).addEventListener(‘click’, function(){go(‘home’);});
-document.getElementById(‘wlback’).addEventListener(‘click’, function(){go(‘home’);});
-// FIX: openAdd now uses plural keys matching D
-document.getElementById(‘wadd’).addEventListener(‘click’, function(){openAdd(‘weapons’);});
-document.getElementById(‘aadd’).addEventListener(‘click’, function(){openAdd(‘ammo’);});
-document.getElementById(‘wladd’).addEventListener(‘click’, function(){openAdd(‘wish’);});
-document.getElementById(‘btn-backup’).addEventListener(‘click’, doExport);
-document.getElementById(‘mclose’).addEventListener(‘click’, closeModal);
-document.getElementById(‘sclose’).addEventListener(‘click’, closeSett);
-document.getElementById(‘sexp’).addEventListener(‘click’, function(){doExport();closeSett();});
-// FIX: PIN change now starts at ‘c0’ to verify current PIN first
-document.getElementById(‘schgpin’).addEventListener(‘click’, function(){closeSett();showPIN(‘c0’,‘VERIFY CURRENT PIN’);});
-document.getElementById(‘sclear’).addEventListener(‘click’, clearAll);
-document.getElementById(‘imod’).addEventListener(‘click’, function(e){if(e.target===this)closeModal();});
-document.getElementById(‘smod’).addEventListener(‘click’, function(e){if(e.target===this)closeSett();});
-document.getElementById(‘wq’).addEventListener(‘input’, function(){rl(‘weapons’);});
-document.getElementById(‘aq’).addEventListener(‘input’, function(){rl(‘ammo’);});
-document.getElementById(‘wlq’).addEventListener(‘input’, function(){rl(‘wish’);});
+on(‘nav-w’,‘click’,function(){go(‘wscr’);});
+on(‘nav-a’,‘click’,function(){go(‘ascr’);});
+on(‘nav-wl’,‘click’,function(){go(‘wlscr’);});
+on(‘wback’,‘click’,function(){go(‘home’);});
+on(‘aback’,‘click’,function(){go(‘home’);});
+on(‘wlback’,‘click’,function(){go(‘home’);});
+on(‘wadd’,‘click’,function(){openAdd(‘weapons’);});
+on(‘aadd’,‘click’,function(){openAdd(‘ammo’);});
+on(‘wladd’,‘click’,function(){openAdd(‘wish’);});
+on(‘btn-backup’,‘click’,doExport);
+on(‘mclose’,‘click’,closeModal);
+on(‘sclose’,‘click’,closeSett);
+on(‘sexp’,‘click’,function(){doExport();closeSett();});
+on(‘schgpin’,‘click’,function(){closeSett();showPIN(‘c0’,‘VERIFY CURRENT PIN’);});
+on(‘sclear’,‘click’,clearAll);
+on(‘imod’,‘click’,function(e){if(e.target===this)closeModal();});
+on(‘smod’,‘click’,function(e){if(e.target===this)closeSett();});
+on(‘wq’,‘input’,function(){rl(‘weapons’);});
+on(‘aq’,‘input’,function(){rl(‘ammo’);});
+on(‘wlq’,‘input’,function(){rl(‘wish’);});
+
 [‘wsrt’,‘asrt’,‘wlsrt’].forEach(function(sid){
 var tm={wsrt:‘weapons’,asrt:‘ammo’,wlsrt:‘wish’};
-document.getElementById(sid).addEventListener(‘click’, function(e){
+on(sid,‘click’,function(e){
 var btn=e.target.closest(‘button’);if(!btn||!btn.dataset.sort)return;
 D.sorts[tm[sid]]=btn.dataset.sort;
 this.querySelectorAll(’.chip’).forEach(function(c){c.classList.remove(‘on’);});
 btn.classList.add(‘on’);rl(tm[sid]);
 });
 });
+
 var ltaps=0,ltmr;
-document.getElementById(‘hlogo’).addEventListener(‘click’, function(){
+on(‘hlogo’,‘click’,function(){
 ltaps++;clearTimeout(ltmr);ltmr=setTimeout(function(){ltaps=0;},700);
-if(ltaps>=3){ltaps=0;document.getElementById(‘smod’).classList.add(‘open’);}
+if(ltaps>=3){ltaps=0;var sm=document.getElementById(‘smod’);if(sm)sm.classList.add(‘open’);}
 });
-initPIN();
+
+// Always init PIN last — even if something above failed
+try{initPIN();}catch(e){document.getElementById(‘perr’).textContent=’INIT ERR: ’+e.message;}
 });
 </script>
 
