@@ -28,8 +28,13 @@
   }catch(e){}
 })();
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+</style>
+<style>
+/* Fallback font stack if Google Fonts fails to load */
+@font-face { font-family: 'Bebas Neue'; src: local('Impact'), local('Arial Narrow'); font-display: swap; }
+</style>
 <style>
 :root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;--b1:#2a2a2a;--b2:#333;--ac:#c8a84b;--ac2:#e8c86b;--ac3:#8b6914;--rd:#c0392b;--rd2:#e74c3c;--gr:#27ae60;--t1:#e8e8e8;--t2:#a0a0a0;--t3:#606060;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -349,7 +354,7 @@ try { var _r = localStorage.getItem(DK); if (_r) D = Object.assign(D, JSON.parse
 function save() { try { localStorage.setItem(DK, JSON.stringify(D)); } catch(e) {} }
 
 // =====================
-// PIN — uses touchend + click via addEventListener only. No onclick attributes.
+// PIN
 // =====================
 var pbuf = '', pmode = 'unlock', ptmp = '';
 function getP() { return localStorage.getItem('arsenal_pin') || ''; }
@@ -410,14 +415,7 @@ function pinErr(m) {
 function hidePIN() { document.getElementById('pin').classList.add('gone'); go('home'); }
 function showPIN(mode, msg) { pmode = mode; pbuf = ''; dots(); pmsg(msg); document.getElementById('pin').classList.remove('gone'); }
 
-// Attach PIN pad listeners — touchend for snappy iOS response, click as fallback
-document.getElementById('ppad').addEventListener('touchend', function(e) {
-  e.preventDefault();
-  var btn = e.target.closest('button');
-  if (!btn) return;
-  if (btn.dataset.action === 'del') { pinDel(); return; }
-  if (btn.dataset.digit !== undefined) pinDigit(btn.dataset.digit);
-});
+// PIN pad — click listener (works on iOS Safari)
 document.getElementById('ppad').addEventListener('click', function(e) {
   var btn = e.target.closest('button');
   if (!btn) return;
@@ -737,7 +735,7 @@ clearTimeout(ttmr); ttmr = setTimeout(function() { e.className = ‘toast’; },
 // =====================
 // INIT
 // =====================
-initPIN();
+window.addEventListener(‘load’, function() { initPIN(); });
 </script>
 
 </body>
