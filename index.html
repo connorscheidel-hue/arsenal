@@ -182,6 +182,7 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
     <button class="pb pbdel" data-action="del">&#9003;</button>
   </div>
   <div id="perr"></div>
+  <div id="ver" style="position:fixed;bottom:8px;right:8px;font-family:monospace;font-size:10px;color:#333;z-index:99999;">v20260309-C</div>
 </div>
 
 <div id="home" class="scr">
@@ -262,9 +263,34 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
 <div class="toast" id="tst"></div>
 
 <script>
+// Early error catcher - runs before anything else
+window.onerror=function(msg,src,line,col,err){
+  var el=document.getElementById('perr');
+  if(el)el.textContent='ERR: '+msg+' L'+line;
+  return false;
+};
+
 var DK='arsenal_v1';
 var D={weapons:[],ammo:[],wish:[],lastBackup:null,sorts:{weapons:'date',ammo:'date',wish:'date'}};
-try{var _r=localStorage.getItem(DK);if(_r)D=Object.assign(D,JSON.parse(_r));}catch(e){}
+try{
+  var _r=localStorage.getItem(DK);
+  if(_r){
+    var _p=JSON.parse(_r);
+    D=Object.assign(D,_p);
+    // Ensure sorts always exists and has all keys
+    if(!D.sorts||typeof D.sorts!=='object')D.sorts={};
+    if(!D.sorts.weapons)D.sorts.weapons='date';
+    if(!D.sorts.ammo)D.sorts.ammo='date';
+    if(!D.sorts.wish)D.sorts.wish='date';
+    // Ensure arrays
+    if(!Array.isArray(D.weapons))D.weapons=[];
+    if(!Array.isArray(D.ammo))D.ammo=[];
+    if(!Array.isArray(D.wish))D.wish=[];
+  }
+}catch(e){
+  var el=document.getElementById('perr');
+  if(el)el.textContent='DATA ERR: '+e.message;
+}
 function save(){try{localStorage.setItem(DK,JSON.stringify(D));}catch(e){}}
 
 var pbuf='',pmode='unlock',ptmp='';
