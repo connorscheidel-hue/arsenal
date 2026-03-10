@@ -13,6 +13,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@600;700&family=Share+Tech+Mono&display=swap');
 :root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;--b1:#2a2a2a;--b2:#333;--ac:#c8a84b;--ac2:#e8c86b;--ac3:#8b6914;--rd:#c0392b;--rd2:#e74c3c;--gr:#27ae60;--t1:#e8e8e8;--t2:#a0a0a0;--t3:#606060;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+button,input,select,textarea,.nc,.card,.chip{touch-action:manipulation;}
 body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
 #pin{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center}
 #pin.gone{display:none}
@@ -24,7 +25,7 @@ body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-
 .pd.on{background:var(--ac);border-color:var(--ac);box-shadow:0 0 10px rgba(200,168,75,.6)}
 .pd.er{background:var(--rd);border-color:var(--rd2)}
 #ppad{display:grid;grid-template-columns:repeat(3,80px);gap:14px}
-.pb{width:80px;height:80px;border-radius:50%;border:2px solid var(--b2);background:var(--bg3);color:var(--t1);font-family:'Bebas Neue',cursive;font-size:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none}
+.pb{width:80px;height:80px;border-radius:50%;border:2px solid var(--b2);background:var(--bg3);color:var(--t1);font-family:'Bebas Neue',cursive;font-size:32px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-user-select:none;user-select:none;touch-action:manipulation;-webkit-touch-callout:none}
 .pb:active{background:var(--bg4);border-color:var(--ac)}
 .pbdel{font-size:22px;color:var(--t2);background:transparent;border-color:var(--b1)}
 #perr{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--rd2);letter-spacing:2px;margin-top:20px;min-height:18px;text-align:center}
@@ -569,12 +570,19 @@ var ttmr;
 function toast(m,t){var e=document.getElementById(‘tst’);e.textContent=m;e.className=‘toast show’+(t?’ ‘+t:’’);clearTimeout(ttmr);ttmr=setTimeout(function(){e.className=‘toast’;},2200);}
 
 window.addEventListener(‘load’, function() {
-// PIN pad
-document.getElementById(‘ppad’).addEventListener(‘click’, function(e) {
-var btn=e.target.closest(‘button’);
-if(!btn)return;
-if(btn.dataset.action===‘del’){pinDel();return;}
-if(btn.dataset.digit!==undefined)pinDigit(btn.dataset.digit);
+// PIN pad — attach directly to each button with both touch and click for mobile reliability
+function handlePinBtn(btn) {
+if(btn.dataset.action===‘del’){pinDel();}
+else if(btn.dataset.digit!==undefined){pinDigit(btn.dataset.digit);}
+}
+document.querySelectorAll(’#ppad button’).forEach(function(btn){
+btn.addEventListener(‘touchend’, function(e){
+e.preventDefault(); // prevent ghost click
+handlePinBtn(this);
+});
+btn.addEventListener(‘click’, function(e){
+handlePinBtn(this);
+});
 });
 // Nav
 document.getElementById(‘nav-w’).addEventListener(‘click’, function(){go(‘wscr’);});
