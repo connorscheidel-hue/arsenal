@@ -570,6 +570,22 @@ var ttmr;
 function toast(m,t){var e=document.getElementById(‘tst’);e.textContent=m;e.className=‘toast show’+(t?’ ‘+t:’’);clearTimeout(ttmr);ttmr=setTimeout(function(){e.className=‘toast’;},2200);}
 
 window.addEventListener(‘load’, function() {
+// DEBUG OVERLAY - remove once fixed
+var dbg=document.createElement(‘div’);
+dbg.id=‘dbg’;
+dbg.style.cssText=‘position:fixed;bottom:0;left:0;right:0;z-index:99999;background:rgba(0,0,0,0.85);color:#0f0;font-family:monospace;font-size:11px;padding:8px;max-height:160px;overflow-y:auto;pointer-events:none;’;
+document.body.appendChild(dbg);
+function log(msg){var d=document.getElementById(‘dbg’);d.innerHTML=’<div>’+msg+’</div>’+d.innerHTML;console.log(msg);}
+window.addEventListener(‘error’,function(e){log(‘JS ERROR: ‘+e.message+’ line ‘+e.lineno);});
+log(‘Page loaded. localStorage available: ‘+(typeof localStorage!==‘undefined’));
+try{localStorage.setItem(’_t’,‘1’);localStorage.removeItem(’_t’);log(‘localStorage: WORKS’);}catch(e){log(‘localStorage ERROR: ‘+e.message);}
+log(‘PIN stored: ‘+(localStorage.getItem(‘arsenal_pin’)?‘YES’:‘NO (will prompt create)’));
+document.addEventListener(‘touchstart’,function(e){log(‘touchstart on: ‘+e.target.tagName+’ id=’+e.target.id+’ class=’+e.target.className);},{passive:true});
+document.addEventListener(‘touchend’,function(e){log(‘touchend on: ‘+e.target.tagName+’ id=’+e.target.id);},{passive:true});
+document.addEventListener(‘click’,function(e){log(‘click on: ‘+e.target.tagName+’ id=’+e.target.id+’ class=’+e.target.className);});
+document.querySelectorAll(’#ppad button’).forEach(function(btn,i){
+log(‘PIN btn ‘+i+’ found: digit=’+btn.dataset.digit+’ action=’+btn.dataset.action);
+});
 // PIN pad — attach directly to each button with both touch and click for mobile reliability
 function handlePinBtn(btn) {
 if(btn.dataset.action===‘del’){pinDel();}
