@@ -9,2103 +9,507 @@
 <meta name="apple-mobile-web-app-title" content="ARSENAL">
 <meta name="theme-color" content="#0a0a0a">
 <title>ARSENAL</title>
-<link id="apple-touch-icon" rel="apple-touch-icon" href="">
+<link id="ati" rel="apple-touch-icon" href="">
 <script>
-// Generate the icon as a canvas PNG and inject it before page renders
 (function(){
-  try {
-    var c = document.createElement('canvas');
-    c.width = 180; c.height = 180;
-    var ctx = c.getContext('2d');
-    // Background
-    ctx.fillStyle = '#0a0a0a';
-    ctx.beginPath();
-    ctx.roundRect(0,0,180,180,32);
-    ctx.fill();
-    // Subtle grid
-    ctx.strokeStyle = 'rgba(200,168,75,0.07)';
-    ctx.lineWidth = 1;
-    for(var i=0;i<180;i+=18){
-      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,180);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(180,i);ctx.stroke();
-    }
-    var cx=90, cy=90, gold='#c8a84b', dark='#0a0a0a';
-    // Outer rings
-    ctx.strokeStyle='rgba(200,168,75,0.35)'; ctx.lineWidth=1.5;
-    ctx.beginPath();ctx.arc(cx,cy,82,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle='rgba(200,168,75,0.15)'; ctx.lineWidth=1;
-    ctx.beginPath();ctx.arc(cx,cy,72,0,Math.PI*2);ctx.stroke();
-    // 6 chambers
-    var chambers=[
-      {x:90,y:32},{x:123,y:51},{x:123,y:87},
-      {x:90,y:106},{x:57,y:87},{x:57,y:51}
-    ];
-    // filled chamber (top-left = position 5, index 5)
-    chambers.forEach(function(ch, i){
-      ctx.beginPath();ctx.arc(ch.x,ch.y,13,0,Math.PI*2);
-      ctx.fillStyle = (i===5) ? gold : '#111111';
-      ctx.fill();
-      ctx.strokeStyle=gold; ctx.lineWidth=1.8;
-      ctx.stroke();
-      // inner ring
-      ctx.beginPath();ctx.arc(ch.x,ch.y,7,0,Math.PI*2);
-      ctx.strokeStyle = (i===5) ? 'rgba(10,10,10,0.8)' : 'rgba(200,168,75,0.4)';
-      ctx.lineWidth=1;
-      ctx.stroke();
+  try{
+    var c=document.createElement('canvas');c.width=180;c.height=180;
+    var x=c.getContext('2d');
+    x.fillStyle='#0a0a0a';x.beginPath();x.roundRect(0,0,180,180,32);x.fill();
+    x.strokeStyle='rgba(200,168,75,0.07)';x.lineWidth=1;
+    for(var i=0;i<180;i+=18){x.beginPath();x.moveTo(i,0);x.lineTo(i,180);x.stroke();x.beginPath();x.moveTo(0,i);x.lineTo(180,i);x.stroke();}
+    var g='#c8a84b';
+    x.strokeStyle='rgba(200,168,75,0.35)';x.lineWidth=1.5;x.beginPath();x.arc(90,90,82,0,Math.PI*2);x.stroke();
+    [{a:90,b:32},{a:123,b:51},{a:123,b:87},{a:90,b:106},{a:57,b:87},{a:57,b:51}].forEach(function(p,i){
+      x.beginPath();x.arc(p.a,p.b,13,0,Math.PI*2);x.fillStyle=(i===5)?g:'#111';x.fill();
+      x.strokeStyle=g;x.lineWidth=1.8;x.stroke();
     });
-    // Center hub
-    ctx.beginPath();ctx.arc(cx,cy,12,0,Math.PI*2);
-    ctx.fillStyle='#0a0a0a';ctx.fill();
-    ctx.strokeStyle=gold;ctx.lineWidth=1.8;ctx.stroke();
-    ctx.beginPath();ctx.arc(cx,cy,4,0,Math.PI*2);
-    ctx.fillStyle=gold;ctx.fill();
-    // Tick marks
-    ctx.strokeStyle='rgba(200,168,75,0.3)';ctx.lineWidth=1.5;
-    [[90,4,90,12],[90,168,90,176],[4,90,12,90],[168,90,176,90]].forEach(function(t){
-      ctx.beginPath();ctx.moveTo(t[0],t[1]);ctx.lineTo(t[2],t[3]);ctx.stroke();
-    });
-    var dataURL = c.toDataURL('image/png');
-    document.getElementById('apple-touch-icon').href = dataURL;
-  } catch(e){}
+    x.beginPath();x.arc(90,90,12,0,Math.PI*2);x.fillStyle='#0a0a0a';x.fill();x.strokeStyle=g;x.lineWidth=1.8;x.stroke();
+    x.beginPath();x.arc(90,90,4,0,Math.PI*2);x.fillStyle=g;x.fill();
+    document.getElementById('ati').href=c.toDataURL('image/png');
+  }catch(e){}
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0a0a;
-    --bg2: #111111;
-    --bg3: #1a1a1a;
-    --bg4: #222222;
-    --border: #2a2a2a;
-    --border2: #333333;
-    --accent: #c8a84b;
-    --accent2: #e8c86b;
-    --accent3: #8b6914;
-    --danger: #c0392b;
-    --danger2: #e74c3c;
-    --success: #27ae60;
-    --text: #e8e8e8;
-    --text2: #a0a0a0;
-    --text3: #606060;
-    --font-display: 'Bebas Neue', cursive;
-    --font-body: 'Rajdhani', sans-serif;
-    --font-mono: 'Share Tech Mono', monospace;
-  }
-
-- { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-body {
-background: var(–bg);
-color: var(–text);
-font-family: var(–font-body);
-min-height: 100vh;
-min-height: -webkit-fill-available;
-overflow-x: hidden;
-font-size: 16px;
-}
-
-/* ─── SCREEN SYSTEM ─── */
-.screen { display: none; min-height: 100vh; flex-direction: column; }
-.screen.active { display: flex; }
-
-/* ─── PIN SCREEN ─── */
-#pin-screen {
-background: var(–bg);
-align-items: center;
-justify-content: center;
-position: fixed;
-inset: 0;
-z-index: 1000;
-flex-direction: column;
-gap: 0;
-}
-#pin-screen.active { display: flex; }
-
-.pin-logo {
-margin-bottom: 32px;
-animation: fadeDown 0.6s ease both;
-}
-
-.chamber-svg {
-filter: drop-shadow(0 0 20px rgba(200,168,75,0.4));
-}
-
-.pin-title {
-font-family: var(–font-display);
-font-size: 48px;
-letter-spacing: 12px;
-color: var(–accent);
-text-align: center;
-animation: fadeDown 0.6s 0.1s ease both;
-margin-bottom: 4px;
-}
-
-.pin-subtitle {
-font-family: var(–font-mono);
-font-size: 11px;
-color: var(–text3);
-letter-spacing: 4px;
-text-align: center;
-animation: fadeDown 0.6s 0.15s ease both;
-margin-bottom: 48px;
-}
-
-.pin-dots {
-display: flex;
-gap: 16px;
-margin-bottom: 40px;
-animation: fadeDown 0.6s 0.2s ease both;
-}
-
-.pin-dot {
-width: 18px; height: 18px;
-border-radius: 50%;
-border: 2px solid var(–accent3);
-background: transparent;
-transition: all 0.15s ease;
-}
-.pin-dot.filled { background: var(–accent); border-color: var(–accent); box-shadow: 0 0 10px rgba(200,168,75,0.6); }
-.pin-dot.error { background: var(–danger); border-color: var(–danger2); }
-
-.pin-pad {
-display: grid;
-grid-template-columns: repeat(3, 72px);
-gap: 12px;
-animation: fadeDown 0.6s 0.25s ease both;
-}
-
-.pin-btn {
-width: 72px; height: 72px;
-border-radius: 50%;
-border: 1px solid var(–border2);
-background: var(–bg3);
-color: var(–text);
-font-family: var(–font-display);
-font-size: 28px;
-letter-spacing: 1px;
-cursor: pointer;
-transition: all 0.1s ease;
-display: flex; align-items: center; justify-content: center;
-position: relative;
-overflow: hidden;
-}
-.pin-btn:active { background: var(–bg4); transform: scale(0.94); border-color: var(–accent3); }
-.pin-btn.zero { grid-column: 2; }
-.pin-btn.del { grid-column: 3; background: transparent; border-color: var(–border); font-size: 18px; color: var(–text2); }
-.pin-btn.del:active { background: var(–bg3); }
-
-.pin-label { font-size: 10px; color: var(–text3); font-family: var(–font-mono); letter-spacing: 2px; display: block; }
-
-.pin-error {
-font-family: var(–font-mono);
-font-size: 11px;
-color: var(–danger2);
-letter-spacing: 2px;
-margin-top: 20px;
-opacity: 0;
-transition: opacity 0.3s;
-}
-.pin-error.show { opacity: 1; }
-
-.pin-setup-label {
-font-family: var(–font-mono);
-font-size: 11px;
-color: var(–accent3);
-letter-spacing: 2px;
-margin-bottom: 12px;
-text-align: center;
-animation: fadeDown 0.6s 0.18s ease both;
-}
-
-/* ─── HOME SCREEN ─── */
-#home-screen {
-background: var(–bg);
-position: relative;
-overflow: hidden;
-}
-
-.home-bg-grid {
-position: absolute;
-inset: 0;
-background-image:
-linear-gradient(rgba(200,168,75,0.03) 1px, transparent 1px),
-linear-gradient(90deg, rgba(200,168,75,0.03) 1px, transparent 1px);
-background-size: 40px 40px;
-pointer-events: none;
-}
-
-.home-bg-radial {
-position: absolute;
-inset: 0;
-background: radial-gradient(ellipse 80% 60% at 50% 20%, rgba(200,168,75,0.06) 0%, transparent 70%);
-pointer-events: none;
-}
-
-.home-header {
-position: relative;
-z-index: 1;
-display: flex;
-flex-direction: column;
-align-items: center;
-padding: 60px 24px 32px;
-gap: 8px;
-}
-
-.home-logo-ring {
-position: relative;
-margin-bottom: 16px;
-animation: spinOnce 2s ease both;
-}
-
-@keyframes spinOnce {
-from { transform: rotate(-60deg); opacity: 0; }
-to { transform: rotate(0deg); opacity: 1; }
-}
-
-.home-title {
-font-family: var(–font-display);
-font-size: 64px;
-letter-spacing: 16px;
-color: var(–accent);
-text-align: center;
-line-height: 1;
-text-shadow: 0 0 40px rgba(200,168,75,0.3);
-animation: fadeDown 0.5s 0.3s ease both;
-opacity: 0;
-animation-fill-mode: forwards;
-}
-
-.home-tagline {
-font-family: var(–font-mono);
-font-size: 10px;
-color: var(–text3);
-letter-spacing: 5px;
-text-align: center;
-animation: fadeDown 0.5s 0.4s ease both;
-opacity: 0;
-animation-fill-mode: forwards;
-}
-
-.home-divider {
-width: 100%;
-max-width: 300px;
-height: 1px;
-background: linear-gradient(90deg, transparent, var(–accent3), transparent);
-margin: 8px 0;
-animation: fadeIn 0.5s 0.5s ease both;
-opacity: 0;
-animation-fill-mode: forwards;
-}
-
-.home-status-bar {
-display: flex;
-gap: 20px;
-padding: 0 24px;
-position: relative;
-z-index: 1;
-justify-content: center;
-animation: fadeDown 0.5s 0.5s ease both;
-opacity: 0;
-animation-fill-mode: forwards;
-}
-
-.status-chip {
-background: var(–bg3);
-border: 1px solid var(–border);
-border-radius: 4px;
-padding: 6px 12px;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 2px;
-}
-
-.status-chip-val {
-font-family: var(–font-display);
-font-size: 22px;
-color: var(–accent);
-line-height: 1;
-}
-
-.status-chip-label {
-font-family: var(–font-mono);
-font-size: 9px;
-color: var(–text3);
-letter-spacing: 2px;
-}
-
-.status-chip-val.alert { color: var(–danger2); }
-
-.home-nav {
-flex: 1;
-display: flex;
-flex-direction: column;
-justify-content: center;
-padding: 24px 20px 40px;
-gap: 16px;
-position: relative;
-z-index: 1;
-}
-
-.nav-card {
-background: var(–bg2);
-border: 1px solid var(–border);
-border-radius: 8px;
-padding: 20px 24px;
-display: flex;
-align-items: center;
-gap: 20px;
-cursor: pointer;
-transition: all 0.2s ease;
-position: relative;
-overflow: hidden;
-animation: slideRight 0.5s ease both;
-opacity: 0;
-animation-fill-mode: forwards;
-}
-
-.nav-card:nth-child(1) { animation-delay: 0.55s; }
-.nav-card:nth-child(2) { animation-delay: 0.65s; }
-.nav-card:nth-child(3) { animation-delay: 0.75s; }
-
-.nav-card::before {
-content: ‘’;
-position: absolute;
-left: 0; top: 0; bottom: 0;
-width: 3px;
-background: var(–accent3);
-transition: all 0.2s ease;
-}
-
-.nav-card:active { transform: scale(0.98); background: var(–bg3); border-color: var(–accent3); }
-.nav-card:active::before { background: var(–accent); width: 4px; }
-
-.nav-card-icon {
-width: 52px; height: 52px;
-border-radius: 6px;
-background: var(–bg3);
-border: 1px solid var(–border2);
-display: flex; align-items: center; justify-content: center;
-flex-shrink: 0;
-font-size: 26px;
-}
-
-.nav-card-info { flex: 1; }
-
-.nav-card-title {
-font-family: var(–font-display);
-font-size: 28px;
-letter-spacing: 4px;
-color: var(–text);
-line-height: 1;
-margin-bottom: 4px;
-}
-
-.nav-card-sub {
-font-family: var(–font-mono);
-font-size: 10px;
-color: var(–text3);
-letter-spacing: 2px;
-}
-
-.nav-card-badge {
-min-width: 28px; height: 28px;
-border-radius: 4px;
-background: var(–danger);
-color: white;
-font-family: var(–font-display);
-font-size: 18px;
-display: flex; align-items: center; justify-content: center;
-padding: 0 6px;
-animation: pulse 2s ease infinite;
-}
-
-.nav-card-count {
-min-width: 28px; height: 28px;
-border-radius: 4px;
-background: var(–bg4);
-border: 1px solid var(–border2);
-color: var(–text2);
-font-family: var(–font-display);
-font-size: 18px;
-display: flex; align-items: center; justify-content: center;
-padding: 0 6px;
-}
-
-.nav-card-arrow {
-color: var(–text3);
-font-size: 20px;
-margin-left: 4px;
-}
-
-@keyframes pulse {
-0%, 100% { box-shadow: 0 0 0 0 rgba(192,57,43,0.4); }
-50% { box-shadow: 0 0 0 6px rgba(192,57,43,0); }
-}
-
-.home-footer {
-padding: 16px 24px 32px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-position: relative;
-z-index: 1;
-border-top: 1px solid var(–border);
-}
-
-.home-footer-left {
-font-family: var(–font-mono);
-font-size: 9px;
-color: var(–text3);
-letter-spacing: 2px;
-line-height: 1.8;
-}
-
-.btn-backup {
-background: transparent;
-border: 1px solid var(–border2);
-color: var(–text3);
-font-family: var(–font-mono);
-font-size: 9px;
-letter-spacing: 2px;
-padding: 8px 12px;
-border-radius: 4px;
-cursor: pointer;
-transition: all 0.2s;
-}
-.btn-backup:active { border-color: var(–accent3); color: var(–accent); }
-
-/* ─── PAGE HEADER ─── */
-.page-header {
-background: var(–bg2);
-border-bottom: 1px solid var(–border);
-padding: 52px 20px 16px;
-display: flex;
-align-items: center;
-gap: 16px;
-position: sticky;
-top: 0;
-z-index: 100;
-}
-
-.btn-back {
-width: 40px; height: 40px;
-border-radius: 6px;
-border: 1px solid var(–border2);
-background: var(–bg3);
-color: var(–text2);
-font-size: 18px;
-display: flex; align-items: center; justify-content: center;
-cursor: pointer;
-flex-shrink: 0;
-transition: all 0.15s;
-}
-.btn-back:active { background: var(–bg4); border-color: var(–accent3); color: var(–accent); }
-
-.page-header-info { flex: 1; }
-
-.page-header-title {
-font-family: var(–font-display);
-font-size: 32px;
-letter-spacing: 6px;
-color: var(–accent);
-line-height: 1;
-}
-
-.page-header-sub {
-font-family: var(–font-mono);
-font-size: 9px;
-color: var(–text3);
-letter-spacing: 3px;
-margin-top: 2px;
-}
-
-.btn-add {
-width: 44px; height: 44px;
-border-radius: 50%;
-border: none;
-background: var(–accent);
-color: var(–bg);
-font-size: 24px;
-display: flex; align-items: center; justify-content: center;
-cursor: pointer;
-flex-shrink: 0;
-font-weight: 700;
-transition: all 0.15s;
-box-shadow: 0 4px 16px rgba(200,168,75,0.3);
-}
-.btn-add:active { transform: scale(0.9); }
-
-/* ─── SEARCH BAR ─── */
-.search-bar {
-padding: 12px 20px;
-background: var(–bg2);
-border-bottom: 1px solid var(–border);
-}
-
-.search-input {
-width: 100%;
-background: var(–bg3);
-border: 1px solid var(–border2);
-border-radius: 6px;
-padding: 10px 14px 10px 38px;
-color: var(–text);
-font-family: var(–font-mono);
-font-size: 12px;
-letter-spacing: 1px;
-outline: none;
-position: relative;
-}
-.search-input:focus { border-color: var(–accent3); }
-.search-input::placeholder { color: var(–text3); }
-
-.search-wrap {
-position: relative;
-}
-.search-icon {
-position: absolute;
-left: 12px; top: 50%;
-transform: translateY(-50%);
-color: var(–text3);
-font-size: 14px;
-pointer-events: none;
-}
-
-/* ─── SORT BAR ─── */
-.sort-bar {
-padding: 8px 20px;
-display: flex;
-gap: 8px;
-overflow-x: auto;
-background: var(–bg);
-border-bottom: 1px solid var(–border);
-scrollbar-width: none;
-}
-.sort-bar::-webkit-scrollbar { display: none; }
-
-.sort-chip {
-background: var(–bg3);
-border: 1px solid var(–border);
-border-radius: 4px;
-padding: 5px 10px;
-font-family: var(–font-mono);
-font-size: 9px;
-letter-spacing: 2px;
-color: var(–text3);
-cursor: pointer;
-white-space: nowrap;
-transition: all 0.15s;
-flex-shrink: 0;
-}
-.sort-chip.active { background: var(–accent3); border-color: var(–accent); color: var(–accent2); }
-
-/* ─── ITEM LIST ─── */
-.item-list {
-flex: 1;
-overflow-y: auto;
-padding: 12px 16px;
-display: flex;
-flex-direction: column;
-gap: 10px;
--webkit-overflow-scrolling: touch;
-}
-
-.item-card {
-background: var(–bg2);
-border: 1px solid var(–border);
-border-radius: 8px;
-overflow: hidden;
-cursor: pointer;
-transition: all 0.15s;
-position: relative;
-}
-.item-card:active { transform: scale(0.99); border-color: var(–border2); }
-
-.item-card-accent {
-position: absolute;
-left: 0; top: 0; bottom: 0;
-width: 3px;
-background: var(–accent3);
-}
-.item-card-accent.low { background: var(–danger); }
-.item-card-accent.wish { background: #4a7fa5; }
-
-.item-card-main {
-padding: 14px 14px 12px 18px;
-display: flex;
-align-items: flex-start;
-gap: 12px;
-}
-
-.item-card-info { flex: 1; min-width: 0; }
-
-.item-card-make {
-font-family: var(–font-display);
-font-size: 20px;
-letter-spacing: 3px;
-color: var(–text);
-line-height: 1;
-white-space: nowrap;
-overflow: hidden;
-text-overflow: ellipsis;
-}
-
-.item-card-model {
-font-family: var(–font-body);
-font-size: 13px;
-color: var(–text2);
-font-weight: 600;
-margin-top: 2px;
-}
-
-.item-card-tags {
-display: flex;
-gap: 6px;
-flex-wrap: wrap;
-margin-top: 8px;
-}
-
-.tag {
-background: var(–bg4);
-border: 1px solid var(–border);
-border-radius: 3px;
-padding: 2px 7px;
-font-family: var(–font-mono);
-font-size: 9px;
-color: var(–text3);
-letter-spacing: 1px;
-}
-
-.tag.caliber { border-color: var(–accent3); color: var(–accent); background: rgba(200,168,75,0.08); }
-.tag.low { border-color: var(–danger); color: var(–danger2); background: rgba(192,57,43,0.1); }
-
-.item-card-right {
-display: flex;
-flex-direction: column;
-align-items: flex-end;
-gap: 6px;
-flex-shrink: 0;
-}
-
-.item-qty {
-font-family: var(–font-display);
-font-size: 28px;
-color: var(–accent);
-line-height: 1;
-}
-.item-qty.low { color: var(–danger2); }
-
-.item-qty-label {
-font-family: var(–font-mono);
-font-size: 8px;
-color: var(–text3);
-letter-spacing: 2px;
-}
-
-.item-price {
-font-family: var(–font-mono);
-font-size: 11px;
-color: var(–text2);
-}
-
-/* ─── EMPTY STATE ─── */
-.empty-state {
-flex: 1;
-display: flex;
-flex-direction: column;
-align-items: center;
-justify-content: center;
-gap: 16px;
-padding: 40px;
-opacity: 0.4;
-}
-
-.empty-state-icon { font-size: 48px; }
-
-.empty-state-text {
-font-family: var(–font-display);
-font-size: 20px;
-letter-spacing: 4px;
-color: var(–text2);
-text-align: center;
-}
-
-.empty-state-sub {
-font-family: var(–font-mono);
-font-size: 10px;
-color: var(–text3);
-letter-spacing: 2px;
-text-align: center;
-}
-
-/* ─── MODAL / DRAWER ─── */
-.modal-overlay {
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.8);
-z-index: 500;
-display: none;
-align-items: flex-end;
-backdrop-filter: blur(4px);
-}
-.modal-overlay.active { display: flex; }
-
-.modal-drawer {
-background: var(–bg2);
-border-radius: 16px 16px 0 0;
-border-top: 1px solid var(–border2);
-width: 100%;
-max-height: 92vh;
-overflow-y: auto;
--webkit-overflow-scrolling: touch;
-animation: slideUp 0.3s ease;
-}
-
-@keyframes slideUp {
-from { transform: translateY(100%); }
-to { transform: translateY(0); }
-}
-
-.modal-handle {
-width: 40px; height: 4px;
-background: var(–border2);
-border-radius: 2px;
-margin: 12px auto 0;
-}
-
-.modal-header {
-padding: 16px 20px;
-border-bottom: 1px solid var(–border);
-display: flex;
-align-items: center;
-justify-content: space-between;
-}
-
-.modal-title {
-font-family: var(–font-display);
-font-size: 24px;
-letter-spacing: 4px;
-color: var(–accent);
-}
-
-.modal-close {
-width: 36px; height: 36px;
-border-radius: 50%;
-border: 1px solid var(–border2);
-background: var(–bg3);
-color: var(–text2);
-font-size: 18px;
-display: flex; align-items: center; justify-content: center;
-cursor: pointer;
-}
-.modal-close:active { background: var(–bg4); }
-
-.modal-body { padding: 20px; }
-
-/* ─── FORM ─── */
-.form-section-title {
-font-family: var(–font-mono);
-font-size: 9px;
-letter-spacing: 3px;
-color: var(–accent3);
-margin-bottom: 12px;
-margin-top: 20px;
-padding-bottom: 6px;
-border-bottom: 1px solid var(–border);
-}
-.form-section-title:first-child { margin-top: 0; }
-
-.form-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 12px;
-}
-
-.form-field {
-display: flex;
-flex-direction: column;
-gap: 5px;
-}
-
-.form-field.full { grid-column: 1 / -1; }
-
-.form-label {
-font-family: var(–font-mono);
-font-size: 9px;
-letter-spacing: 2px;
-color: var(–text3);
-}
-
-.form-input, .form-select, .form-textarea {
-background: var(–bg3);
-border: 1px solid var(–border2);
-border-radius: 6px;
-padding: 10px 12px;
-color: var(–text);
-font-family: var(–font-body);
-font-size: 15px;
-font-weight: 600;
-outline: none;
-transition: border-color 0.15s;
-width: 100%;
--webkit-appearance: none;
-}
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(–accent3); }
-.form-select { appearance: none; -webkit-appearance: none; }
-.form-textarea { resize: none; min-height: 80px; font-size: 14px; }
-
-.threshold-row {
-display: flex;
-align-items: center;
-gap: 12px;
-padding: 12px;
-background: rgba(192,57,43,0.08);
-border: 1px solid rgba(192,57,43,0.2);
-border-radius: 6px;
-margin-top: 8px;
-}
-
-.threshold-label {
-font-family: var(–font-mono);
-font-size: 10px;
-color: var(–danger2);
-letter-spacing: 2px;
-flex: 1;
-}
-
-.threshold-input {
-width: 70px;
-background: var(–bg3);
-border: 1px solid rgba(192,57,43,0.3);
-border-radius: 4px;
-padding: 8px;
-color: var(–danger2);
-font-family: var(–font-display);
-font-size: 20px;
-text-align: center;
-outline: none;
-}
-
-.form-actions {
-display: flex;
-gap: 12px;
-margin-top: 24px;
-padding-bottom: 20px;
-}
-
-.btn-primary {
-flex: 1;
-background: var(–accent);
-color: var(–bg);
-border: none;
-border-radius: 8px;
-padding: 14px;
-font-family: var(–font-display);
-font-size: 20px;
-letter-spacing: 3px;
-cursor: pointer;
-transition: all 0.15s;
-}
-.btn-primary:active { transform: scale(0.97); }
-
-.btn-danger {
-background: var(–bg3);
-color: var(–danger2);
-border: 1px solid rgba(192,57,43,0.3);
-border-radius: 8px;
-padding: 14px 18px;
-font-family: var(–font-display);
-font-size: 20px;
-letter-spacing: 2px;
-cursor: pointer;
-transition: all 0.15s;
-}
-.btn-danger:active { background: rgba(192,57,43,0.15); }
-
-/* ─── REORDER PANEL ─── */
-.reorder-panel {
-background: rgba(192,57,43,0.06);
-border: 1px solid rgba(192,57,43,0.2);
-border-radius: 8px;
-margin: 12px 16px;
-overflow: hidden;
-}
-
-.reorder-header {
-padding: 12px 16px;
-display: flex;
-align-items: center;
-gap: 10px;
-border-bottom: 1px solid rgba(192,57,43,0.15);
-}
-
-.reorder-alert {
-font-family: var(–font-mono);
-font-size: 10px;
-color: var(–danger2);
-letter-spacing: 2px;
-flex: 1;
-}
-
-.reorder-item-name {
-font-family: var(–font-display);
-font-size: 16px;
-color: var(–danger2);
-letter-spacing: 2px;
-}
-
-.supplier-links {
-padding: 12px 16px;
-display: flex;
-flex-direction: column;
-gap: 8px;
-}
-
-.supplier-link {
-display: flex;
-align-items: center;
-gap: 12px;
-padding: 10px 12px;
-background: var(–bg3);
-border: 1px solid var(–border);
-border-radius: 6px;
-text-decoration: none;
-transition: all 0.15s;
-}
-.supplier-link:active { border-color: var(–accent3); }
-
-.supplier-name {
-font-family: var(–font-display);
-font-size: 16px;
-letter-spacing: 2px;
-color: var(–text);
-flex: 1;
-}
-
-.supplier-type {
-font-family: var(–font-mono);
-font-size: 8px;
-color: var(–text3);
-letter-spacing: 2px;
-}
-
-.supplier-arrow {
-color: var(–accent3);
-font-size: 14px;
-}
-
-/* ─── ANIMATIONS ─── */
-@keyframes fadeDown {
-from { opacity: 0; transform: translateY(-16px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideRight {
-from { opacity: 0; transform: translateX(-24px); }
-to { opacity: 1; transform: translateX(0); }
-}
-
-@keyframes fadeIn {
-from { opacity: 0; }
-to { opacity: 1; }
-}
-
-@keyframes shake {
-0%, 100% { transform: translateX(0); }
-20% { transform: translateX(-8px); }
-40% { transform: translateX(8px); }
-60% { transform: translateX(-6px); }
-80% { transform: translateX(6px); }
-}
-
-.shake { animation: shake 0.4s ease; }
-
-/* ─── TOAST ─── */
-.toast {
-position: fixed;
-bottom: 32px;
-left: 50%;
-transform: translateX(-50%) translateY(20px);
-background: var(–bg3);
-border: 1px solid var(–border2);
-border-radius: 8px;
-padding: 12px 20px;
-font-family: var(–font-mono);
-font-size: 11px;
-letter-spacing: 2px;
-color: var(–text2);
-z-index: 2000;
-opacity: 0;
-transition: all 0.3s ease;
-pointer-events: none;
-white-space: nowrap;
-}
-.toast.success { border-color: var(–success); color: #5dbb7c; }
-.toast.error { border-color: var(–danger); color: var(–danger2); }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ─── SCROLLBAR ─── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(–bg); }
-::-webkit-scrollbar-thumb { background: var(–border2); border-radius: 2px; }
-
-/* ─── WISH PRIORITY ─── */
-.priority-badge {
-padding: 3px 8px;
-border-radius: 3px;
-font-family: var(–font-mono);
-font-size: 8px;
-letter-spacing: 2px;
-}
-.priority-badge.high { background: rgba(192,57,43,0.15); color: var(–danger2); border: 1px solid rgba(192,57,43,0.3); }
-.priority-badge.med { background: rgba(200,168,75,0.1); color: var(–accent); border: 1px solid var(–accent3); }
-.priority-badge.low-p { background: var(–bg4); color: var(–text3); border: 1px solid var(–border); }
-
-/* ─── SETTINGS BUTTON ─── */
-.btn-settings {
-width: 36px; height: 36px;
-border-radius: 6px;
-border: 1px solid var(–border);
-background: var(–bg3);
-color: var(–text3);
-font-size: 16px;
-display: flex; align-items: center; justify-content: center;
-cursor: pointer;
-}
-
-.settings-modal { display: none; }
-.settings-modal.active { display: flex; }
-
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a1a;--bg4:#222;--b1:#2a2a2a;--b2:#333;--ac:#c8a84b;--ac2:#e8c86b;--ac3:#8b6914;--rd:#c0392b;--rd2:#e74c3c;--gr:#27ae60;--t1:#e8e8e8;--t2:#a0a0a0;--t3:#606060;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--t1);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden}
+#pin{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0}
+#pin.gone{display:none}
+.plogo{margin-bottom:24px}
+.psvg{filter:drop-shadow(0 0 20px rgba(200,168,75,0.4))}
+.ptitle{font-family:'Bebas Neue',cursive;font-size:48px;letter-spacing:12px;color:var(--ac);text-align:center;margin-bottom:4px}
+.psub{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t3);letter-spacing:4px;text-align:center;margin-bottom:8px}
+#pmsg{font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:3px;color:var(--ac3);text-align:center;min-height:20px;margin-bottom:20px}
+.pdots{display:flex;gap:16px;margin-bottom:32px}
+.pd{width:18px;height:18px;border-radius:50%;border:2px solid var(--ac3);background:transparent;transition:all .15s}
+.pd.on{background:var(--ac);border-color:var(--ac);box-shadow:0 0 10px rgba(200,168,75,.6)}
+.pd.er{background:var(--rd);border-color:var(--rd2)}
+.ppad{display:grid;grid-template-columns:repeat(3,72px);gap:12px}
+.pb{width:72px;height:72px;border-radius:50%;border:1px solid var(--b2);background:var(--bg3);color:var(--t1);font-family:'Bebas Neue',cursive;font-size:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .1s}
+.pb:active{background:var(--bg4);transform:scale(.94);border-color:var(--ac3)}
+.pbz{grid-column:2}
+.pbd{background:transparent;border-color:var(--b1);font-size:18px;color:var(--t2)}
+.pbd:active{background:var(--bg3)}
+#perr{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--rd2);letter-spacing:2px;margin-top:16px;min-height:18px;text-align:center}
+.scr{display:none;min-height:100vh;flex-direction:column}
+.scr.on{display:flex}
+#home{background:var(--bg);position:relative;overflow:hidden}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,168,75,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,75,.03) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.hrad{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 20%,rgba(200,168,75,.06) 0%,transparent 70%);pointer-events:none}
+.hhd{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding:56px 24px 24px;gap:6px}
+.hlog{margin-bottom:12px;animation:spin 2s ease both;cursor:pointer}
+@keyframes spin{from{transform:rotate(-60deg);opacity:0}to{transform:rotate(0);opacity:1}}
+.htit{font-family:'Bebas Neue',cursive;font-size:64px;letter-spacing:16px;color:var(--ac);text-align:center;line-height:1;text-shadow:0 0 40px rgba(200,168,75,.3);animation:fd .5s .3s ease both;opacity:0;animation-fill-mode:forwards}
+.htag{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:5px;text-align:center;animation:fd .5s .4s ease both;opacity:0;animation-fill-mode:forwards}
+.hdiv{width:100%;max-width:300px;height:1px;background:linear-gradient(90deg,transparent,var(--ac3),transparent);margin:6px 0;animation:fi .5s .5s ease both;opacity:0;animation-fill-mode:forwards}
+.hst{display:flex;gap:10px;padding:0 16px;position:relative;z-index:1;justify-content:center;animation:fd .5s .5s ease both;opacity:0;animation-fill-mode:forwards;flex-wrap:wrap}
+.sc{background:var(--bg3);border:1px solid var(--b1);border-radius:4px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.scv{font-family:'Bebas Neue',cursive;font-size:22px;color:var(--ac);line-height:1}
+.scv.red{color:var(--rd2)}
+.scl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:2px}
+.hnv{flex:1;display:flex;flex-direction:column;justify-content:center;padding:18px 18px 32px;gap:12px;position:relative;z-index:1}
+.nc{background:var(--bg2);border:1px solid var(--b1);border-radius:8px;padding:18px 22px;display:flex;align-items:center;gap:18px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;animation:sr .5s ease both;opacity:0;animation-fill-mode:forwards}
+.nc:nth-child(1){animation-delay:.55s}.nc:nth-child(2){animation-delay:.65s}.nc:nth-child(3){animation-delay:.75s}
+.nc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac3);transition:all .2s}
+.nc:active{transform:scale(.98);background:var(--bg3);border-color:var(--ac3)}
+.nc:active::before{background:var(--ac);width:4px}
+.nci{width:50px;height:50px;border-radius:6px;background:var(--bg3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px}
+.nct{font-family:'Bebas Neue',cursive;font-size:26px;letter-spacing:4px;color:var(--t1);line-height:1;margin-bottom:3px}
+.ncs{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:2px}
+.nbdg{min-width:28px;height:28px;border-radius:4px;background:var(--rd);color:#fff;font-family:'Bebas Neue',cursive;font-size:16px;display:flex;align-items:center;justify-content:center;padding:0 6px;animation:pulse 2s ease infinite}
+.ncnt{min-width:28px;height:28px;border-radius:4px;background:var(--bg4);border:1px solid var(--b2);color:var(--t2);font-family:'Bebas Neue',cursive;font-size:18px;display:flex;align-items:center;justify-content:center;padding:0 6px}
+.narr{color:var(--t3);font-size:20px;margin-left:4px}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,57,43,.4)}50%{box-shadow:0 0 0 6px rgba(192,57,43,0)}}
+.hft{padding:12px 22px 28px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;border-top:1px solid var(--b1)}
+.hftl{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:2px;line-height:1.8}
+.btnbk2{background:transparent;border:1px solid var(--b2);color:var(--t3);font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;padding:8px 12px;border-radius:4px;cursor:pointer}
+.btnbk2:active{border-color:var(--ac3);color:var(--ac)}
+.phd{background:var(--bg2);border-bottom:1px solid var(--b1);padding:52px 18px 14px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
+.btnbk{width:40px;height:40px;border-radius:6px;border:1px solid var(--b2);background:var(--bg3);color:var(--t2);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.btnbk:active{background:var(--bg4);border-color:var(--ac3);color:var(--ac)}
+.pht{font-family:'Bebas Neue',cursive;font-size:30px;letter-spacing:6px;color:var(--ac);line-height:1}
+.phs{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:3px;margin-top:2px}
+.btnadd{width:44px;height:44px;border-radius:50%;border:none;background:var(--ac);color:var(--bg);font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-weight:700;box-shadow:0 4px 16px rgba(200,168,75,.3)}
+.btnadd:active{transform:scale(.9)}
+.sbr{padding:10px 18px;background:var(--bg2);border-bottom:1px solid var(--b1)}
+.swp{position:relative}
+.sin{width:100%;background:var(--bg3);border:1px solid var(--b2);border-radius:6px;padding:10px 14px 10px 36px;color:var(--t1);font-family:'Share Tech Mono',monospace;font-size:12px;letter-spacing:1px;outline:none;-webkit-appearance:none}
+.sin:focus{border-color:var(--ac3)}
+.sin::placeholder{color:var(--t3)}
+.sico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none}
+.srtb{padding:7px 18px;display:flex;gap:7px;overflow-x:auto;background:var(--bg);border-bottom:1px solid var(--b1);scrollbar-width:none}
+.srtb::-webkit-scrollbar{display:none}
+.chip{background:var(--bg3);border:1px solid var(--b1);border-radius:4px;padding:5px 9px;font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--t3);cursor:pointer;white-space:nowrap;flex-shrink:0}
+.chip.on{background:var(--ac3);border-color:var(--ac);color:var(--ac2)}
+.lst{flex:1;overflow-y:auto;padding:10px 14px;display:flex;flex-direction:column;gap:9px;-webkit-overflow-scrolling:touch}
+.card{background:var(--bg2);border:1px solid var(--b1);border-radius:8px;overflow:hidden;cursor:pointer;position:relative}
+.card:active{transform:scale(.99)}
+.cbar{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac3)}
+.cbar.low{background:var(--rd)}
+.cbar.wsh{background:#4a7fa5}
+.cmn{padding:13px 13px 11px 17px;display:flex;align-items:flex-start;gap:11px}
+.cinfo{flex:1;min-width:0}
+.cmk{font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;color:var(--t1);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmd{font-family:'Rajdhani',sans-serif;font-size:13px;color:var(--t2);font-weight:600;margin-top:2px}
+.ctgs{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.tg{background:var(--bg4);border:1px solid var(--b1);border-radius:3px;padding:2px 6px;font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--t3);letter-spacing:1px}
+.tg.cal{border-color:var(--ac3);color:var(--ac);background:rgba(200,168,75,.08)}
+.tg.low{border-color:var(--rd);color:var(--rd2);background:rgba(192,57,43,.1)}
+.crt{display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0}
+.qty{font-family:'Bebas Neue',cursive;font-size:28px;color:var(--ac);line-height:1}
+.qty.low{color:var(--rd2)}
+.qtyl{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--t3);letter-spacing:2px}
+.prc{font-family:'Share Tech Mono',monospace;font-size:11px;color:var(--t2)}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px;opacity:.4}
+.eico{font-size:48px}
+.etxt{font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:4px;color:var(--t2);text-align:center}
+.esub{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--t3);letter-spacing:2px;text-align:center}
+.mov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:500;display:none;align-items:flex-end;backdrop-filter:blur(4px)}
+.mov.open{display:flex}
+.mdr{background:var(--bg2);border-radius:16px 16px 0 0;border-top:1px solid var(--b2);width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;animation:su .3s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mhan{width:40px;height:4px;background:var(--b2);border-radius:2px;margin:12px auto 0}
+.mhd{padding:14px 18px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.mtit{font-family:'Bebas Neue',cursive;font-size:24px;letter-spacing:4px;color:var(--ac)}
+.mcls{width:36px;height:36px;border-radius:50%;border:1px solid var(--b2);background:var(--bg3);color:var(--t2);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.mcls:active{background:var(--bg4)}
+.mbd{padding:18px}
+.fsec{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--ac3);margin-bottom:11px;margin-top:18px;padding-bottom:5px;border-bottom:1px solid var(--b1)}
+.fsec:first-child{margin-top:0}
+.fgrd{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.ff{display:flex;flex-direction:column;gap:4px}
+.ff.full{grid-column:1/-1}
+.fl{font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--t3)}
+.fi,.fs,.ft{background:var(--bg3);border:1px solid var(--b2);border-radius:6px;padding:10px 11px;color:var(--t1);font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;outline:none;width:100%;-webkit-appearance:none}
+.fi:focus,.fs:focus,.ft:focus{border-color:var(--ac3)}
+.ft{resize:none;min-height:76px;font-size:14px}
+.trow{display:flex;align-items:center;gap:11px;padding:11px;background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);border-radius:6px;margin-top:7px}
+.tlbl{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--rd2);letter-spacing:2px;flex:1}
+.tin{width:68px;background:var(--bg3);border:1px solid rgba(192,57,43,.3);border-radius:4px;padding:8px;color:var(--rd2);font-family:'Bebas Neue',cursive;font-size:20px;text-align:center;outline:none;-webkit-appearance:none}
+.facs{display:flex;gap:11px;margin-top:22px;padding-bottom:18px}
+.btnp{flex:1;background:var(--ac);color:var(--bg);border:none;border-radius:8px;padding:14px;font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:3px;cursor:pointer}
+.btnp:active{transform:scale(.97)}
+.btnd{background:var(--bg3);color:var(--rd2);border:1px solid rgba(192,57,43,.3);border-radius:8px;padding:14px 16px;font-family:'Bebas Neue',cursive;font-size:20px;letter-spacing:2px;cursor:pointer}
+.btnd:active{background:rgba(192,57,43,.15)}
+.rp{background:rgba(192,57,43,.06);border:1px solid rgba(192,57,43,.2);border-radius:8px;margin:10px 14px;overflow:hidden}
+.rphd{padding:11px 14px;display:flex;align-items:center;gap:9px;border-bottom:1px solid rgba(192,57,43,.15)}
+.rpa{font-family:'Share Tech Mono',monospace;font-size:10px;color:var(--rd2);letter-spacing:2px}
+.rpn{font-family:'Bebas Neue',cursive;font-size:15px;color:var(--rd2);letter-spacing:2px}
+.sls{padding:11px 14px;display:flex;flex-direction:column;gap:7px}
+.sl{display:flex;align-items:center;gap:11px;padding:9px 11px;background:var(--bg3);border:1px solid var(--b1);border-radius:6px;text-decoration:none}
+.sl:active{border-color:var(--ac3)}
+.sln{font-family:'Bebas Neue',cursive;font-size:16px;letter-spacing:2px;color:var(--t1);flex:1}
+.slt{font-family:'Share Tech Mono',monospace;font-size:8px;color:var(--t3);letter-spacing:2px}
+.pri{padding:3px 8px;border-radius:3px;font-family:'Share Tech Mono',monospace;font-size:8px;letter-spacing:2px}
+.pri.hi{background:rgba(192,57,43,.15);color:var(--rd2);border:1px solid rgba(192,57,43,.3)}
+.pri.md{background:rgba(200,168,75,.1);color:var(--ac);border:1px solid var(--ac3)}
+.pri.lo{background:var(--bg4);color:var(--t3);border:1px solid var(--b1)}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--b2);border-radius:8px;padding:11px 18px;font-family:'Share Tech Mono',monospace;font-size:11px;letter-spacing:2px;color:var(--t2);z-index:99999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+.toast.ok{border-color:var(--gr);color:#5dbb7c}
+.toast.er{border-color:var(--rd);color:var(--rd2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@keyframes fd{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes sr{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes fi{from{opacity:0}to{opacity:1}}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
+.shk{animation:shk .4s ease}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
 </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════════ PIN SCREEN ═══════════════════════════════════ -->
-
-<div id="pin-screen" class="screen active">
-  <div class="pin-logo">
-    <svg class="chamber-svg" width="100" height="100" viewBox="0 0 100 100">
-      <!-- Outer ring -->
-      <circle cx="50" cy="50" r="46" fill="none" stroke="#c8a84b" stroke-width="1.5" opacity="0.4"/>
-      <circle cx="50" cy="50" r="40" fill="none" stroke="#c8a84b" stroke-width="0.5" opacity="0.2"/>
-      <!-- Center -->
-      <circle cx="50" cy="50" r="8" fill="none" stroke="#c8a84b" stroke-width="1.5"/>
-      <circle cx="50" cy="50" r="3" fill="#c8a84b"/>
-      <!-- 6 chambers -->
-      <circle cx="50" cy="18" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
-      <circle cx="50" cy="18" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-      <circle cx="77.8" cy="34" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
-      <circle cx="77.8" cy="34" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-      <circle cx="77.8" cy="66" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
-      <circle cx="77.8" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-      <circle cx="50" cy="82" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
-      <circle cx="50" cy="82" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-      <circle cx="22.2" cy="66" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/>
-      <circle cx="22.2" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-      <circle cx="22.2" cy="34" r="8" fill="#c8a84b" stroke="#c8a84b" stroke-width="1.5"/>
-      <circle cx="22.2" cy="34" r="4" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
-      <!-- Tick marks -->
-      <line x1="50" y1="4" x2="50" y2="8" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
-      <line x1="50" y1="92" x2="50" y2="96" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
-      <line x1="4" y1="50" x2="8" y2="50" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
-      <line x1="92" y1="50" x2="96" y2="50" stroke="#c8a84b" stroke-width="1" opacity="0.3"/>
-    </svg>
+<div id="pin">
+  <div class="plogo"><svg class="psvg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#c8a84b" stroke-width="1.5" opacity="0.4"/><circle cx="50" cy="50" r="40" fill="none" stroke="#c8a84b" stroke-width="0.5" opacity="0.2"/><circle cx="50" cy="50" r="8" fill="none" stroke="#c8a84b" stroke-width="1.5"/><circle cx="50" cy="50" r="3" fill="#c8a84b"/><circle cx="50" cy="18" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/><circle cx="77.8" cy="34" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/><circle cx="77.8" cy="66" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/><circle cx="50" cy="82" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/><circle cx="22.2" cy="66" r="8" fill="#1a1a1a" stroke="#c8a84b" stroke-width="1.5"/><circle cx="22.2" cy="34" r="8" fill="#c8a84b" stroke="#c8a84b" stroke-width="1.5"/><circle cx="22.2" cy="34" r="4" fill="none" stroke="#0a0a0a" stroke-width="1.2"/></svg></div>
+  <div class="ptitle">ARSENAL</div>
+  <div class="psub">INVENTORY MANAGEMENT SYSTEM</div>
+  <div id="pmsg">ENTER YOUR PIN</div>
+  <div class="pdots"><div class="pd" id="d0"></div><div class="pd" id="d1"></div><div class="pd" id="d2"></div><div class="pd" id="d3"></div></div>
+  <div class="ppad">
+    <button class="pb" onclick="pp('1')">1</button><button class="pb" onclick="pp('2')">2</button><button class="pb" onclick="pp('3')">3</button>
+    <button class="pb" onclick="pp('4')">4</button><button class="pb" onclick="pp('5')">5</button><button class="pb" onclick="pp('6')">6</button>
+    <button class="pb" onclick="pp('7')">7</button><button class="pb" onclick="pp('8')">8</button><button class="pb" onclick="pp('9')">9</button>
+    <button class="pb pbz" onclick="pp('0')">0</button><button class="pb pbd" onclick="pdel()">&#9003;</button>
   </div>
-  <div class="pin-title">ARSENAL</div>
-  <div class="pin-subtitle">INVENTORY MANAGEMENT SYSTEM</div>
-  <div id="pin-setup-label" class="pin-setup-label" style="display:none"></div>
-  <div class="pin-dots">
-    <div class="pin-dot" id="d0"></div>
-    <div class="pin-dot" id="d1"></div>
-    <div class="pin-dot" id="d2"></div>
-    <div class="pin-dot" id="d3"></div>
-  </div>
-  <div class="pin-pad">
-    <button class="pin-btn" onclick="pinPress('1')">1</button>
-    <button class="pin-btn" onclick="pinPress('2')">2</button>
-    <button class="pin-btn" onclick="pinPress('3')">3</button>
-    <button class="pin-btn" onclick="pinPress('4')">4</button>
-    <button class="pin-btn" onclick="pinPress('5')">5</button>
-    <button class="pin-btn" onclick="pinPress('6')">6</button>
-    <button class="pin-btn" onclick="pinPress('7')">7</button>
-    <button class="pin-btn" onclick="pinPress('8')">8</button>
-    <button class="pin-btn" onclick="pinPress('9')">9</button>
-    <button class="pin-btn zero" onclick="pinPress('0')">0</button>
-    <button class="pin-btn del" onclick="pinDel()">⌫</button>
-  </div>
-  <div class="pin-error" id="pin-error">INCORRECT PIN</div>
+  <div id="perr"></div>
 </div>
 
-<!-- ═══════════════════════════════════ HOME SCREEN ═══════════════════════════════════ -->
-
-<div id="home-screen" class="screen">
-  <div class="home-bg-grid"></div>
-  <div class="home-bg-radial"></div>
-
-  <div class="home-header">
-    <div class="home-logo-ring">
-      <svg class="chamber-svg" width="80" height="80" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="46" fill="none" stroke="#c8a84b" stroke-width="1.5" opacity="0.4"/>
-        <circle cx="50" cy="50" r="40" fill="none" stroke="#c8a84b" stroke-width="0.5" opacity="0.2"/>
-        <circle cx="50" cy="50" r="8" fill="none" stroke="#c8a84b" stroke-width="1.5"/>
-        <circle cx="50" cy="50" r="3" fill="#c8a84b"/>
-        <circle cx="50" cy="18" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
-        <circle cx="50" cy="18" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-        <circle cx="77.8" cy="34" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
-        <circle cx="77.8" cy="34" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-        <circle cx="77.8" cy="66" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
-        <circle cx="77.8" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-        <circle cx="50" cy="82" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
-        <circle cx="50" cy="82" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-        <circle cx="22.2" cy="66" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/>
-        <circle cx="22.2" cy="66" r="4" fill="none" stroke="#c8a84b" stroke-width="0.8" opacity="0.5"/>
-        <circle cx="22.2" cy="34" r="8" fill="#c8a84b" stroke="#c8a84b" stroke-width="1.5"/>
-        <circle cx="22.2" cy="34" r="4" fill="none" stroke="#111" stroke-width="1.2"/>
-      </svg>
-    </div>
-    <div class="home-title">ARSENAL</div>
-    <div class="home-divider"></div>
-    <div class="home-tagline">FIREARM INVENTORY MANAGEMENT</div>
+<div id="home" class="scr">
+  <div class="hgrid"></div><div class="hrad"></div>
+  <div class="hhd">
+    <div class="hlog" onclick="logoTap()"><svg class="psvg" width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="none" stroke="#c8a84b" stroke-width="1.5" opacity="0.4"/><circle cx="50" cy="50" r="40" fill="none" stroke="#c8a84b" stroke-width="0.5" opacity="0.2"/><circle cx="50" cy="50" r="8" fill="none" stroke="#c8a84b" stroke-width="1.5"/><circle cx="50" cy="50" r="3" fill="#c8a84b"/><circle cx="50" cy="18" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/><circle cx="77.8" cy="34" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/><circle cx="77.8" cy="66" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/><circle cx="50" cy="82" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/><circle cx="22.2" cy="66" r="8" fill="#111" stroke="#c8a84b" stroke-width="1.5"/><circle cx="22.2" cy="34" r="8" fill="#c8a84b" stroke="#c8a84b" stroke-width="1.5"/><circle cx="22.2" cy="34" r="4" fill="none" stroke="#111" stroke-width="1.2"/></svg></div>
+    <div class="htit">ARSENAL</div><div class="hdiv"></div><div class="htag">FIREARM INVENTORY MANAGEMENT</div>
   </div>
-
-  <div class="home-status-bar">
-    <div class="status-chip">
-      <span class="status-chip-val" id="stat-weapons">0</span>
-      <span class="status-chip-label">WEAPONS</span>
-    </div>
-    <div class="status-chip">
-      <span class="status-chip-val" id="stat-ammo">0</span>
-      <span class="status-chip-label">AMMO SKUs</span>
-    </div>
-    <div class="status-chip">
-      <span class="status-chip-val alert" id="stat-low">0</span>
-      <span class="status-chip-label">LOW STOCK</span>
-    </div>
-    <div class="status-chip">
-      <span class="status-chip-val" id="stat-wish">0</span>
-      <span class="status-chip-label">WISH LIST</span>
-    </div>
+  <div class="hst">
+    <div class="sc"><span class="scv" id="sw">0</span><span class="scl">WEAPONS</span></div>
+    <div class="sc"><span class="scv" id="sa">0</span><span class="scl">AMMO SKUs</span></div>
+    <div class="sc"><span class="scv red" id="sl">0</span><span class="scl">LOW STOCK</span></div>
+    <div class="sc"><span class="scv" id="swl">0</span><span class="scl">WISH LIST</span></div>
   </div>
-
-  <nav class="home-nav">
-    <div class="nav-card" onclick="showScreen('weapons-screen')">
-      <div class="nav-card-icon">🔫</div>
-      <div class="nav-card-info">
-        <div class="nav-card-title">WEAPONS</div>
-        <div class="nav-card-sub">FIREARMS INVENTORY</div>
-      </div>
-      <div class="nav-card-count" id="nav-weapons-count">0</div>
-      <div class="nav-card-arrow">›</div>
-    </div>
-    <div class="nav-card" onclick="showScreen('ammo-screen')">
-      <div class="nav-card-icon">🎯</div>
-      <div class="nav-card-info">
-        <div class="nav-card-title">AMMUNITION</div>
-        <div class="nav-card-sub">ROUNDS & STOCK LEVELS</div>
-      </div>
-      <div id="nav-ammo-badge"></div>
-      <div class="nav-card-arrow">›</div>
-    </div>
-    <div class="nav-card" onclick="showScreen('wish-screen')">
-      <div class="nav-card-icon">📋</div>
-      <div class="nav-card-info">
-        <div class="nav-card-title">WISH LIST</div>
-        <div class="nav-card-sub">ACQUISITION TARGETS</div>
-      </div>
-      <div class="nav-card-count" id="nav-wish-count">0</div>
-      <div class="nav-card-arrow">›</div>
-    </div>
+  <nav class="hnv">
+    <div class="nc" onclick="go('wscr')"><div class="nci">&#128299;</div><div style="flex:1"><div class="nct">WEAPONS</div><div class="ncs">FIREARMS INVENTORY</div></div><div class="ncnt" id="nw">0</div><div class="narr">&#8250;</div></div>
+    <div class="nc" onclick="go('ascr')"><div class="nci">&#127919;</div><div style="flex:1"><div class="nct">AMMUNITION</div><div class="ncs">ROUNDS &amp; STOCK LEVELS</div></div><div id="na" class="ncnt">0</div><div class="narr">&#8250;</div></div>
+    <div class="nc" onclick="go('wlscr')"><div class="nci">&#128203;</div><div style="flex:1"><div class="nct">WISH LIST</div><div class="ncs">ACQUISITION TARGETS</div></div><div class="ncnt" id="nwl">0</div><div class="narr">&#8250;</div></div>
   </nav>
-
-  <div class="home-footer">
-    <div class="home-footer-left">
-      <span id="footer-date"></span><br>
-      <span id="footer-backup-time" style="color:var(--text3)">BACKUP: NEVER</span>
-    </div>
-    <button class="btn-backup" onclick="manualBackup()">⬆ BACKUP NOW</button>
-  </div>
+  <div class="hft"><div class="hftl"><span id="fdt"></span><br><span id="fbk">BACKUP: NEVER</span></div><button class="btnbk2" onclick="doExport()">&#8679; BACKUP NOW</button></div>
 </div>
 
-<!-- ═══════════════════════════════════ WEAPONS SCREEN ═══════════════════════════════════ -->
-
-<div id="weapons-screen" class="screen">
-  <div class="page-header">
-    <button class="btn-back" onclick="showScreen('home-screen')">‹</button>
-    <div class="page-header-info">
-      <div class="page-header-title">WEAPONS</div>
-      <div class="page-header-sub" id="weapons-sub">0 FIREARMS IN INVENTORY</div>
-    </div>
-    <button class="btn-add" onclick="openAddModal('weapon')">+</button>
-  </div>
-
-  <div class="search-bar">
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input class="search-input" id="weapons-search" placeholder="SEARCH MAKE, MODEL, CALIBER..." oninput="renderList('weapons')">
-    </div>
-  </div>
-
-  <div class="sort-bar">
-    <button class="sort-chip active" onclick="setSort('weapons','date',this)">RECENT</button>
-    <button class="sort-chip" onclick="setSort('weapons','make',this)">MAKE A-Z</button>
-    <button class="sort-chip" onclick="setSort('weapons','qty',this)">QTY</button>
-    <button class="sort-chip" onclick="setSort('weapons','price',this)">PRICE</button>
-    <button class="sort-chip" onclick="setSort('weapons','caliber',this)">CALIBER</button>
-  </div>
-
-  <div class="item-list" id="weapons-list"></div>
+<div id="wscr" class="scr">
+  <div class="phd"><button class="btnbk" onclick="go('home')">&#8249;</button><div style="flex:1"><div class="pht">WEAPONS</div><div class="phs" id="wsub">0 FIREARMS</div></div><button class="btnadd" onclick="openAdd('weapon')">+</button></div>
+  <div class="sbr"><div class="swp"><span class="sico">&#9906;</span><input class="sin" id="wq" placeholder="SEARCH MAKE, MODEL, CALIBER..." oninput="rl('weapons')"></div></div>
+  <div class="srtb"><button class="chip on" onclick="ss('weapons','date',this)">RECENT</button><button class="chip" onclick="ss('weapons','make',this)">MAKE A-Z</button><button class="chip" onclick="ss('weapons','qty',this)">QTY</button><button class="chip" onclick="ss('weapons','price',this)">PRICE</button><button class="chip" onclick="ss('weapons','caliber',this)">CALIBER</button></div>
+  <div class="lst" id="wl"></div>
 </div>
 
-<!-- ═══════════════════════════════════ AMMO SCREEN ═══════════════════════════════════ -->
-
-<div id="ammo-screen" class="screen">
-  <div class="page-header">
-    <button class="btn-back" onclick="showScreen('home-screen')">‹</button>
-    <div class="page-header-info">
-      <div class="page-header-title">AMMUNITION</div>
-      <div class="page-header-sub" id="ammo-sub">0 SKUs IN INVENTORY</div>
-    </div>
-    <button class="btn-add" onclick="openAddModal('ammo')">+</button>
-  </div>
-
-  <div class="search-bar">
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input class="search-input" id="ammo-search" placeholder="SEARCH CALIBER, BRAND, TYPE..." oninput="renderList('ammo')">
-    </div>
-  </div>
-
-  <div class="sort-bar">
-    <button class="sort-chip active" onclick="setSort('ammo','date',this)">RECENT</button>
-    <button class="sort-chip" onclick="setSort('ammo','caliber',this)">CALIBER</button>
-    <button class="sort-chip" onclick="setSort('ammo','qty',this)">QTY</button>
-    <button class="sort-chip" onclick="setSort('ammo','brand',this)">BRAND</button>
-    <button class="sort-chip low-btn" onclick="setSort('ammo','low',this)">⚠ LOW STOCK</button>
-  </div>
-
-  <div id="reorder-alerts"></div>
-  <div class="item-list" id="ammo-list"></div>
+<div id="ascr" class="scr">
+  <div class="phd"><button class="btnbk" onclick="go('home')">&#8249;</button><div style="flex:1"><div class="pht">AMMUNITION</div><div class="phs" id="asub">0 SKUs</div></div><button class="btnadd" onclick="openAdd('ammo')">+</button></div>
+  <div class="sbr"><div class="swp"><span class="sico">&#9906;</span><input class="sin" id="aq" placeholder="SEARCH CALIBER, BRAND, TYPE..." oninput="rl('ammo')"></div></div>
+  <div class="srtb"><button class="chip on" onclick="ss('ammo','date',this)">RECENT</button><button class="chip" onclick="ss('ammo','caliber',this)">CALIBER</button><button class="chip" onclick="ss('ammo','qty',this)">QTY</button><button class="chip" onclick="ss('ammo','brand',this)">BRAND</button><button class="chip" onclick="ss('ammo','low',this)">&#9888; LOW</button></div>
+  <div id="rod"></div><div class="lst" id="al"></div>
 </div>
 
-<!-- ═══════════════════════════════════ WISH LIST SCREEN ═══════════════════════════════════ -->
-
-<div id="wish-screen" class="screen">
-  <div class="page-header">
-    <button class="btn-back" onclick="showScreen('home-screen')">‹</button>
-    <div class="page-header-info">
-      <div class="page-header-title">WISH LIST</div>
-      <div class="page-header-sub" id="wish-sub">0 ACQUISITION TARGETS</div>
-    </div>
-    <button class="btn-add" onclick="openAddModal('wish')">+</button>
-  </div>
-
-  <div class="search-bar">
-    <div class="search-wrap">
-      <span class="search-icon">⌕</span>
-      <input class="search-input" id="wish-search" placeholder="SEARCH MAKE, MODEL, CALIBER..." oninput="renderList('wish')">
-    </div>
-  </div>
-
-  <div class="sort-bar">
-    <button class="sort-chip active" onclick="setSort('wish','date',this)">RECENT</button>
-    <button class="sort-chip" onclick="setSort('wish','make',this)">MAKE A-Z</button>
-    <button class="sort-chip" onclick="setSort('wish','priority',this)">PRIORITY</button>
-    <button class="sort-chip" onclick="setSort('wish','budget',this)">BUDGET</button>
-  </div>
-
-  <div class="item-list" id="wish-list"></div>
+<div id="wlscr" class="scr">
+  <div class="phd"><button class="btnbk" onclick="go('home')">&#8249;</button><div style="flex:1"><div class="pht">WISH LIST</div><div class="phs" id="wlsub">0 TARGETS</div></div><button class="btnadd" onclick="openAdd('wish')">+</button></div>
+  <div class="sbr"><div class="swp"><span class="sico">&#9906;</span><input class="sin" id="wlq" placeholder="SEARCH MAKE, MODEL, CALIBER..." oninput="rl('wish')"></div></div>
+  <div class="srtb"><button class="chip on" onclick="ss('wish','date',this)">RECENT</button><button class="chip" onclick="ss('wish','make',this)">MAKE A-Z</button><button class="chip" onclick="ss('wish','priority',this)">PRIORITY</button><button class="chip" onclick="ss('wish','budget',this)">BUDGET</button></div>
+  <div class="lst" id="wll"></div>
 </div>
 
-<!-- ═══════════════════════════════════ ADD/EDIT MODAL ═══════════════════════════════════ -->
+<div class="mov" id="imod"><div class="mdr"><div class="mhan"></div><div class="mhd"><div class="mtit" id="mtit">ADD</div><button class="mcls" onclick="closeModal()">&#10005;</button></div><div class="mbd" id="mbd"></div></div></div>
 
-<div class="modal-overlay" id="item-modal">
-  <div class="modal-drawer">
-    <div class="modal-handle"></div>
-    <div class="modal-header">
-      <div class="modal-title" id="modal-title">ADD WEAPON</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div class="modal-body" id="modal-body"></div>
-  </div>
+<div class="mov" id="smod">
+  <div class="mdr"><div class="mhan"></div><div class="mhd"><div class="mtit">SETTINGS</div><button class="mcls" onclick="closeSett()">&#10005;</button></div>
+  <div class="mbd">
+    <div class="fsec">BACKUP</div>
+    <button class="btnp" onclick="doExport();closeSett()" style="font-size:16px;letter-spacing:2px;margin-bottom:10px">EXPORT DATA (CSV)</button>
+    <p style="font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--t3);line-height:1.8">DOWNLOADS A CSV YOU CAN SAVE TO GOOGLE DRIVE OR EMAIL TO YOURSELF.</p>
+    <div class="fsec">SECURITY</div>
+    <button class="btnp" onclick="chgPin()" style="font-size:16px;letter-spacing:2px;margin-bottom:10px">CHANGE PIN</button>
+    <div class="fsec">DANGER ZONE</div>
+    <button class="btnd" onclick="clearAll()" style="width:100%;font-size:16px">CLEAR ALL DATA</button>
+  </div></div>
 </div>
 
-<!-- ═══════════════════════════════════ SETTINGS MODAL ═══════════════════════════════════ -->
-
-<div class="modal-overlay settings-modal" id="settings-modal">
-  <div class="modal-drawer">
-    <div class="modal-handle"></div>
-    <div class="modal-header">
-      <div class="modal-title">SETTINGS</div>
-      <button class="modal-close" onclick="closeSettings()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="form-section-title">GOOGLE DRIVE BACKUP</div>
-      <div class="form-field">
-        <label class="form-label">BACKUP EMAIL (GOOGLE ACCOUNT)</label>
-        <input class="form-input" id="settings-email" placeholder="your@gmail.com" type="email">
-      </div>
-      <p style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:8px;line-height:1.8;letter-spacing:1px">
-        DATA IS EXPORTED AS CSV. USE THE "BACKUP NOW" BUTTON ON HOME SCREEN TO DOWNLOAD AND MANUALLY SAVE TO GOOGLE DRIVE, OR EMAIL IT TO YOURSELF.
-      </p>
-      <div class="form-section-title">SECURITY</div>
-      <button class="btn-primary" onclick="changePIN()" style="font-size:16px;letter-spacing:2px;margin-bottom:12px">CHANGE PIN</button>
-      <div class="form-section-title">DATA</div>
-      <button class="btn-primary" onclick="exportCSV()" style="font-size:16px;letter-spacing:2px;margin-bottom:8px">EXPORT ALL DATA (CSV)</button>
-      <button class="btn-danger" onclick="confirmClearData()" style="width:100%;font-size:16px">CLEAR ALL DATA</button>
-    </div>
-  </div>
-</div>
-
-<!-- TOAST -->
-
-<div class="toast" id="toast"></div>
+<div class="toast" id="tst"></div>
 
 <script>
-// ═══════════════════════════════════════════════════════
-//  STATE & STORAGE
-// ═══════════════════════════════════════════════════════
-const DB_KEY = 'arsenal_v1';
-let state = {
-  weapons: [],
-  ammo: [],
-  wish: [],
-  lastBackup: null,
-  sorts: { weapons: 'date', ammo: 'date', wish: 'date' }
-};
+var DK='arsenal_v1';
+var D={weapons:[],ammo:[],wish:[],lastBackup:null,sorts:{weapons:'date',ammo:'date',wish:'date'}};
+try{var r=localStorage.getItem(DK);if(r)D=Object.assign(D,JSON.parse(r));}catch(e){}
+function save(){try{localStorage.setItem(DK,JSON.stringify(D));}catch(e){}}
 
-function loadState() {
-  try {
-    const raw = localStorage.getItem(DB_KEY);
-    if (raw) state = { ...state, ...JSON.parse(raw) };
-  } catch(e) {}
+// ── PIN ──
+var pbuf='',pmode='unlock',ptmp='';
+function getP(){return localStorage.getItem('arsenal_pin')||'';}
+function setP(v){localStorage.setItem('arsenal_pin',v);}
+function pmsg(t){document.getElementById('pmsg').textContent=t;}
+
+function initPIN(){
+  if(!getP()){pmode='s1';pmsg('CREATE A 4-DIGIT PIN');}
+  else{pmode='unlock';pmsg('ENTER YOUR PIN');}
 }
 
-function saveState() {
-  try {
-    localStorage.setItem(DB_KEY, JSON.stringify(state));
-    scheduleAutoBackup();
-  } catch(e) {}
+function pp(d){
+  if(pbuf.length>=4)return;
+  pbuf+=d;dots();
+  if(pbuf.length===4)setTimeout(hp,150);
 }
+function pdel(){pbuf=pbuf.slice(0,-1);dots();}
 
-loadState();
-
-// ═══════════════════════════════════════════════════════
-//  PIN SYSTEM
-// ═══════════════════════════════════════════════════════
-let pinBuffer = '';
-let pinSetupStep = 0;
-let pinSetupFirst = '';
-let changingPin = false;
-
-function hasPIN() { return !!localStorage.getItem('arsenal_pin'); }
-function getPIN() { return localStorage.getItem('arsenal_pin') || ''; }
-function setPIN(p) { localStorage.setItem('arsenal_pin', p); }
-
-function initPIN() {
-  if (!hasPIN()) {
-    document.getElementById('pin-setup-label').style.display = 'block';
-    document.getElementById('pin-setup-label').textContent = 'CREATE A 4-DIGIT PIN';
-    pinSetupStep = 1;
+function dots(e){
+  for(var i=0;i<4;i++){
+    var el=document.getElementById('d'+i);
+    el.className='pd';
+    if(e)el.classList.add('er');
+    else if(i<pbuf.length)el.classList.add('on');
   }
 }
 
-function pinPress(digit) {
-  if (pinBuffer.length >= 4) return;
-  pinBuffer += digit;
-  updateDots(false);
-  if (pinBuffer.length === 4) {
-    setTimeout(() => handlePINComplete(), 150);
-  }
-}
-
-function pinDel() {
-  pinBuffer = pinBuffer.slice(0, -1);
-  updateDots(false);
-}
-
-function updateDots(isError) {
-  for (let i = 0; i < 4; i++) {
-    const d = document.getElementById('d' + i);
-    d.classList.remove('filled', 'error');
-    if (isError) d.classList.add('error');
-    else if (i < pinBuffer.length) d.classList.add('filled');
-  }
-}
-
-function handlePINComplete() {
-  if (pinSetupStep === 1) {
-    // First entry of setup
-    pinSetupFirst = pinBuffer;
-    pinBuffer = '';
-    updateDots(false);
-    document.getElementById('pin-setup-label').textContent = 'CONFIRM YOUR PIN';
-    pinSetupStep = 2;
+function hp(){
+  var en=pbuf;
+  if(pmode==='s1'){ptmp=en;pbuf='';dots();pmode='s2';pmsg('CONFIRM YOUR PIN');return;}
+  if(pmode==='s2'){
+    if(en===ptmp){setP(en);pbuf='';ptmp='';pmode='unlock';unlock();}
+    else{perr('PINS DO NOT MATCH');pmode='s1';pmsg('CREATE A 4-DIGIT PIN');}
     return;
   }
-  if (pinSetupStep === 2) {
-    // Confirm setup
-    if (pinBuffer === pinSetupFirst) {
-      setPIN(pinBuffer);
-      pinBuffer = '';
-      pinSetupStep = 0;
-      document.getElementById('pin-setup-label').style.display = 'none';
-      unlockApp();
-    } else {
-      showPinError('PINS DO NOT MATCH');
-    }
+  if(pmode==='c1'){ptmp=en;pbuf='';dots();pmode='c2';pmsg('CONFIRM NEW PIN');return;}
+  if(pmode==='c2'){
+    if(en===ptmp){setP(en);pbuf='';ptmp='';pmode='unlock';unlock();toast('PIN UPDATED','ok');}
+    else{perr('PINS DO NOT MATCH');pmode='c1';pmsg('ENTER NEW PIN');}
     return;
   }
-  if (changingPin) {
-    if (pinSetupStep === 10) {
-      pinSetupFirst = pinBuffer;
-      pinBuffer = '';
-      updateDots(false);
-      document.getElementById('pin-setup-label').textContent = 'CONFIRM NEW PIN';
-      pinSetupStep = 11;
-      return;
-    }
-    if (pinSetupStep === 11) {
-      if (pinBuffer === pinSetupFirst) {
-        setPIN(pinBuffer);
-        changingPin = false; pinSetupStep = 0;
-        document.getElementById('pin-setup-label').style.display = 'none';
-        closeSettings();
-        showToast('PIN UPDATED', 'success');
-        showScreen('home-screen');
-        pinBuffer = '';
-      } else {
-        showPinError('PINS DO NOT MATCH');
-      }
-      return;
-    }
+  if(en===getP()){pbuf='';unlock();}
+  else perr('INCORRECT PIN');
+}
+
+function perr(m){
+  pbuf='';dots(true);
+  document.getElementById('perr').textContent=m;
+  document.querySelector('.pdots').classList.add('shk');
+  setTimeout(function(){document.querySelector('.pdots').classList.remove('shk');dots();document.getElementById('perr').textContent='';},1400);
+}
+
+function unlock(){document.getElementById('pin').classList.add('gone');go('home');}
+function chgPin(){closeSett();pmode='c1';pbuf='';dots();pmsg('ENTER NEW PIN');document.getElementById('pin').classList.remove('gone');}
+
+// ── SCREENS ──
+function go(id){
+  document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
+  document.getElementById(id).classList.add('on');
+  if(id==='home')hstats();
+  if(id==='wscr')rl('weapons');
+  if(id==='ascr'){rl('ammo');rrod();}
+  if(id==='wlscr')rl('wish');
+}
+
+// ── HOME STATS ──
+function hstats(){
+  var low=D.ammo.filter(function(a){return a.threshold&&parseInt(a.qty)<=parseInt(a.threshold);});
+  document.getElementById('sw').textContent=D.weapons.length;
+  document.getElementById('sa').textContent=D.ammo.length;
+  document.getElementById('sl').textContent=low.length;
+  document.getElementById('swl').textContent=D.wish.length;
+  document.getElementById('nw').textContent=D.weapons.length;
+  document.getElementById('nwl').textContent=D.wish.length;
+  var na=document.getElementById('na');
+  if(low.length){na.className='nbdg';na.textContent='! '+low.length;}
+  else{na.className='ncnt';na.textContent=D.ammo.length;}
+  var now=new Date();
+  document.getElementById('fdt').textContent=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'}).toUpperCase();
+  document.getElementById('fbk').textContent=D.lastBackup?'LAST BACKUP: '+new Date(D.lastBackup).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).toUpperCase():'BACKUP: NEVER';
+}
+
+var ltaps=0,ltmr;
+function logoTap(){ltaps++;clearTimeout(ltmr);ltmr=setTimeout(function(){ltaps=0;},700);if(ltaps>=3){ltaps=0;document.getElementById('smod').classList.add('open');}}
+function closeSett(){document.getElementById('smod').classList.remove('open');}
+function clearAll(){if(confirm('DELETE ALL DATA? CANNOT BE UNDONE.')){D.weapons=[];D.ammo=[];D.wish=[];save();closeSett();toast('ALL DATA CLEARED','er');}}
+
+// ── SORT ──
+function ss(type,key,btn){
+  D.sorts[type]=key;
+  btn.closest('.srtb').querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+  btn.classList.add('on');rl(type);
+}
+
+function sortIt(items,key){
+  var a=items.slice();
+  if(key==='date')return a.sort(function(x,y){return(y.created||0)-(x.created||0);});
+  if(key==='make')return a.sort(function(x,y){return(x.make||'').localeCompare(y.make||'');});
+  if(key==='brand')return a.sort(function(x,y){return(x.brand||'').localeCompare(y.brand||'');});
+  if(key==='caliber')return a.sort(function(x,y){return(x.caliber||'').localeCompare(y.caliber||'');});
+  if(key==='qty')return a.sort(function(x,y){return(parseInt(y.qty)||0)-(parseInt(x.qty)||0);});
+  if(key==='price')return a.sort(function(x,y){return(parseFloat(y.price)||0)-(parseFloat(x.price)||0);});
+  if(key==='budget')return a.sort(function(x,y){return(parseFloat(y.budget)||0)-(parseFloat(x.budget)||0);});
+  if(key==='priority'){var o={high:0,med:1,low:2};return a.sort(function(x,y){return(o[x.priority]||1)-(o[y.priority]||1);});}
+  if(key==='low')return a.sort(function(x,y){var xl=x.threshold&&parseInt(x.qty)<=parseInt(x.threshold)?0:1;var yl=y.threshold&&parseInt(y.qty)<=parseInt(y.threshold)?0:1;return xl-yl;});
+  return a;
+}
+
+// ── RENDER ──
+function rl(type){
+  var cfg={weapons:{list:'wl',q:'wq',sub:'wsub',lbl:'FIREARMS'},ammo:{list:'al',q:'aq',sub:'asub',lbl:'SKUs'},wish:{list:'wll',q:'wlq',sub:'wlsub',lbl:'TARGETS'}};
+  var c=cfg[type];
+  var q=(document.getElementById(c.q).value||'').toLowerCase();
+  var items=D[type].slice();
+  if(q)items=items.filter(function(it){return[it.make,it.model,it.caliber,it.brand,it.notes,it.serial].filter(Boolean).join(' ').toLowerCase().indexOf(q)>=0;});
+  items=sortIt(items,D.sorts[type]||'date');
+  document.getElementById(c.sub).textContent=items.length+' '+c.lbl;
+  var el=document.getElementById(c.list);
+  if(!items.length){
+    var ico={weapons:'&#128299;',ammo:'&#127919;',wish:'&#128203;'}[type];
+    var lbl={weapons:'NO WEAPONS ON FILE',ammo:'NO AMMO ON FILE',wish:'WISH LIST IS EMPTY'}[type];
+    var sub={weapons:'TAP + TO ADD YOUR FIRST FIREARM',ammo:'TAP + TO ADD AMMUNITION',wish:'TAP + TO ADD TO WISH LIST'}[type];
+    el.innerHTML='<div class="empty"><div class="eico">'+ico+'</div><div class="etxt">'+lbl+'</div><div class="esub">'+sub+'</div></div>';return;
   }
-  // Normal unlock
-  if (pinBuffer === getPIN()) {
-    unlockApp();
-  } else {
-    showPinError('INCORRECT PIN');
-  }
+  var html='';
+  if(type==='weapons')items.forEach(function(it){html+=wCard(it);});
+  else if(type==='ammo')items.forEach(function(it){html+=aCard(it);});
+  else items.forEach(function(it){html+=wlCard(it);});
+  el.innerHTML=html;
 }
 
-function showPinError(msg) {
-  pinBuffer = '';
-  updateDots(true);
-  const el = document.getElementById('pin-error');
-  el.textContent = msg;
-  el.classList.add('show');
-  document.querySelector('.pin-dots').classList.add('shake');
-  setTimeout(() => {
-    document.querySelector('.pin-dots').classList.remove('shake');
-    el.classList.remove('show');
-    updateDots(false);
-  }, 1200);
+function esc(s){return(s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function wCard(it){
+  var tags='';
+  if(it.caliber)tags+='<span class="tg cal">'+esc(it.caliber)+'</span>';
+  if(it.action)tags+='<span class="tg">'+esc(it.action)+'</span>';
+  if(it.condition)tags+='<span class="tg">'+esc(it.condition)+'</span>';
+  if(it.serial)tags+='<span class="tg">SN: '+esc(it.serial)+'</span>';
+  return '<div class="card" onclick="openEdit(\'weapon\',\''+it.id+'\')"><div class="cbar"></div><div class="cmn"><div class="cinfo"><div class="cmk">'+esc(it.make||'UNKNOWN')+'</div><div class="cmd">'+esc(it.model||'')+'</div><div class="ctgs">'+tags+'</div></div><div class="crt"><div class="qty">'+(it.qty||'0')+'</div><div class="qtyl">IN STOCK</div>'+(it.price?'<div class="prc">$'+parseFloat(it.price).toFixed(2)+'</div>':'')+'</div></div></div>';
 }
 
-function unlockApp() {
-  document.getElementById('pin-screen').classList.remove('active');
-  showScreen('home-screen');
-  pinBuffer = '';
+function aCard(it){
+  var isLow=it.threshold&&parseInt(it.qty)<=parseInt(it.threshold);
+  var tags='';
+  if(it.caliber)tags+='<span class="tg cal">'+esc(it.caliber)+'</span>';
+  if(it.grain)tags+='<span class="tg">'+esc(it.grain)+'GR</span>';
+  if(it.bullet_type)tags+='<span class="tg">'+esc(it.bullet_type)+'</span>';
+  if(it.casing)tags+='<span class="tg">'+esc(it.casing)+'</span>';
+  if(isLow)tags+='<span class="tg low">&#9888; LOW</span>';
+  return '<div class="card" onclick="openEdit(\'ammo\',\''+it.id+'\')"><div class="cbar'+(isLow?' low':'')+'"></div><div class="cmn"><div class="cinfo"><div class="cmk">'+esc(it.brand||'UNKNOWN')+'</div><div class="cmd">'+esc(it.caliber||'')+(it.grain?' &middot; '+esc(it.grain)+'GR':'')+'</div><div class="ctgs">'+tags+'</div></div><div class="crt"><div class="qty'+(isLow?' low':'')+'">'+(it.qty||'0')+'</div><div class="qtyl">ROUNDS</div>'+(it.price?'<div class="prc">$'+parseFloat(it.price).toFixed(2)+'/BOX</div>':'')+'</div></div></div>';
 }
 
-function changePIN() {
-  closeSettings();
-  changingPin = true;
-  pinSetupStep = 10;
-  pinBuffer = '';
-  updateDots(false);
-  document.getElementById('pin-setup-label').style.display = 'block';
-  document.getElementById('pin-setup-label').textContent = 'ENTER NEW PIN';
-  document.getElementById('pin-screen').classList.add('active');
+function wlCard(it){
+  var pc={high:'hi',med:'md',low:'lo'}[it.priority]||'lo';
+  var pl={high:'HIGH PRIORITY',med:'MEDIUM',low:'LOW PRIORITY'}[it.priority]||'UNSET';
+  var tags='';
+  if(it.caliber)tags+='<span class="tg cal">'+esc(it.caliber)+'</span>';
+  if(it.action)tags+='<span class="tg">'+esc(it.action)+'</span>';
+  if(it.source)tags+='<span class="tg">'+esc(it.source)+'</span>';
+  return '<div class="card" onclick="openEdit(\'wish\',\''+it.id+'\')"><div class="cbar wsh"></div><div class="cmn"><div class="cinfo"><div class="cmk">'+esc(it.make||'UNKNOWN')+'</div><div class="cmd">'+esc(it.model||'')+'</div><div class="ctgs">'+tags+'</div></div><div class="crt"><span class="pri '+pc+'">'+pl+'</span>'+(it.budget?'<div class="prc" style="margin-top:6px">$'+parseFloat(it.budget).toFixed(2)+'</div>':'')+(it.qty?'<div class="qtyl" style="color:var(--t2)">'+it.qty+' UNITS</div>':'')+'</div></div></div>';
 }
 
-// ═══════════════════════════════════════════════════════
-//  SCREEN NAVIGATION
-// ═══════════════════════════════════════════════════════
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  if (id === 'home-screen') updateHomeStats();
-  if (id === 'weapons-screen') renderList('weapons');
-  if (id === 'ammo-screen') { renderList('ammo'); renderReorderAlerts(); }
-  if (id === 'wish-screen') renderList('wish');
-}
-
-// ═══════════════════════════════════════════════════════
-//  HOME STATS
-// ═══════════════════════════════════════════════════════
-function updateHomeStats() {
-  const lowAmmo = state.ammo.filter(a => a.qty <= (parseInt(a.threshold) || 0) && a.threshold);
-  document.getElementById('stat-weapons').textContent = state.weapons.length;
-  document.getElementById('stat-ammo').textContent = state.ammo.length;
-  document.getElementById('stat-low').textContent = lowAmmo.length;
-  document.getElementById('stat-wish').textContent = state.wish.length;
-  document.getElementById('nav-weapons-count').textContent = state.weapons.length;
-  document.getElementById('nav-wish-count').textContent = state.wish.length;
-
-  const badge = document.getElementById('nav-ammo-badge');
-  if (lowAmmo.length > 0) {
-    badge.className = 'nav-card-badge';
-    badge.textContent = '⚠ ' + lowAmmo.length;
-  } else {
-    badge.className = 'nav-card-count';
-    badge.textContent = state.ammo.length;
-  }
-
-  // Footer date
-  const now = new Date();
-  document.getElementById('footer-date').textContent =
-    now.toLocaleDateString('en-US', {weekday:'short',month:'short',day:'numeric',year:'numeric'}).toUpperCase();
-
-  if (state.lastBackup) {
-    document.getElementById('footer-backup-time').textContent =
-      'LAST BACKUP: ' + new Date(state.lastBackup).toLocaleString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}).toUpperCase();
-  }
-}
-
-// ═══════════════════════════════════════════════════════
-//  SORT SYSTEM
-// ═══════════════════════════════════════════════════════
-function setSort(type, key, btn) {
-  state.sorts[type] = key;
-  btn.closest('.sort-bar').querySelectorAll('.sort-chip').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  renderList(type);
-}
-
-function sortItems(items, key, type) {
-  const arr = [...items];
-  if (key === 'date') return arr.sort((a,b) => (b.created||0)-(a.created||0));
-  if (key === 'make') return arr.sort((a,b) => (a.make||'').localeCompare(b.make||''));
-  if (key === 'brand') return arr.sort((a,b) => (a.brand||'').localeCompare(b.brand||''));
-  if (key === 'caliber') return arr.sort((a,b) => (a.caliber||'').localeCompare(b.caliber||''));
-  if (key === 'qty') return arr.sort((a,b) => (parseInt(b.qty)||0)-(parseInt(a.qty)||0));
-  if (key === 'price') return arr.sort((a,b) => (parseFloat(b.price)||0)-(parseFloat(a.price)||0));
-  if (key === 'budget') return arr.sort((a,b) => (parseFloat(b.budget)||0)-(parseFloat(a.budget)||0));
-  if (key === 'priority') {
-    const order = {high:0,med:1,low:2};
-    return arr.sort((a,b) => (order[a.priority]||1)-(order[b.priority]||1));
-  }
-  if (key === 'low') {
-    return arr.sort((a,b) => {
-      const aLow = a.threshold && parseInt(a.qty) <= parseInt(a.threshold) ? 0 : 1;
-      const bLow = b.threshold && parseInt(b.qty) <= parseInt(b.threshold) ? 0 : 1;
-      return aLow - bLow;
-    });
-  }
-  return arr;
-}
-
-// ═══════════════════════════════════════════════════════
-//  RENDER LISTS
-// ═══════════════════════════════════════════════════════
-function renderList(type) {
-  const listEl = document.getElementById(type + '-list');
-  const searchEl = document.getElementById(type + '-search');
-  const q = (searchEl?.value || '').toLowerCase();
-  let items = state[type] || [];
-
-  // Filter
-  if (q) {
-    items = items.filter(item => {
-      const hay = [item.make, item.model, item.caliber, item.brand, item.type, item.notes, item.serial]
-        .filter(Boolean).join(' ').toLowerCase();
-      return hay.includes(q);
-    });
-  }
-
-  // Sort
-  items = sortItems(items, state.sorts[type] || 'date', type);
-
-  // Update sub-header
-  if (type === 'weapons') {
-    document.getElementById('weapons-sub').textContent = items.length + ' FIREARMS IN INVENTORY';
-  } else if (type === 'ammo') {
-    document.getElementById('ammo-sub').textContent = items.length + ' SKUs IN INVENTORY';
-  } else {
-    document.getElementById('wish-sub').textContent = items.length + ' ACQUISITION TARGETS';
-  }
-
-  if (items.length === 0) {
-    const icons = { weapons: '🔫', ammo: '🎯', wish: '📋' };
-    const labels = { weapons: 'NO WEAPONS ON FILE', ammo: 'NO AMMO ON FILE', wish: 'WISH LIST IS EMPTY' };
-    const subs = { weapons: 'TAP + TO ADD YOUR FIRST FIREARM', ammo: 'TAP + TO ADD AMMUNITION', wish: 'TAP + TO ADD TO WISH LIST' };
-    listEl.innerHTML = `<div class="empty-state">
-      <div class="empty-state-icon">${icons[type]}</div>
-      <div class="empty-state-text">${labels[type]}</div>
-      <div class="empty-state-sub">${subs[type]}</div>
-    </div>`;
-    return;
-  }
-
-  if (type === 'weapons') {
-    listEl.innerHTML = items.map(item => weaponCard(item)).join('');
-  } else if (type === 'ammo') {
-    listEl.innerHTML = items.map(item => ammoCard(item)).join('');
-  } else {
-    listEl.innerHTML = items.map(item => wishCard(item)).join('');
-  }
-}
-
-function weaponCard(item) {
-  const tags = [
-    item.caliber ? `<span class="tag caliber">${item.caliber}</span>` : '',
-    item.action ? `<span class="tag">${item.action}</span>` : '',
-    item.condition ? `<span class="tag">${item.condition}</span>` : '',
-    item.serial ? `<span class="tag">SN: ${item.serial}</span>` : '',
-  ].filter(Boolean).join('');
-
-  return `<div class="item-card" onclick="openEditModal('weapon','${item.id}')">
-    <div class="item-card-accent"></div>
-    <div class="item-card-main">
-      <div class="item-card-info">
-        <div class="item-card-make">${item.make || 'UNKNOWN'}</div>
-        <div class="item-card-model">${item.model || '—'}</div>
-        <div class="item-card-tags">${tags}</div>
-      </div>
-      <div class="item-card-right">
-        <div class="item-qty">${item.qty || '0'}</div>
-        <div class="item-qty-label">IN STOCK</div>
-        ${item.price ? `<div class="item-price">$${parseFloat(item.price).toFixed(2)}</div>` : ''}
-      </div>
-    </div>
-  </div>`;
-}
-
-function ammoCard(item) {
-  const isLow = item.threshold && parseInt(item.qty) <= parseInt(item.threshold);
-  const tags = [
-    item.caliber ? `<span class="tag caliber">${item.caliber}</span>` : '',
-    item.grain ? `<span class="tag">${item.grain}GR</span>` : '',
-    item.bullet_type ? `<span class="tag">${item.bullet_type}</span>` : '',
-    item.casing ? `<span class="tag">${item.casing}</span>` : '',
-    isLow ? `<span class="tag low">⚠ LOW STOCK</span>` : '',
-  ].filter(Boolean).join('');
-
-  return `<div class="item-card" onclick="openEditModal('ammo','${item.id}')">
-    <div class="item-card-accent ${isLow ? 'low' : ''}"></div>
-    <div class="item-card-main">
-      <div class="item-card-info">
-        <div class="item-card-make">${item.brand || 'UNKNOWN'}</div>
-        <div class="item-card-model">${item.caliber || '—'}${item.grain ? ' · ' + item.grain + 'GR' : ''}</div>
-        <div class="item-card-tags">${tags}</div>
-      </div>
-      <div class="item-card-right">
-        <div class="item-qty ${isLow ? 'low' : ''}">${item.qty || '0'}</div>
-        <div class="item-qty-label">ROUNDS</div>
-        ${item.price ? `<div class="item-price">$${parseFloat(item.price).toFixed(2)}/BOX</div>` : ''}
-      </div>
-    </div>
-  </div>`;
-}
-
-function wishCard(item) {
-  const pClass = { high: 'high', med: 'med', low: 'low-p' }[item.priority] || 'low-p';
-  const pLabel = { high: 'HIGH PRIORITY', med: 'MEDIUM', low: 'LOW PRIORITY' }[item.priority] || 'UNSET';
-  const tags = [
-    item.caliber ? `<span class="tag caliber">${item.caliber}</span>` : '',
-    item.action ? `<span class="tag">${item.action}</span>` : '',
-    item.source ? `<span class="tag">${item.source}</span>` : '',
-  ].filter(Boolean).join('');
-
-  return `<div class="item-card" onclick="openEditModal('wish','${item.id}')">
-    <div class="item-card-accent wish"></div>
-    <div class="item-card-main">
-      <div class="item-card-info">
-        <div class="item-card-make">${item.make || 'UNKNOWN'}</div>
-        <div class="item-card-model">${item.model || '—'}</div>
-        <div class="item-card-tags">${tags}</div>
-      </div>
-      <div class="item-card-right">
-        <span class="priority-badge ${pClass}">${pLabel}</span>
-        ${item.budget ? `<div class="item-price" style="margin-top:6px">$${parseFloat(item.budget).toFixed(2)}</div>` : ''}
-        ${item.qty ? `<div class="item-qty-label" style="color:var(--text2)">${item.qty} UNITS</div>` : ''}
-      </div>
-    </div>
-  </div>`;
-}
-
-// ═══════════════════════════════════════════════════════
-//  REORDER ALERTS
-// ═══════════════════════════════════════════════════════
-const SUPPLIERS = [
-  { name: 'MIDWAY USA', type: 'RETAILER', url: (cal) => `https://www.midwayusa.com/find?sortby=0&categoryId=14718&filter=caliber%3A${encodeURIComponent(cal)}` },
-  { name: 'SPORTSMANS GUIDE', type: 'DISCOUNT BULK', url: (cal) => `https://www.sportsmansguide.com/search?searchText=${encodeURIComponent(cal + ' ammunition')}` },
-  { name: 'AMMOSEEK', type: 'PRICE COMPARE', url: (cal) => `https://www.ammoseek.com/ammo/${encodeURIComponent(cal.toLowerCase().replace(/\s+/g,'-'))}` },
+// ── REORDER ──
+var SUPS=[
+  {n:'MIDWAY USA',t:'RETAILER',u:function(c){return'https://www.midwayusa.com/find?sortby=0&categoryId=14718&filter=caliber%3A'+encodeURIComponent(c);}},
+  {n:'SPORTSMANS GUIDE',t:'DISCOUNT BULK',u:function(c){return'https://www.sportsmansguide.com/search?searchText='+encodeURIComponent(c+' ammunition');}},
+  {n:'AMMOSEEK',t:'PRICE COMPARE',u:function(c){return'https://www.ammoseek.com/ammo/'+encodeURIComponent(c.toLowerCase().replace(/\s+/g,'-'));}}
 ];
 
-function renderReorderAlerts() {
-  const container = document.getElementById('reorder-alerts');
-  const lowItems = state.ammo.filter(a => a.threshold && parseInt(a.qty) <= parseInt(a.threshold));
-  if (lowItems.length === 0) { container.innerHTML = ''; return; }
-
-  container.innerHTML = lowItems.map(item => `
-    <div class="reorder-panel">
-      <div class="reorder-header">
-        <span style="font-size:16px">⚠️</span>
-        <div style="flex:1">
-          <div class="reorder-alert">LOW STOCK ALERT</div>
-          <div class="reorder-item-name">${item.brand || ''} ${item.caliber || ''} — ${item.qty} ROUNDS REMAINING</div>
-        </div>
-      </div>
-      <div class="supplier-links">
-        <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:2px;margin-bottom:4px">REORDER FROM:</div>
-        ${SUPPLIERS.map(s => `
-          <a href="${s.url(item.caliber || '')}" target="_blank" class="supplier-link">
-            <div>
-              <div class="supplier-name">${s.name}</div>
-              <div class="supplier-type">${s.type}</div>
-            </div>
-            <div class="supplier-arrow">→</div>
-          </a>
-        `).join('')}
-      </div>
-    </div>
-  `).join('');
+function rrod(){
+  var con=document.getElementById('rod');
+  var low=D.ammo.filter(function(a){return a.threshold&&parseInt(a.qty)<=parseInt(a.threshold);});
+  if(!low.length){con.innerHTML='';return;}
+  var html='';
+  low.forEach(function(it){
+    var links='';
+    SUPS.forEach(function(s){links+='<a href="'+s.u(it.caliber||'')+'" target="_blank" class="sl"><div><div class="sln">'+s.n+'</div><div class="slt">'+s.t+'</div></div><div style="color:var(--ac3);font-size:14px">&#8594;</div></a>';});
+    html+='<div class="rp"><div class="rphd"><span style="font-size:16px">&#9888;</span><div style="flex:1;margin-left:9px"><div class="rpa">LOW STOCK ALERT</div><div class="rpn">'+esc(it.brand||'')+' '+esc(it.caliber||'')+' &mdash; '+esc(it.qty)+' ROUNDS LEFT</div></div></div><div class="sls"><div style="font-family:\'Share Tech Mono\',monospace;font-size:9px;color:var(--t3);letter-spacing:2px;margin-bottom:4px">REORDER FROM:</div>'+links+'</div></div>';
+  });
+  con.innerHTML=html;
 }
 
-// ═══════════════════════════════════════════════════════
-//  MODAL FORMS
-// ═══════════════════════════════════════════════════════
-let currentModalType = null;
-let currentEditId = null;
+// ── MODAL ──
+var ctype=null,ceid=null;
+function openAdd(type){ctype=type;ceid=null;document.getElementById('mtit').textContent={weapon:'ADD WEAPON',ammo:'ADD AMMO',wish:'ADD TO WISH LIST'}[type];document.getElementById('mbd').innerHTML=buildForm(type,null);document.getElementById('imod').classList.add('open');}
+function openEdit(type,id){ctype=type;ceid=id;var key={weapon:'weapons',ammo:'ammo',wish:'wish'}[type];var it=D[key].find(function(i){return i.id===id;});if(!it)return;document.getElementById('mtit').textContent={weapon:'EDIT WEAPON',ammo:'EDIT AMMO',wish:'EDIT WISH ITEM'}[type];document.getElementById('mbd').innerHTML=buildForm(type,it);document.getElementById('imod').classList.add('open');}
+function closeModal(){document.getElementById('imod').classList.remove('open');ctype=null;ceid=null;}
+document.getElementById('imod').addEventListener('click',function(e){if(e.target===this)closeModal();});
+document.getElementById('smod').addEventListener('click',function(e){if(e.target===this)closeSett();});
 
-function openAddModal(type) {
-  currentModalType = type;
-  currentEditId = null;
-  const titles = { weapon: 'ADD WEAPON', ammo: 'ADD AMMO', wish: 'ADD TO WISH LIST' };
-  document.getElementById('modal-title').textContent = titles[type];
-  document.getElementById('modal-body').innerHTML = buildForm(type, null);
-  document.getElementById('item-modal').classList.add('active');
+function fv(it,k,fb){return it?(it[k]!=null&&it[k]!==''?it[k]:fb||''):(fb||'');}
+function fsel(it,k,val){return it&&it[k]===val?'selected':'';}
+
+function buildForm(type,it){
+  var fa='<div class="facs">'+(ceid?'<button class="btnd" onclick="delItem()">DELETE</button>':'')+'<button class="btnp" onclick="saveItem()">SAVE</button></div>';
+  if(type==='weapon'){return '<div class="fsec">IDENTIFICATION</div><div class="fgrd"><div class="ff"><label class="fl">MAKE</label><input class="fi" id="fmk" placeholder="GLOCK" value="'+esc(fv(it,'make'))+'"></div><div class="ff"><label class="fl">MODEL</label><input class="fi" id="fmd" placeholder="19 GEN5" value="'+esc(fv(it,'model'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder="9MM" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">ACTION</label><select class="fs" id="fac"><option value="">SELECT</option><option '+fsel(it,'action','SEMI-AUTO')+'>SEMI-AUTO</option><option '+fsel(it,'action','PUMP')+'>PUMP</option><option '+fsel(it,'action','BOLT')+'>BOLT</option><option '+fsel(it,'action','REVOLVER')+'>REVOLVER</option><option '+fsel(it,'action','LEVER')+'>LEVER</option><option '+fsel(it,'action','SINGLE-SHOT')+'>SINGLE-SHOT</option><option '+fsel(it,'action','FULL-AUTO')+'>FULL-AUTO</option><option '+fsel(it,'action','BREAK')+'>BREAK</option></select></div><div class="ff"><label class="fl">TYPE</label><select class="fs" id="fft"><option value="">SELECT</option><option '+fsel(it,'ftype','PISTOL')+'>PISTOL</option><option '+fsel(it,'ftype','RIFLE')+'>RIFLE</option><option '+fsel(it,'ftype','SHOTGUN')+'>SHOTGUN</option><option '+fsel(it,'ftype','REVOLVER')+'>REVOLVER</option><option '+fsel(it,'ftype','SBR')+'>SBR</option><option '+fsel(it,'ftype','SMG')+'>SMG</option><option '+fsel(it,'ftype','SUPPRESSOR')+'>SUPPRESSOR</option><option '+fsel(it,'ftype','NFA ITEM')+'>NFA ITEM</option></select></div><div class="ff"><label class="fl">BARREL LENGTH</label><input class="fi" id="fbl" placeholder="4.02in" value="'+esc(fv(it,'barrel'))+'"></div></div><div class="fsec">INVENTORY &amp; PRICING</div><div class="fgrd"><div class="ff"><label class="fl">QTY IN STOCK</label><input class="fi" id="fqt" type="number" placeholder="1" value="'+esc(fv(it,'qty','1'))+'"></div><div class="ff"><label class="fl">CONDITION</label><select class="fs" id="fco"><option value="">SELECT</option><option '+fsel(it,'condition','NEW')+'>NEW</option><option '+fsel(it,'condition','LIKE NEW')+'>LIKE NEW</option><option '+fsel(it,'condition','EXCELLENT')+'>EXCELLENT</option><option '+fsel(it,'condition','VERY GOOD')+'>VERY GOOD</option><option '+fsel(it,'condition','GOOD')+'>GOOD</option><option '+fsel(it,'condition','FAIR')+'>FAIR</option><option '+fsel(it,'condition','CONSIGNMENT')+'>CONSIGNMENT</option></select></div><div class="ff"><label class="fl">COST PAID</label><input class="fi" id="fcs" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'cost'))+'"></div><div class="ff"><label class="fl">RETAIL PRICE</label><input class="fi" id="fpr" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'price'))+'"></div><div class="ff full"><label class="fl">SERIAL NUMBER</label><input class="fi" id="fsr" placeholder="SERIAL #" value="'+esc(fv(it,'serial'))+'"></div></div><div class="fsec">DETAILS</div><div class="fgrd"><div class="ff"><label class="fl">FINISH</label><input class="fi" id="ffn" placeholder="MATTE BLACK" value="'+esc(fv(it,'finish'))+'"></div><div class="ff"><label class="fl">CAPACITY</label><input class="fi" id="fcp" placeholder="15+1" value="'+esc(fv(it,'capacity'))+'"></div><div class="ff"><label class="fl">SUPPLIER</label><input class="fi" id="fsp" placeholder="ZANDERS" value="'+esc(fv(it,'supplier'))+'"></div><div class="ff"><label class="fl">DATE ACQUIRED</label><input class="fi" id="fda" type="date" value="'+esc(fv(it,'acquired'))+'"></div><div class="ff full"><label class="fl">NOTES</label><textarea class="ft" id="fnt" placeholder="MAGS, SIGHTS, ACCESSORIES...">'+esc(fv(it,'notes'))+'</textarea></div></div>'+fa;}
+
+if(type===‘ammo’){return ‘<div class="fsec">IDENTIFICATION</div><div class="fgrd"><div class="ff"><label class="fl">BRAND</label><input class="fi" id="fbr" placeholder="FEDERAL" value="'+esc(fv(it,'brand'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder="9MM LUGER" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">GRAIN</label><input class="fi" id="fgr" placeholder="115" value="'+esc(fv(it,'grain'))+'"></div><div class="ff"><label class="fl">BULLET TYPE</label><select class="fs" id="fbt"><option value="">SELECT</option><option ‘+fsel(it,‘bullet_type’,‘FMJ’)+’>FMJ</option><option ‘+fsel(it,‘bullet_type’,‘HP’)+’>HP</option><option ‘+fsel(it,‘bullet_type’,‘JHP’)+’>JHP</option><option ‘+fsel(it,‘bullet_type’,‘SP’)+’>SP</option><option ‘+fsel(it,‘bullet_type’,‘FP’)+’>FP</option><option ‘+fsel(it,‘bullet_type’,‘BTHP’)+’>BTHP</option><option ‘+fsel(it,‘bullet_type’,‘SLUG’)+’>SLUG</option><option ‘+fsel(it,‘bullet_type’,‘BUCKSHOT’)+’>BUCKSHOT</option><option ‘+fsel(it,‘bullet_type’,‘BIRDSHOT’)+’>BIRDSHOT</option><option ‘+fsel(it,‘bullet_type’,‘TRACER’)+’>TRACER</option><option ‘+fsel(it,‘bullet_type’,‘SUBSONIC’)+’>SUBSONIC</option><option ‘+fsel(it,‘bullet_type’,‘FRANGIBLE’)+’>FRANGIBLE</option></select></div><div class="ff"><label class="fl">CASING</label><select class="fs" id="fca"><option value="">SELECT</option><option ‘+fsel(it,‘casing’,‘BRASS’)+’>BRASS</option><option ‘+fsel(it,‘casing’,‘STEEL’)+’>STEEL</option><option ‘+fsel(it,‘casing’,‘ALUMINUM’)+’>ALUMINUM</option><option ‘+fsel(it,‘casing’,‘NICKEL’)+’>NICKEL-PLATED</option><option ‘+fsel(it,‘casing’,‘POLYMER’)+’>POLYMER</option></select></div><div class="ff"><label class="fl">VELOCITY (FPS)</label><input class="fi" id="fvl" placeholder="1200" value="'+esc(fv(it,'velocity'))+'"></div></div><div class="fsec">INVENTORY</div><div class="fgrd"><div class="ff"><label class="fl">ROUNDS IN STOCK</label><input class="fi" id="fqt" type="number" placeholder="500" value="'+esc(fv(it,'qty'))+'"></div><div class="ff"><label class="fl">BOX SIZE</label><input class="fi" id="fbx" type="number" placeholder="50" value="'+esc(fv(it,'boxsize'))+'"></div><div class="ff"><label class="fl">COST / BOX</label><input class="fi" id="fcs" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'cost'))+'"></div><div class="ff"><label class="fl">RETAIL / BOX</label><input class="fi" id="fpr" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'price'))+'"></div><div class="ff"><label class="fl">SUPPLIER</label><input class="fi" id="fsp" placeholder="RSR GROUP" value="'+esc(fv(it,'supplier'))+'"></div><div class="ff"><label class="fl">LOT / UPC</label><input class="fi" id="flt" placeholder="UPC #" value="'+esc(fv(it,'lot'))+'"></div></div><div class="fsec">LOW STOCK ALERT</div><div class="trow"><div><div class="tlbl">ALERT WHEN AT OR BELOW:</div><div style="font-family:\'Share Tech Mono\',monospace;font-size:9px;color:var(--t3);margin-top:4px">SUPPLIER LINKS APPEAR AUTOMATICALLY</div></div><input class="tin" id="fth" type="number" placeholder="100" value="'+esc(fv(it,'threshold'))+'"></div><div class="fgrd" style="margin-top:12px"><div class="ff full"><label class="fl">NOTES</label><textarea class="ft" id="fnt" placeholder="RANGE USE, DEFENSE, BULK...">’+esc(fv(it,‘notes’))+’</textarea></div></div>’+fa;}
+if(type===‘wish’){return ‘<div class="fsec">FIREARM DETAILS</div><div class="fgrd"><div class="ff"><label class="fl">MAKE</label><input class="fi" id="fmk" placeholder="COLT" value="'+esc(fv(it,'make'))+'"></div><div class="ff"><label class="fl">MODEL</label><input class="fi" id="fmd" placeholder="PYTHON" value="'+esc(fv(it,'model'))+'"></div><div class="ff"><label class="fl">CALIBER</label><input class="fi" id="fcl" placeholder=".357 MAG" value="'+esc(fv(it,'caliber'))+'"></div><div class="ff"><label class="fl">ACTION</label><select class="fs" id="fac"><option value="">SELECT</option><option ‘+fsel(it,‘action’,‘SEMI-AUTO’)+’>SEMI-AUTO</option><option ‘+fsel(it,‘action’,‘PUMP’)+’>PUMP</option><option ‘+fsel(it,‘action’,‘BOLT’)+’>BOLT</option><option ‘+fsel(it,‘action’,‘REVOLVER’)+’>REVOLVER</option><option ‘+fsel(it,‘action’,‘LEVER’)+’>LEVER</option><option ‘+fsel(it,‘action’,‘SINGLE-SHOT’)+’>SINGLE-SHOT</option></select></div><div class="ff"><label class="fl">UNITS WANTED</label><input class="fi" id="fqt" type="number" placeholder="2" value="'+esc(fv(it,'qty'))+'"></div><div class="ff"><label class="fl">PRIORITY</label><select class="fs" id="fpri"><option value="">SELECT</option><option ‘+fsel(it,‘priority’,‘high’)+’>HIGH</option><option ‘+fsel(it,‘priority’,‘med’)+’>MEDIUM</option><option ‘+fsel(it,‘priority’,‘low’)+’>LOW</option></select></div></div><div class="fsec">ACQUISITION</div><div class="fgrd"><div class="ff"><label class="fl">TARGET BUDGET</label><input class="fi" id="fbd" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'budget'))+'"></div><div class="ff"><label class="fl">MAX BUDGET</label><input class="fi" id="fmb" type="number" step="0.01" placeholder="0.00" value="'+esc(fv(it,'maxbudget'))+'"></div><div class="ff"><label class="fl">SOURCE</label><select class="fs" id="fsc"><option value="">SELECT</option><option ‘+fsel(it,‘source’,‘ZANDERS’)+’>ZANDERS</option><option ‘+fsel(it,‘source’,‘RSR GROUP’)+’>RSR GROUP</option><option ‘+fsel(it,‘source’,‘SPORTS SOUTH’)+’>SPORTS SOUTH</option><option ‘+fsel(it,‘source’,‘BILL HICKS’)+’>BILL HICKS</option><option ‘+fsel(it,‘source’,‘LIPSEYS’)+’>LIPSEYS</option><option ‘+fsel(it,‘source’,‘AUCTION’)+’>AUCTION</option><option ‘+fsel(it,‘source’,‘PRIVATE SALE’)+’>PRIVATE SALE</option><option ‘+fsel(it,‘source’,‘OTHER’)+’>OTHER</option></select></div><div class="ff"><label class="fl">TARGET DATE</label><input class="fi" id="ftd" type="date" value="'+esc(fv(it,'targetdate'))+'"></div><div class="ff full"><label class="fl">REASON</label><textarea class="ft" id="fnt" placeholder="CUSTOMER DEMAND, MARGIN...">’+esc(fv(it,‘notes’))+’</textarea></div></div>’+fa;}
 }
 
-function openEditModal(type, id) {
-  currentModalType = type;
-  currentEditId = id;
-  const map = { weapon: 'weapons', ammo: 'ammo', wish: 'wish' };
-  const item = state[map[type]].find(i => i.id === id);
-  if (!item) return;
-  const titles = { weapon: 'EDIT WEAPON', ammo: 'EDIT AMMO', wish: 'EDIT WISH ITEM' };
-  document.getElementById('modal-title').textContent = titles[type];
-  document.getElementById('modal-body').innerHTML = buildForm(type, item);
-  document.getElementById('item-modal').classList.add('active');
+function g(id){var e=document.getElementById(id);return e?e.value.trim():’’;}
+
+function saveItem(){
+var type=ctype;
+var key={weapon:‘weapons’,ammo:‘ammo’,wish:‘wish’}[type];
+var data={};
+if(type===‘weapon’){data={make:g(‘fmk’),model:g(‘fmd’),caliber:g(‘fcl’),action:g(‘fac’),ftype:g(‘fft’),barrel:g(‘fbl’),qty:g(‘fqt’)||‘1’,condition:g(‘fco’),cost:g(‘fcs’),price:g(‘fpr’),serial:g(‘fsr’),finish:g(‘ffn’),capacity:g(‘fcp’),supplier:g(‘fsp’),acquired:g(‘fda’),notes:g(‘fnt’)};if(!data.make&&!data.model){toast(‘ENTER MAKE OR MODEL’,‘er’);return;}}
+if(type===‘ammo’){data={brand:g(‘fbr’),caliber:g(‘fcl’),grain:g(‘fgr’),bullet_type:g(‘fbt’),casing:g(‘fca’),velocity:g(‘fvl’),qty:g(‘fqt’),boxsize:g(‘fbx’),cost:g(‘fcs’),price:g(‘fpr’),supplier:g(‘fsp’),lot:g(‘flt’),threshold:g(‘fth’),notes:g(‘fnt’)};if(!data.caliber){toast(‘CALIBER IS REQUIRED’,‘er’);return;}}
+if(type===‘wish’){data={make:g(‘fmk’),model:g(‘fmd’),caliber:g(‘fcl’),action:g(‘fac’),qty:g(‘fqt’),priority:g(‘fpri’),budget:g(‘fbd’),maxbudget:g(‘fmb’),source:g(‘fsc’),targetdate:g(‘ftd’),notes:g(‘fnt’)};if(!data.make&&!data.model){toast(‘ENTER MAKE OR MODEL’,‘er’);return;}}
+if(ceid){var idx=D[key].findIndex(function(i){return i.id===ceid;});if(idx!==-1)D[key][idx]=Object.assign(D[key][idx],data);}
+else{data.id=‘id_’+Date.now()+’_’+Math.random().toString(36).substr(2,5);data.created=Date.now();D[key].push(data);}
+save();closeModal();toast(‘SAVED’,‘ok’);
+if(key===‘weapons’)rl(‘weapons’);
+if(key===‘ammo’){rl(‘ammo’);rrod();}
+if(key===‘wish’)rl(‘wish’);
 }
 
-function closeModal() {
-  document.getElementById('item-modal').classList.remove('active');
-  currentModalType = null; currentEditId = null;
+function delItem(){
+if(!confirm(‘DELETE THIS ITEM?’))return;
+var key={weapon:‘weapons’,ammo:‘ammo’,wish:‘wish’}[ctype];
+D[key]=D[key].filter(function(i){return i.id!==ceid;});
+save();closeModal();toast(‘DELETED’,‘ok’);
+if(key===‘weapons’)rl(‘weapons’);
+if(key===‘ammo’){rl(‘ammo’);rrod();}
+if(key===‘wish’)rl(‘wish’);
 }
 
-function buildForm(type, item) {
-  const v = (key, fallback='') => item ? (item[key] || fallback) : fallback;
-  const sel = (key, val) => item && item[key] === val ? 'selected' : '';
-
-  if (type === 'weapon') {
-    return `
-      <div class="form-section-title">IDENTIFICATION</div>
-      <div class="form-grid">
-        <div class="form-field">
-          <label class="form-label">MAKE / MANUFACTURER</label>
-          <input class="form-input" id="f-make" placeholder="GLOCK" value="${v('make')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">MODEL</label>
-          <input class="form-input" id="f-model" placeholder="19 GEN5" value="${v('model')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">CALIBER</label>
-          <input class="form-input" id="f-caliber" placeholder="9MM" value="${v('caliber')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">ACTION TYPE</label>
-          <select class="form-select" id="f-action">
-            <option value="">SELECT</option>
-            <option ${sel('action','SEMI-AUTO')}>SEMI-AUTO</option>
-            <option ${sel('action','PUMP')}>PUMP</option>
-            <option ${sel('action','BOLT')}>BOLT</option>
-            <option ${sel('action','REVOLVER')}>REVOLVER</option>
-            <option ${sel('action','LEVER')}>LEVER</option>
-            <option ${sel('action','SINGLE-SHOT')}>SINGLE-SHOT</option>
-            <option ${sel('action','FULL-AUTO')}>FULL-AUTO</option>
-            <option ${sel('action','BREAK')}>BREAK</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label class="form-label">FIREARM TYPE</label>
-          <select class="form-select" id="f-ftype">
-            <option value="">SELECT</option>
-            <option ${sel('ftype','PISTOL')}>PISTOL</option>
-            <option ${sel('ftype','RIFLE')}>RIFLE</option>
-            <option ${sel('ftype','SHOTGUN')}>SHOTGUN</option>
-            <option ${sel('ftype','REVOLVER')}>REVOLVER</option>
-            <option ${sel('ftype','SBR')}>SBR</option>
-            <option ${sel('ftype','SMG')}>SMG</option>
-            <option ${sel('ftype','SUPPRESSOR')}>SUPPRESSOR</option>
-            <option ${sel('ftype','NFA ITEM')}>NFA ITEM</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label class="form-label">BARREL LENGTH</label>
-          <input class="form-input" id="f-barrel" placeholder='4.02"' value="${v('barrel')}">
-        </div>
-      </div>
-      <div class="form-section-title">INVENTORY & PRICING</div>
-      <div class="form-grid">
-        <div class="form-field">
-          <label class="form-label">QTY IN STOCK</label>
-          <input class="form-input" id="f-qty" type="number" placeholder="1" value="${v('qty','1')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">CONDITION</label>
-          <select class="form-select" id="f-condition">
-            <option value="">SELECT</option>
-            <option ${sel('condition','NEW')}>NEW</option>
-            <option ${sel('condition','LIKE NEW')}>LIKE NEW</option>
-            <option ${sel('condition','EXCELLENT')}>EXCELLENT</option>
-            <option ${sel('condition','VERY GOOD')}>VERY GOOD</option>
-            <option ${sel('condition','GOOD')}>GOOD</option>
-            <option ${sel('condition','FAIR')}>FAIR</option>
-            <option ${sel('condition','CONSIGNMENT')}>CONSIGNMENT</option>
-          </select>
-        </div>
-        <div class="form-field">
-          <label class="form-label">COST (WHAT YOU PAID)</label>
-          <input class="form-input" id="f-cost" type="number" step="0.01" placeholder="0.00" value="${v('cost')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">RETAIL / ASKING PRICE</label>
-          <input class="form-input" id="f-price" type="number" step="0.01" placeholder="0.00" value="${v('price')}">
-        </div>
-        <div class="form-field full">
-          <label class="form-label">SERIAL NUMBER</label>
-          <input class="form-input" id="f-serial" placeholder="SERIAL NUMBER" value="${v('serial')}">
-        </div>
-      </div>
-      <div class="form-section-title">DETAILS</div>
-      <div class="form-grid">
-        <div class="form-field">
-          <label class="form-label">FINISH / COLOR</label>
-          <input class="form-input" id="f-finish" placeholder="MATTE BLACK" value="${v('finish')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">CAPACITY (ROUNDS)</label>
-          <input class="form-input" id="f-capacity" placeholder="15+1" value="${v('capacity')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">SUPPLIER / DISTRIBUTOR</label>
-          <input class="form-input" id="f-supplier" placeholder="ZANDERS" value="${v('supplier')}">
-        </div>
-        <div class="form-field">
-          <label class="form-label">DATE ACQUIRED</label>
-          <input class="form-input" id="f-acquired" type="date" value="${v('acquired')}">
-        </div>
-        <div class="form-field full">
-          <label class="form-label">NOTES / ACCESSORIES</label>
-          <textarea class="form-textarea" id="f-notes" placeholder="E.g., INCLUDES 2 MAGS, NIGHT SIGHTS, ORIGINAL BOX...">${v('notes')}</textarea>
-
-```
-    </div>
-  </div>
-  ${buildFormActions()}`;
-```
-
-}
-
-if (type === ‘ammo’) {
-return ` <div class="form-section-title">IDENTIFICATION</div> <div class="form-grid"> <div class="form-field"> <label class="form-label">BRAND</label> <input class="form-input" id="f-brand" placeholder="FEDERAL" value="${v('brand')}"> </div> <div class="form-field"> <label class="form-label">CALIBER</label> <input class="form-input" id="f-caliber" placeholder="9MM LUGER" value="${v('caliber')}"> </div> <div class="form-field"> <label class="form-label">GRAIN WEIGHT</label> <input class="form-input" id="f-grain" placeholder="115" value="${v('grain')}"> </div> <div class="form-field"> <label class="form-label">BULLET TYPE</label> <select class="form-select" id="f-bullet_type"> <option value="">SELECT</option> <option ${sel('bullet_type','FMJ')}>FMJ – FULL METAL JACKET</option> <option ${sel('bullet_type','HP')}>HP – HOLLOW POINT</option> <option ${sel('bullet_type','JHP')}>JHP – JACKETED HP</option> <option ${sel('bullet_type','SP')}>SP – SOFT POINT</option> <option ${sel('bullet_type','FP')}>FP – FLAT POINT</option> <option ${sel('bullet_type','BTHP')}>BTHP – BOAT TAIL HP</option> <option ${sel('bullet_type','AP')}>AP – ARMOR PIERCING</option> <option ${sel('bullet_type','SLUG')}>SLUG</option> <option ${sel('bullet_type','BUCKSHOT')}>BUCKSHOT</option> <option ${sel('bullet_type','BIRDSHOT')}>BIRDSHOT</option> <option ${sel('bullet_type','TRACER')}>TRACER</option> <option ${sel('bullet_type','SUBSONIC')}>SUBSONIC</option> <option ${sel('bullet_type','FRANGIBLE')}>FRANGIBLE</option> </select> </div> <div class="form-field"> <label class="form-label">CASING</label> <select class="form-select" id="f-casing"> <option value="">SELECT</option> <option ${sel('casing','BRASS')}>BRASS</option> <option ${sel('casing','STEEL')}>STEEL</option> <option ${sel('casing','ALUMINUM')}>ALUMINUM</option> <option ${sel('casing','NICKEL')}>NICKEL-PLATED</option> <option ${sel('casing','POLYMER')}>POLYMER</option> </select> </div> <div class="form-field"> <label class="form-label">MUZZLE VELOCITY (FPS)</label> <input class="form-input" id="f-velocity" placeholder="1200" value="${v('velocity')}"> </div> </div> <div class="form-section-title">INVENTORY</div> <div class="form-grid"> <div class="form-field"> <label class="form-label">ROUNDS IN STOCK</label> <input class="form-input" id="f-qty" type="number" placeholder="500" value="${v('qty')}"> </div> <div class="form-field"> <label class="form-label">BOX SIZE (RDS/BOX)</label> <input class="form-input" id="f-boxsize" type="number" placeholder="50" value="${v('boxsize')}"> </div> <div class="form-field"> <label class="form-label">COST PER BOX</label> <input class="form-input" id="f-cost" type="number" step="0.01" placeholder="0.00" value="${v('cost')}"> </div> <div class="form-field"> <label class="form-label">RETAIL PRICE / BOX</label> <input class="form-input" id="f-price" type="number" step="0.01" placeholder="0.00" value="${v('price')}"> </div> <div class="form-field"> <label class="form-label">SUPPLIER</label> <input class="form-input" id="f-supplier" placeholder="RSR GROUP" value="${v('supplier')}"> </div> <div class="form-field"> <label class="form-label">LOT / UPC</label> <input class="form-input" id="f-lot" placeholder="UPC OR LOT #" value="${v('lot')}"> </div> </div> <div class="form-section-title">⚠ LOW STOCK ALERT THRESHOLD</div> <div class="threshold-row"> <div> <div class="threshold-label">ALERT WHEN ROUNDS DROP TO OR BELOW:</div> <div style="font-family:var(--font-mono);font-size:9px;color:var(--text3);margin-top:4px;letter-spacing:1px">SUPPLIER LINKS WILL APPEAR AUTOMATICALLY</div> </div> <input class="threshold-input" id="f-threshold" type="number" placeholder="100" value="${v('threshold')}"> </div> <div class="form-grid" style="margin-top:12px"> <div class="form-field full"> <label class="form-label">NOTES</label> <textarea class="form-textarea" id="f-notes" placeholder="RANGE USE, DEFENSE, BULK ORDER INFO...">${v('notes')}</textarea> </div> </div> ${buildFormActions()}`;
-}
-
-if (type === ‘wish’) {
-return ` <div class="form-section-title">FIREARM DETAILS</div> <div class="form-grid"> <div class="form-field"> <label class="form-label">MAKE / MANUFACTURER</label> <input class="form-input" id="f-make" placeholder="COLT" value="${v('make')}"> </div> <div class="form-field"> <label class="form-label">MODEL</label> <input class="form-input" id="f-model" placeholder="PYTHON" value="${v('model')}"> </div> <div class="form-field"> <label class="form-label">CALIBER</label> <input class="form-input" id="f-caliber" placeholder=".357 MAGNUM" value="${v('caliber')}"> </div> <div class="form-field"> <label class="form-label">ACTION TYPE</label> <select class="form-select" id="f-action"> <option value="">SELECT</option> <option ${sel('action','SEMI-AUTO')}>SEMI-AUTO</option> <option ${sel('action','PUMP')}>PUMP</option> <option ${sel('action','BOLT')}>BOLT</option> <option ${sel('action','REVOLVER')}>REVOLVER</option> <option ${sel('action','LEVER')}>LEVER</option> <option ${sel('action','SINGLE-SHOT')}>SINGLE-SHOT</option> </select> </div> <div class="form-field"> <label class="form-label">UNITS WANTED</label> <input class="form-input" id="f-qty" type="number" placeholder="2" value="${v('qty')}"> </div> <div class="form-field"> <label class="form-label">PRIORITY</label> <select class="form-select" id="f-priority"> <option value="">SELECT</option> <option ${sel('priority','high')}>HIGH</option> <option ${sel('priority','med')}>MEDIUM</option> <option ${sel('priority','low')}>LOW</option> </select> </div> </div> <div class="form-section-title">ACQUISITION INFO</div> <div class="form-grid"> <div class="form-field"> <label class="form-label">TARGET BUDGET ($)</label> <input class="form-input" id="f-budget" type="number" step="0.01" placeholder="0.00" value="${v('budget')}"> </div> <div class="form-field"> <label class="form-label">MAX BUDGET ($)</label> <input class="form-input" id="f-maxbudget" type="number" step="0.01" placeholder="0.00" value="${v('maxbudget')}"> </div> <div class="form-field"> <label class="form-label">PREFERRED SOURCE</label> <select class="form-select" id="f-source"> <option value="">SELECT</option> <option ${sel('source','ZANDERS')}>ZANDERS</option> <option ${sel('source','RSR GROUP')}>RSR GROUP</option> <option ${sel('source','SPORTS SOUTH')}>SPORTS SOUTH</option> <option ${sel('source','BILL HICKS')}>BILL HICKS</option> <option ${sel('source','LIPSEYS')}>LIPSEYS</option> <option ${sel('source','AUCTION')}>AUCTION</option> <option ${sel('source','PRIVATE SALE')}>PRIVATE SALE</option> <option ${sel('source','OTHER')}>OTHER</option> </select> </div> <div class="form-field"> <label class="form-label">TARGET DATE</label> <input class="form-input" id="f-targetdate" type="date" value="${v('targetdate')}"> </div> <div class="form-field full"> <label class="form-label">REASON / JUSTIFICATION</label> <textarea class="form-textarea" id="f-notes" placeholder="WHY DO YOU WANT TO STOCK THIS? CUSTOMER DEMAND, MARGIN, ETC.">${v('notes')}</textarea> </div> </div> ${buildFormActions()}`;
-}
-}
-
-function buildFormActions() {
-const isEdit = !!currentEditId;
-return `<div class="form-actions"> ${isEdit ? `<button class="btn-danger" onclick="deleteItem()">DELETE</button>` : ‘’}
-<button class="btn-primary" onclick="saveItem()">SAVE</button>
-
-  </div>`;
-}
-
-function saveItem() {
-const type = currentModalType;
-const stateKey = { weapon: ‘weapons’, ammo: ‘ammo’, wish: ‘wish’ }[type];
-
-const get = id => document.getElementById(id)?.value?.trim() || ‘’;
-
-let data = {};
-
-if (type === ‘weapon’) {
-data = {
-make: get(‘f-make’), model: get(‘f-model’), caliber: get(‘f-caliber’),
-action: get(‘f-action’), ftype: get(‘f-ftype’), barrel: get(‘f-barrel’),
-qty: get(‘f-qty’) || ‘1’, condition: get(‘f-condition’),
-cost: get(‘f-cost’), price: get(‘f-price’), serial: get(‘f-serial’),
-finish: get(‘f-finish’), capacity: get(‘f-capacity’),
-supplier: get(‘f-supplier’), acquired: get(‘f-acquired’), notes: get(‘f-notes’),
-};
-if (!data.make && !data.model) { showToast(‘ENTER AT LEAST MAKE OR MODEL’, ‘error’); return; }
-}
-
-if (type === ‘ammo’) {
-data = {
-brand: get(‘f-brand’), caliber: get(‘f-caliber’), grain: get(‘f-grain’),
-bullet_type: get(‘f-bullet_type’), casing: get(‘f-casing’), velocity: get(‘f-velocity’),
-qty: get(‘f-qty’), boxsize: get(‘f-boxsize’), cost: get(‘f-cost’), price: get(‘f-price’),
-supplier: get(‘f-supplier’), lot: get(‘f-lot’), threshold: get(‘f-threshold’), notes: get(‘f-notes’),
-};
-if (!data.caliber) { showToast(‘CALIBER IS REQUIRED’, ‘error’); return; }
-}
-
-if (type === ‘wish’) {
-data = {
-make: get(‘f-make’), model: get(‘f-model’), caliber: get(‘f-caliber’),
-action: get(‘f-action’), qty: get(‘f-qty’), priority: get(‘f-priority’),
-budget: get(‘f-budget’), maxbudget: get(‘f-maxbudget’), source: get(‘f-source’),
-targetdate: get(‘f-targetdate’), notes: get(‘f-notes’),
-};
-if (!data.make && !data.model) { showToast(‘ENTER AT LEAST MAKE OR MODEL’, ‘error’); return; }
-}
-
-if (currentEditId) {
-const idx = state[stateKey].findIndex(i => i.id === currentEditId);
-if (idx !== -1) {
-state[stateKey][idx] = { …state[stateKey][idx], …data };
-}
-showToast(‘SAVED’, ‘success’);
-} else {
-data.id = ‘id_’ + Date.now() + ‘_’ + Math.random().toString(36).substr(2,5);
-data.created = Date.now();
-state[stateKey].push(data);
-showToast(‘ADDED’, ‘success’);
-}
-
-saveState();
-closeModal();
-
-if (stateKey === ‘weapons’) renderList(‘weapons’);
-if (stateKey === ‘ammo’) { renderList(‘ammo’); renderReorderAlerts(); }
-if (stateKey === ‘wish’) renderList(‘wish’);
-}
-
-function deleteItem() {
-if (!confirm(‘DELETE THIS ITEM?’)) return;
-const stateKey = { weapon: ‘weapons’, ammo: ‘ammo’, wish: ‘wish’ }[currentModalType];
-state[stateKey] = state[stateKey].filter(i => i.id !== currentEditId);
-saveState();
-closeModal();
-if (stateKey === ‘weapons’) renderList(‘weapons’);
-if (stateKey === ‘ammo’) { renderList(‘ammo’); renderReorderAlerts(); }
-if (stateKey === ‘wish’) renderList(‘wish’);
-showToast(‘DELETED’, ‘success’);
-}
-
-// ═══════════════════════════════════════════════════════
-//  BACKUP / EXPORT
-// ═══════════════════════════════════════════════════════
-function toCSV(arr, fields) {
-if (!arr.length) return fields.join(’,’) + ‘\n’;
-const rows = arr.map(item => fields.map(f => {
-const val = (item[f] || ‘’).toString().replace(/”/g, ‘””’);
-return `"${val}"`;
-}).join(’,’));
-return fields.join(’,’) + ‘\n’ + rows.join(’\n’);
-}
-
-function exportCSV() {
-const now = new Date().toISOString().slice(0,10);
-const wCSV = toCSV(state.weapons, [‘make’,‘model’,‘caliber’,‘action’,‘ftype’,‘barrel’,‘qty’,‘condition’,‘cost’,‘price’,‘serial’,‘finish’,‘capacity’,‘supplier’,‘acquired’,‘notes’]);
-const aCSV = toCSV(state.ammo, [‘brand’,‘caliber’,‘grain’,‘bullet_type’,‘casing’,‘velocity’,‘qty’,‘boxsize’,‘cost’,‘price’,‘supplier’,‘lot’,‘threshold’,‘notes’]);
-const wiCSV = toCSV(state.wish, [‘make’,‘model’,‘caliber’,‘action’,‘qty’,‘priority’,‘budget’,‘maxbudget’,‘source’,‘targetdate’,‘notes’]);
-
-const combined = `ARSENAL INVENTORY BACKUP — ${now}\n\n=== WEAPONS ===\n${wCSV}\n\n=== AMMO ===\n${aCSV}\n\n=== WISH LIST ===\n${wiCSV}`;
-
-const blob = new Blob([combined], { type: ‘text/csv’ });
-const url = URL.createObjectURL(blob);
-const a = document.createElement(‘a’);
-a.href = url;
-a.download = `arsenal-backup-${now}.csv`;
-a.click();
+// ── EXPORT ──
+function doExport(){
+function csv(arr,fields){if(!arr.length)return fields.join(’,’);return fields.join(’,’)+’\n’+arr.map(function(it){return fields.map(function(f){return’”’+(it[f]||’’).toString().replace(/”/g,’””’)+’”’;}).join(’,’);}).join(’\n’);}
+var d=new Date().toISOString().slice(0,10);
+var content=‘ARSENAL BACKUP ‘+d+’\n\n=== WEAPONS ===\n’+csv(D.weapons,[‘make’,‘model’,‘caliber’,‘action’,‘ftype’,‘barrel’,‘qty’,‘condition’,‘cost’,‘price’,‘serial’,‘finish’,‘capacity’,‘supplier’,‘acquired’,‘notes’])+’\n\n=== AMMO ===\n’+csv(D.ammo,[‘brand’,‘caliber’,‘grain’,‘bullet_type’,‘casing’,‘velocity’,‘qty’,‘boxsize’,‘cost’,‘price’,‘supplier’,‘lot’,‘threshold’,‘notes’])+’\n\n=== WISH LIST ===\n’+csv(D.wish,[‘make’,‘model’,‘caliber’,‘action’,‘qty’,‘priority’,‘budget’,‘maxbudget’,‘source’,‘targetdate’,‘notes’]);
+var blob=new Blob([content],{type:‘text/csv’});
+var url=URL.createObjectURL(blob);
+var a=document.createElement(‘a’);a.href=url;a.download=‘arsenal-’+d+’.csv’;a.click();
 URL.revokeObjectURL(url);
-
-state.lastBackup = Date.now();
-saveState();
-updateHomeStats();
-showToast(‘BACKUP DOWNLOADED’, ‘success’);
+D.lastBackup=Date.now();save();hstats();toast(‘BACKUP DOWNLOADED’,‘ok’);
 }
 
-function manualBackup() { exportCSV(); }
-
-function scheduleAutoBackup() {
-// Auto-backup every 24 hours
-const last = state.lastBackup || 0;
-if (Date.now() - last > 24 * 60 * 60 * 1000) {
-// Silent backup reminder (don’t force download automatically on every save)
-// Just flag it needs backing up
-updateHomeStats();
-}
+// ── TOAST ──
+var ttmr;
+function toast(m,t){
+var e=document.getElementById(‘tst’);
+e.textContent=m;e.className=‘toast show’+(t?’ ‘+t:’’);
+clearTimeout(ttmr);ttmr=setTimeout(function(){e.className=‘toast’;},2200);
 }
 
-function confirmClearData() {
-if (confirm(‘DELETE ALL DATA? THIS CANNOT BE UNDONE.’)) {
-if (confirm(‘ARE YOU ABSOLUTELY SURE?’)) {
-state.weapons = []; state.ammo = []; state.wish = [];
-saveState();
-closeSettings();
-showToast(‘ALL DATA CLEARED’, ‘error’);
-}
-}
-}
-
-// ═══════════════════════════════════════════════════════
-//  SETTINGS
-// ═══════════════════════════════════════════════════════
-function closeSettings() {
-document.getElementById(‘settings-modal’).classList.remove(‘active’);
-}
-
-// ═══════════════════════════════════════════════════════
-//  TOAST
-// ═══════════════════════════════════════════════════════
-let toastTimeout;
-function showToast(msg, type=’’) {
-const el = document.getElementById(‘toast’);
-el.textContent = msg;
-el.className = ’toast show ’ + type;
-clearTimeout(toastTimeout);
-toastTimeout = setTimeout(() => { el.className = ‘toast’; }, 2000);
-}
-
-// ═══════════════════════════════════════════════════════
-//  CLOSE MODAL ON OVERLAY CLICK
-// ═══════════════════════════════════════════════════════
-document.getElementById(‘item-modal’).addEventListener(‘click’, function(e) {
-if (e.target === this) closeModal();
-});
-document.getElementById(‘settings-modal’).addEventListener(‘click’, function(e) {
-if (e.target === this) closeSettings();
-});
-
-// ═══════════════════════════════════════════════════════
-//  SETTINGS GEAR (tap home logo 3x)
-// ═══════════════════════════════════════════════════════
-let homeTapCount = 0; let homeTapTimer;
-document.querySelector(’.home-logo-ring’).addEventListener(‘click’, () => {
-homeTapCount++;
-clearTimeout(homeTapTimer);
-homeTapTimer = setTimeout(() => { homeTapCount = 0; }, 700);
-if (homeTapCount >= 3) {
-homeTapCount = 0;
-document.getElementById(‘settings-modal’).classList.add(‘active’);
-}
-});
-
-// ═══════════════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════════════
 initPIN();
-updateHomeStats();
 </script>
 
 </body>
